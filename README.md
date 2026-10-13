@@ -125,7 +125,7 @@ We introduce ReAct, a new paradigm that...
 
 | 日期 | 内容 |
 |---|---|
-| 2026-10-13 | 同步收录 Lecture 4–6 slides;新增「课程作业」板块,HW1(官方 GitHub harness)已收录 |
+| 2026-10-13 | 同步收录 Lecture 4–6 slides;新增「课程作业」板块:HW1 作业讲义 PDF 与完整 starter 仓库 zip 均已镜像,附中文作业概览 |
 | 2026-10-03 | 同步收录 Lecture 3(RAG)slides;讲义链接切换为官网 stanford.edu 直链 |
 | 2026-09-29 | 新增「课程讲义」板块,同步收录 Lecture 1–2 slides;仓库完整化:源码入仓、README/LICENSE/CI/贡献指南 |
 | 2026-09-28 | 🎉 35/35 论文逐段全译对照全部完成(2,035 对照段) |

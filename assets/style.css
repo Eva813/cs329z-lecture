@@ -147,6 +147,10 @@ a:hover { text-decoration: underline; }
 .lecture-note b { color: var(--cardinal); }
 .lecture-table td { vertical-align: top; }
 .lecture-links a.slide-dl { font-weight: 700; white-space: nowrap; }
+.hw-brief { margin-top: 14px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; }
+.hw-brief summary { cursor: pointer; font-weight: 700; font-size: 14.5px; }
+.hw-brief[open] summary { margin-bottom: 8px; }
+.hw-brief .markdown-body { font-size: 15px; }
 .footer {
   border-top: 1px solid var(--line); color: var(--ink-soft); font-size: 13px;
   text-align: center; padding: 26px 20px; background: #faf8f6;

@@ -77,11 +77,12 @@ LECTURES = [
      "url": "https://web.stanford.edu/class/cs329z/slides/lecture06.pdf"},
 ]
 
-# 官网发布的作业;HW 链接为官方 GitHub harness 仓库
+# 官网发布的作业;HW 链接为官方 GitHub harness 仓库;pdf/zip 为本站镜像(hw/ 目录,存在才显示)
 HOMEWORKS = [
     {"no": "HW1", "title_zh": "构建一个智能体脚手架", "title": "Build an Agentic Harness",
      "released": "10/5", "due": "10/30",
-     "url": "https://github.com/cs329z/assignment1-harness"},
+     "url": "https://github.com/cs329z/assignment1-harness",
+     "pdf": "cs329z_assignment1_harness.pdf", "zip": "assignment1-harness.zip"},
 ]
 
 def parse_front_matter(text: str):
@@ -271,7 +272,7 @@ def main():
 
     # ---- fresh output (preserve repo meta + project docs + source mirror) ----
     PRESERVE = {".git", "README.md", ".github", "CNAME", "LICENSE",
-                "CONTRIBUTING.md", "docs", "source", ".gitignore",
+                "CONTRIBUTING.md", "docs", "source", "hw", ".gitignore",
                 "requirements.txt"}
     if SITE.exists():
         for child in SITE.iterdir():
@@ -297,6 +298,12 @@ def main():
         (SITE / "slides").mkdir(exist_ok=True)
         for l in lectures:
             shutil.copy2(ROOT / "slides" / l["file"], SITE / "slides" / l["file"])
+    hw_dir = ROOT / "hw"
+    if hw_dir.exists():
+        (SITE / "hw").mkdir(exist_ok=True)
+        for f in hw_dir.iterdir():
+            if f.is_file():
+                shutil.copy2(f, SITE / "hw" / f.name)
 
     # ---- reading pages ----
     stars = github_stars()
@@ -424,7 +431,7 @@ def main():
           <td>{html.escape(h['title_zh'])}<div class="mt-sub">{html.escape(h['title'])}</div></td>
           <td class="d-date">{h['released']}</td>
           <td class="d-date">{h['due']}</td>
-          <td class="lecture-links"><a class="slide-dl" href="{h['url']}" target="_blank" rel="noopener">官方 GitHub 仓库 ↗</a></td>
+          <td class="lecture-links">{'<a class="slide-dl" href="hw/' + h["pdf"] + '" target="_blank" rel="noopener">作业讲义 PDF ↗</a>' if h.get("pdf") and (ROOT / "hw" / h["pdf"]).exists() else ''}<div class="mt-sub">{'<a href="hw/' + h["zip"] + '" target="_blank" rel="noopener">完整仓库 zip 镜像下载</a> · ' if h.get("zip") and (ROOT / "hw" / h["zip"]).exists() else ''}<a href="{h['url']}" target="_blank" rel="noopener">官方 GitHub 仓库</a></div></td>
         </tr>"""
         for h in HOMEWORKS)
 
@@ -469,6 +476,20 @@ def main():
       <tr><th>作业</th><th>主题</th><th>发布</th><th>截止</th><th>链接</th></tr>
 {homework_rows}
     </table>
+    <details class="hw-brief">
+      <summary>📖 HW1 作业概览(讲义 26 页 · 17 题 · 100 分,点击展开)</summary>
+      <div class="markdown-body">
+        <p><b>背景</b>:为虚构公司 Cardinal Energy(内部文档 26 篇)和一份真实企业邮件档案(58MB)构建智能体系统——先做<b>控制流写在代码里的 LLM 流水线</b>,再做<b>由模型决定下一步的智能体脚手架(harness)</b>。</p>
+        <ul>
+          <li><b>Part 1 · LLM 流水线</b>:单次调用的邮件优先级排序、每日摘要生成、<b>从零手写 BM25 检索器</b>(2ms 性能要求)、多跳 RAG 问答</li>
+          <li><b>Part 2 · Cardinal Agent</b>:自研工具调用循环——工具注册表与文本格式协议、把 Part 1 流水线包装成工具、文档检索工具、<b>给智能体一个终端(沙箱)</b>、长会话上下文压缩(compaction)、跨会话记忆、用户批准/拒绝/重定向、防提示注入护栏</li>
+          <li><b>评测三层</b>:确定性测试(不调 LLM)→ 真实模型阈值评测 → <b>模拟用户(LLM 人格)多轮对话</b>任务成功率</li>
+          <li><b>压轴题</b>:Design Memo 设计备忘录(20 分)——阐述你的 harness 设计决策</li>
+          <li><b>环境</b>:uv + Python ≥3.11,OpenRouter API Key;两套测试:`uv run pytest`</li>
+        </ul>
+        <p>对应本站阅读材料:MCP 规范与工具调用(L4)、Effective Harnesses / Claude Code 最佳实践、RAG 与 ColBERT(L3)、ReAct 与设计模式(L6)。</p>
+      </div>
+    </details>
   </section>
 
   <section class="dates" id="dates">
