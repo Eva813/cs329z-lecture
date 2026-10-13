@@ -66,6 +66,22 @@ LECTURES = [
     {"no": 3, "date": "9/30", "title_zh": "构建基石:检索增强生成 RAG",
      "title": "Building Blocks: Retrieval-Augmented Generation (RAG)", "file": "lecture03.pdf",
      "url": "https://web.stanford.edu/class/cs329z/slides/lecture03.pdf"},
+    {"no": 4, "date": "10/5", "title_zh": "工具调用与函数调用",
+     "title": "Tool Use & Function Calling", "file": "lecture04.pdf",
+     "url": "https://web.stanford.edu/class/cs329z/slides/lecture04.pdf"},
+    {"no": 5, "date": "10/7", "title_zh": "框架与编排",
+     "title": "Frameworks & Orchestration", "file": "lecture05.pdf",
+     "url": "https://web.stanford.edu/class/cs329z/slides/lecture05.pdf"},
+    {"no": 6, "date": "10/12", "title_zh": "智能体设计模式与脚手架",
+     "title": "Agent Design Patterns & Scaffolds", "file": "lecture06.pdf",
+     "url": "https://web.stanford.edu/class/cs329z/slides/lecture06.pdf"},
+]
+
+# 官网发布的作业;HW 链接为官方 GitHub harness 仓库
+HOMEWORKS = [
+    {"no": "HW1", "title_zh": "构建一个智能体脚手架", "title": "Build an Agentic Harness",
+     "released": "10/5", "due": "10/30",
+     "url": "https://github.com/cs329z/assignment1-harness"},
 ]
 
 def parse_front_matter(text: str):
@@ -402,6 +418,15 @@ def main():
           <td class="lecture-links"><a class="slide-dl" href="slides/{l['file']}" target="_blank" rel="noopener">在线阅读 / 下载 PDF ↗</a><div class="mt-sub"><a href="{l['url']}" target="_blank" rel="noopener">官网原始链接</a></div></td>
         </tr>"""
         for l in lectures)
+    homework_rows = "\n".join(
+        f"""        <tr>
+          <td class="d-week">{h['no']}</td>
+          <td>{html.escape(h['title_zh'])}<div class="mt-sub">{html.escape(h['title'])}</div></td>
+          <td class="d-date">{h['released']}</td>
+          <td class="d-date">{h['due']}</td>
+          <td class="lecture-links"><a class="slide-dl" href="{h['url']}" target="_blank" rel="noopener">官方 GitHub 仓库 ↗</a></td>
+        </tr>"""
+        for h in HOMEWORKS)
 
     index_body = f"""{topbar("")}
 <div class="hero">
@@ -430,10 +455,19 @@ def main():
 
   <section class="dates lectures" id="lectures">
     <h2 class="sec-title">课程讲义 · Lecture Slides</h2>
-    <div class="lecture-note">课程 9/23 开课后,官网随进度放出各讲幻灯片,本站同步收录 PDF 原件——已收录 <b>{len(lectures)} 讲</b>,后续讲次待官网发布后跟进(下一讲:10/5 Tool Use)。视频录像暂未公开(仅斯坦福内部 Canvas 可见)。</div>
+    <div class="lecture-note">课程 9/23 开课后,官网随进度放出各讲幻灯片,本站同步收录 PDF 原件——已收录 <b>{len(lectures)} 讲</b>,后续讲次待官网发布后跟进(下一讲:10/14 Memory Architectures)。视频录像暂未公开(仅斯坦福内部 Canvas 可见)。</div>
     <table class="dates-table lecture-table">
       <tr><th>讲次</th><th>主题</th><th>日期</th><th>讲义</th></tr>
 {lectures_rows}
+    </table>
+  </section>
+
+  <section class="dates homeworks" id="homeworks">
+    <h2 class="sec-title">课程作业 · Homework</h2>
+    <div class="lecture-note">作业由课程官方发布在 GitHub(含 starter code),跟做作业请使用官方仓库;截止时间均为 23:59 PT。HW2 预计 <b>10/26</b> 发布。</div>
+    <table class="dates-table lecture-table">
+      <tr><th>作业</th><th>主题</th><th>发布</th><th>截止</th><th>链接</th></tr>
+{homework_rows}
     </table>
   </section>
 
@@ -455,7 +489,7 @@ def main():
       <ul>
         <li><b>翻译策略</b>:论文正文(摘要至结论,多数含实质附录)逐段英文原文+中文全译;参考文献列表不译;博客服从原文结构全文中译。</li>
         <li><b>重要度标记</b>:🔴 必读 = 该讲核心;🟡 推荐 = 强烈建议;⚪ 补充 = 拓展阅读(编者判断,仅供参考)。</li>
-        <li><b>时效说明</b>:阅读材料下载于 2026-09-14(开课前);开课后官网放出的课程讲义(slides)已同步收录(见「课程讲义」),作业待官方发布后跟进。</li>
+        <li><b>时效说明</b>:阅读材料下载于 2026-09-14(开课前);开课后官网放出的课程讲义(slides)与作业(HW1)已同步收录(见「课程讲义」「课程作业」)。</li>
         <li><b>版权</b>:原文版权归原作者及机构所有,AI 辅助译文仅供个人学习研究使用,请勿商用。</li>
       </ul>
     </div>
