@@ -75,6 +75,9 @@ LECTURES = [
     {"no": 6, "date": "10/12", "title_zh": "智能体设计模式与脚手架",
      "title": "Agent Design Patterns & Scaffolds", "file": "lecture06.pdf",
      "url": "https://web.stanford.edu/class/cs329z/slides/lecture06.pdf"},
+    {"no": 7, "date": "10/14", "title_zh": "智能体记忆架构",
+     "title": "Agent Memory Architectures", "file": "lecture07.pdf",
+     "url": "https://web.stanford.edu/class/cs329z/slides/lecture07.pdf"},
 ]
 
 # 官网发布的作业;HW 链接为官方 GitHub harness 仓库;pdf/zip 为本站镜像(hw/ 目录,存在才显示)
@@ -462,7 +465,7 @@ def main():
 
   <section class="dates lectures" id="lectures">
     <h2 class="sec-title">课程讲义 · Lecture Slides</h2>
-    <div class="lecture-note">课程 9/23 开课后,官网随进度放出各讲幻灯片,本站同步收录 PDF 原件——已收录 <b>{len(lectures)} 讲</b>,后续讲次待官网发布后跟进(下一讲:10/14 Memory Architectures)。视频录像暂未公开(仅斯坦福内部 Canvas 可见)。</div>
+    <div class="lecture-note">课程 9/23 开课后,官网随进度放出各讲幻灯片,本站同步收录 PDF 原件——已收录 <b>{len(lectures)} 讲</b>,后续讲次待官网发布后跟进(下一讲:10/19 Multi-Agent Systems)。视频录像暂未公开(仅斯坦福内部 Canvas 可见)。</div>
     <table class="dates-table lecture-table">
       <tr><th>讲次</th><th>主题</th><th>日期</th><th>讲义</th></tr>
 {lectures_rows}
