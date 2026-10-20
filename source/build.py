@@ -45,7 +45,7 @@ WEEK_META = {
 IMPORTANT_DATES = [
     ("第3周", "HW1《Build an Agentic Harness》发布", "10/5"),
     ("第3周", "Project Proposal 截止", "10/9"),
-    ("第6周", "HW2《Evaluate an Agent》发布 · HW1 截止", "10/26 · 10/30"),
+    ("第6周", "Guest Lecture:Terminal-Bench 作者团队(Laude Institute)· HW2《Evaluate an Agent》发布 · HW1 截止", "10/26 · 10/30"),
     ("第7周", "期中演示 · 期中报告截止", "11/4 · 11/6"),
     ("第8周", "论文视频截止", "11/13"),
     ("第9周", "HW2 截止", "11/20"),
@@ -78,6 +78,9 @@ LECTURES = [
     {"no": 7, "date": "10/14", "title_zh": "智能体记忆架构",
      "title": "Agent Memory Architectures", "file": "lecture07.pdf",
      "url": "https://web.stanford.edu/class/cs329z/slides/lecture07.pdf"},
+    {"no": 8, "date": "10/19", "title_zh": "多智能体系统",
+     "title": "Multi-Agent Systems", "file": "lecture08.pdf",
+     "url": "https://web.stanford.edu/class/cs329z/slides/lecture08.pdf"},
 ]
 
 # 官网发布的作业;HW 链接为官方 GitHub harness 仓库;pdf/zip 为本站镜像(hw/ 目录,存在才显示)
@@ -465,7 +468,7 @@ def main():
 
   <section class="dates lectures" id="lectures">
     <h2 class="sec-title">课程讲义 · Lecture Slides</h2>
-    <div class="lecture-note">课程 9/23 开课后,官网随进度放出各讲幻灯片,本站同步收录 PDF 原件——已收录 <b>{len(lectures)} 讲</b>,后续讲次待官网发布后跟进(下一讲:10/19 Multi-Agent Systems)。视频录像暂未公开(仅斯坦福内部 Canvas 可见)。</div>
+    <div class="lecture-note">课程 9/23 开课后,官网随进度放出各讲幻灯片,本站同步收录 PDF 原件——已收录 <b>{len(lectures)} 讲</b>,后续讲次待官网发布后跟进(下一讲:10/21 Optimization;10/26 嘉宾讲座:Terminal-Bench 作者团队)。视频录像暂未公开(仅斯坦福内部 Canvas 可见)。</div>
     <table class="dates-table lecture-table">
       <tr><th>讲次</th><th>主题</th><th>日期</th><th>讲义</th></tr>
 {lectures_rows}
