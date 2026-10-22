@@ -5,3 +5,6 @@ __pycache__/
 
 # 系统
 .DS_Store
+
+# Python 虚拟环境
+.venv/
