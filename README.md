@@ -56,11 +56,15 @@
 
 ```bash
 git clone https://github.com/athlonk8/cs329z.git
-cd cs329z/source
-pip install -r ../requirements.txt   # 只有 markdown 一个依赖
+cd cs329z
+python3 -m venv .venv && source .venv/bin/activate   # 建议用虚拟环境(.venv/ 已在 .gitignore)
+pip install -r requirements.txt      # 只有 markdown 一个依赖
+cd source
 python3 build.py                     # 构建完整站点到 source/site/
 python3 -m http.server -d site 8329  # 打开 http://127.0.0.1:8329
 ```
+
+之后每次开新终端,先执行 `source .venv/bin/activate` 再构建。不想用虚拟环境的话,也可以改用 `python3 -m pip install --user -r requirements.txt` 装到用户目录。
 
 仓库根目录本身就是**已构建好的站点**(GitHub Pages 直接部署它),`source/` 是它的完整源码——fresh clone 开箱即可构建。
 
