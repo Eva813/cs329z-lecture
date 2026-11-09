@@ -54,17 +54,28 @@
 
 **本地构建**(纯 Python,仅依赖一个库):
 
+首次设置(只需一次,在仓库根目录执行):
+
 ```bash
 git clone https://github.com/athlonk8/cs329z.git
 cd cs329z
 python3 -m venv .venv && source .venv/bin/activate   # 建议用虚拟环境(.venv/ 已在 .gitignore)
 pip install -r requirements.txt      # 只有 markdown 一个依赖
+```
+
+之后每次运行(**每开一个新终端都要先激活虚拟环境**,激活后提示符前会出现 `(.venv)`):
+
+```bash
+cd cs329z                            # 必须回到仓库根目录再激活
+source .venv/bin/activate
 cd source
 python3 build.py                     # 构建完整站点到 source/site/
 python3 -m http.server -d site 8329  # 打开 http://127.0.0.1:8329
 ```
 
-之后每次开新终端,先执行 `source .venv/bin/activate` 再构建。不想用虚拟环境的话,也可以改用 `python3 -m pip install --user -r requirements.txt` 装到用户目录。
+> **遇到 `ModuleNotFoundError: No module named 'markdown'`?** 说明当前终端没有激活虚拟环境,`python3` 用的是系统 Python。回到仓库根目录执行 `source .venv/bin/activate` 后重试即可,不需要重新安装依赖;也可以不激活,在 `source/` 目录下直接运行 `../.venv/bin/python build.py`。注意 `.venv` 只需在仓库根目录创建一次,不要在 `source/` 里重复创建。
+
+不想用虚拟环境的话,也可以改用 `python3 -m pip install --user -r requirements.txt` 装到用户目录。
 
 仓库根目录本身就是**已构建好的站点**(GitHub Pages 直接部署它),`source/` 是它的完整源码——fresh clone 开箱即可构建。
 
