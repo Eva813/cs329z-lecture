@@ -56,13 +56,16 @@ IMPORTANT_DATES = [
 BADGE_LABEL = {"must": "必读", "recommended": "推荐", "supplementary": "补充"}
 
 # 官网(cs329z.stanford.edu)开课后放出的讲义;PDF 放在 slides/ 目录,存在即收录
+# video 字段 = 官网放出的课程录像(YouTube)
 LECTURES = [
     {"no": 1, "date": "9/23", "title_zh": "课程导论:什么是智能体系统?",
      "title": "Introduction — What Are Agentic Systems?", "file": "lecture01.pdf",
-     "url": "https://web.stanford.edu/class/cs329z/slides/lecture01.pdf"},
+     "url": "https://web.stanford.edu/class/cs329z/slides/lecture01.pdf",
+     "video": "https://youtu.be/DGI4vucR71w"},
     {"no": 2, "date": "9/28", "title_zh": "给开发者的 LLM",
      "title": "LLMs for Builders", "file": "lecture02.pdf",
-     "url": "https://web.stanford.edu/class/cs329z/slides/lecture02.pdf"},
+     "url": "https://web.stanford.edu/class/cs329z/slides/lecture02.pdf",
+     "video": "https://youtu.be/Vr1NzH8bT44"},
     {"no": 3, "date": "9/30", "title_zh": "构建基石:检索增强生成 RAG",
      "title": "Building Blocks: Retrieval-Augmented Generation (RAG)", "file": "lecture03.pdf",
      "url": "https://web.stanford.edu/class/cs329z/slides/lecture03.pdf"},
@@ -71,7 +74,9 @@ LECTURES = [
      "url": "https://web.stanford.edu/class/cs329z/slides/lecture04.pdf"},
     {"no": 5, "date": "10/7", "title_zh": "框架与编排",
      "title": "Frameworks & Orchestration", "file": "lecture05.pdf",
-     "url": "https://web.stanford.edu/class/cs329z/slides/lecture05.pdf"},
+     "url": "https://web.stanford.edu/class/cs329z/slides/lecture05.pdf",
+     "code_zip": "lecture05-code.zip",
+     "code_repo": "https://github.com/cs329z/lecture5-frameworks"},
     {"no": 6, "date": "10/12", "title_zh": "智能体设计模式与脚手架",
      "title": "Agent Design Patterns & Scaffolds", "file": "lecture06.pdf",
      "url": "https://web.stanford.edu/class/cs329z/slides/lecture06.pdf"},
@@ -81,6 +86,21 @@ LECTURES = [
     {"no": 8, "date": "10/19", "title_zh": "多智能体系统",
      "title": "Multi-Agent Systems", "file": "lecture08.pdf",
      "url": "https://web.stanford.edu/class/cs329z/slides/lecture08.pdf"},
+    {"no": 9, "date": "10/21", "title_zh": "优化:测试时计算与提示优化",
+     "title": "Optimization: Test-Time Compute, Prompt Optimization & Finetuning", "file": "lecture09.pdf",
+     "url": "https://web.stanford.edu/class/cs329z/slides/lecture09.pdf"},
+    {"no": 10, "date": "10/26", "title_zh": "嘉宾讲座:Terminal-Bench 与 Harbor(智能体评测)",
+     "title": "Guest Lecture: Evaluating Agents — Terminal-Bench & Harbor (Laude Institute)", "file": "lecture10.pdf",
+     "url": "https://web.stanford.edu/class/cs329z/slides/lecture10.pdf"},
+    {"no": 11, "date": "10/28", "title_zh": "智能体需要什么数据?",
+     "title": "What Data Do Agents Need?", "file": "lecture11.pdf",
+     "url": "https://web.stanford.edu/class/cs329z/slides/lecture11.pdf"},
+    {"no": 12, "date": "11/2", "title_zh": "数据选择与质量",
+     "title": "Data Selection & Quality", "file": "lecture12.pdf",
+     "url": "https://web.stanford.edu/class/cs329z/slides/lecture12.pdf"},
+    {"no": 13, "date": "11/4", "title_zh": "评测基础与基准设计",
+     "title": "Evaluation Fundamentals & Benchmark Design", "file": "lecture13.pdf",
+     "url": "https://web.stanford.edu/class/cs329z/slides/lecture13.pdf"},
 ]
 
 # 官网发布的作业;HW 链接为官方 GitHub harness 仓库;pdf/zip 为本站镜像(hw/ 目录,存在才显示)
@@ -89,6 +109,14 @@ HOMEWORKS = [
      "released": "10/5", "due": "10/30",
      "url": "https://github.com/cs329z/assignment1-harness",
      "pdf": "cs329z_assignment1_harness.pdf", "zip": "assignment1-harness.zip"},
+    {"no": "Paper Video", "title_zh": "论文视频(课程项目交付物)", "title": "Paper Video (Project Deliverable)",
+     "released": "—", "due": "11/13",
+     "url": "https://web.stanford.edu/class/cs329z/assignments/paper_video.pdf",
+     "pdf": "paper_video.pdf"},
+    {"no": "HW2", "title_zh": "构建一个评测任务", "title": "Building an Evaluation Task",
+     "released": "10/26", "due": "11/20",
+     "url": "https://github.com/cs329z/assignment2-evals",
+     "pdf": "cs329z_assignment2_evaluation.pdf", "zip": "assignment2-evals.zip"},
 ]
 
 def parse_front_matter(text: str):
@@ -277,7 +305,7 @@ def main():
     entries.sort(key=lambda e: (order.get(e["week"], 99), e["file"]))
 
     # ---- fresh output (preserve repo meta + project docs + source mirror) ----
-    PRESERVE = {".git", "README.md", ".github", "CNAME", "LICENSE",
+    PRESERVE = {".git", "README.md", ".github", "CNAME", "LICENSE", ".nojekyll",
                 "CONTRIBUTING.md", "docs", "source", "hw", ".gitignore",
                 "requirements.txt"}
     if SITE.exists():
@@ -304,12 +332,18 @@ def main():
         (SITE / "slides").mkdir(exist_ok=True)
         for l in lectures:
             shutil.copy2(ROOT / "slides" / l["file"], SITE / "slides" / l["file"])
+            if l.get("code_zip") and (ROOT / "slides" / l["code_zip"]).exists():
+                shutil.copy2(ROOT / "slides" / l["code_zip"], SITE / "slides" / l["code_zip"])
     hw_dir = ROOT / "hw"
     if hw_dir.exists():
         (SITE / "hw").mkdir(exist_ok=True)
         for f in hw_dir.iterdir():
             if f.is_file():
                 shutil.copy2(f, SITE / "hw" / f.name)
+    if (ROOT / "figures").exists():
+        for d in (ROOT / "figures").iterdir():
+            if d.is_dir() and any(d.iterdir()):
+                shutil.copytree(d, SITE / "figures" / d.name, dirs_exist_ok=True)
 
     # ---- reading pages ----
     stars = github_stars()
@@ -334,6 +368,19 @@ def main():
         meta_line = " · ".join(x for x in [e["meta"].get("authors"), e["meta"].get("venue")] if x)
         orig_anchor = (f'<a class="orig-link" href="{orig_html}" target="_blank" rel="noopener">查看原文({e["kind"].upper()}) ↗</a>' if orig_html else "")
         star_line = f'觉得有帮助?欢迎在 GitHub 给本项目一个 ⭐ <a href="https://github.com/athlonk8/cs329z" target="_blank" rel="noopener">athlonk8/cs329z</a>{star_text}'
+        fig_dir = ROOT / "figures" / e["slug"]
+        figs = sorted(f for f in fig_dir.iterdir()
+                      if f.suffix.lower() in (".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg")
+                      ) if fig_dir.exists() else []
+        if figs:
+            fig_items = "".join(
+                f'<figure><img loading="lazy" src="../figures/{e["slug"]}/{f.name}" alt="原文插图 {n}"><figcaption>原文图 {n} / {len(figs)}</figcaption></figure>'
+                for n, f in enumerate(figs, 1))
+            gallery = (f'<details class="fig-gallery"><summary>🖼 原文图表({len(figs)} 张)—— 提取自原始文献,点击展开</summary>'
+                       f'<div class="fig-grid">{fig_items}</div>'
+                       f'<p class="fig-note">以上图片自动提取自原始 PDF/网页并镜像至本站;与正文的对应关系请以原文为准。若某篇无画廊,说明其原文图表为矢量绘制,暂无法自动提取。</p></details>')
+        else:
+            gallery = ""
         body = f"""{topbar()}
 <div class="read-layout">
   <aside class="read-toc"><div class="read-toc-title">本页目录</div>{e['toc']}</aside>
@@ -350,6 +397,7 @@ def main():
       <div class="markdown-body">
 {e['body_html']}
       </div>
+{gallery}
     </article>
     {nav}
     <div class="read-star">📖 {star_line}</div>
@@ -428,7 +476,8 @@ def main():
           <td class="d-week">Lecture {l['no']}</td>
           <td>{html.escape(l['title_zh'])}<div class="mt-sub">{html.escape(l['title'])}</div></td>
           <td class="d-date">{l['date']}</td>
-          <td class="lecture-links"><a class="slide-dl" href="slides/{l['file']}" target="_blank" rel="noopener">在线阅读 / 下载 PDF ↗</a><div class="mt-sub"><a href="{l['url']}" target="_blank" rel="noopener">官网原始链接</a></div></td>
+          <td class="lecture-links"><a class="slide-dl" href="slides/{l['file']}" target="_blank" rel="noopener">在线阅读 / 下载 PDF ↗</a><div class="mt-sub"><a href="{l['url']}" target="_blank" rel="noopener">官网原始链接</a>{f' · <a href="slides/{l["code_zip"]}" target="_blank" rel="noopener">官方跟练代码 zip 镜像</a> · <a href="{l["code_repo"]}" target="_blank" rel="noopener">GitHub</a>' if l.get("code_zip") and (ROOT / "slides" / l["code_zip"]).exists() else ''}</div></td>
+          <td class="lecture-links">{'<a class="video-link" href="' + l["video"] + '" target="_blank" rel="noopener">▶ 观看视频 ↗</a><div class="mt-sub">YouTube</div>' if l.get("video") else '<span class="mt-sub">待放出</span>'}</td>
         </tr>"""
         for l in lectures)
     homework_rows = "\n".join(
@@ -468,16 +517,16 @@ def main():
 
   <section class="dates lectures" id="lectures">
     <h2 class="sec-title">课程讲义 · Lecture Slides</h2>
-    <div class="lecture-note">课程 9/23 开课后,官网随进度放出各讲幻灯片,本站同步收录 PDF 原件——已收录 <b>{len(lectures)} 讲</b>,后续讲次待官网发布后跟进(下一讲:10/21 Optimization;10/26 嘉宾讲座:Terminal-Bench 作者团队)。视频录像暂未公开(仅斯坦福内部 Canvas 可见)。</div>
+    <div class="lecture-note">课程 9/23 开课后,官网随进度放出各讲幻灯片,本站同步收录 PDF 原件——已收录 <b>{len(lectures)} 讲</b>,后续讲次待官网发布后跟进(下一讲:11/9 LLM-as-Judge;Lecture 10 为 10/26 Terminal-Bench 嘉宾讲座)。<b>官方录像已开始放出</b>(视频列,YouTube 渠道,国内访问需自备网络)。</div>
     <table class="dates-table lecture-table">
-      <tr><th>讲次</th><th>主题</th><th>日期</th><th>讲义</th></tr>
+      <tr><th>讲次</th><th>主题</th><th>日期</th><th>讲义</th><th>视频</th></tr>
 {lectures_rows}
     </table>
   </section>
 
   <section class="dates homeworks" id="homeworks">
     <h2 class="sec-title">课程作业 · Homework</h2>
-    <div class="lecture-note">作业由课程官方发布在 GitHub(含 starter code),跟做作业请使用官方仓库;截止时间均为 23:59 PT。HW2 预计 <b>10/26</b> 发布。</div>
+    <div class="lecture-note">作业由课程官方发布(含 starter code),跟做作业请使用官方仓库;截止时间均为 23:59 PT。HW1 已于 10/30 截止;HW2 讲义与完整仓库本站已镜像。</div>
     <table class="dates-table lecture-table">
       <tr><th>作业</th><th>主题</th><th>发布</th><th>截止</th><th>链接</th></tr>
 {homework_rows}
@@ -494,6 +543,20 @@ def main():
           <li><b>环境</b>:uv + Python ≥3.11,OpenRouter API Key;两套测试:`uv run pytest`</li>
         </ul>
         <p>对应本站阅读材料:MCP 规范与工具调用(L4)、Effective Harnesses / Claude Code 最佳实践、RAG 与 ColBERT(L3)、ReAct 与设计模式(L6)。</p>
+      </div>
+    </details>
+    <details class="hw-brief">
+      <summary>📖 HW2 作业概览(讲义 17 页,点击展开)</summary>
+      <div class="markdown-body">
+        <p><b>背景</b>:基于 <b>Harbor</b>(Terminal-Bench 的评测框架,正是 10/26 嘉宾讲座的内容)亲手<b>构建评测任务</b>——不是调智能体,而是设计衡量智能体的尺子。</p>
+        <ul>
+          <li>示例任务 <code>humaneval-0</code>:完整 Harbor 任务结构(environment/Dockerfile + instruction + solution + tests)</li>
+          <li><code>pinned_agent.py</code>:固定 <b>mini-SWE-agent</b> 作为被测智能体,保证结果可复现</li>
+          <li><b>writeup 分节</b>:基础问答 → 跑示例任务 → 自建任务(LaTeX 报告模板)→ 同伴互评(对应 11/30 互评节点)</li>
+          <li><code>check_submission.py</code>:提交前自检完整性</li>
+          <li><b>环境</b>:uv + Docker(任务跑在容器里)</li>
+        </ul>
+        <p>对应本站阅读材料:评测基础与基准设计(L13)、How to Build Good LM Benchmarks、Terminal-Bench 嘉宾讲座 slides(L10)。</p>
       </div>
     </details>
   </section>
@@ -516,7 +579,7 @@ def main():
       <ul>
         <li><b>翻译策略</b>:论文正文(摘要至结论,多数含实质附录)逐段英文原文+中文全译;参考文献列表不译;博客服从原文结构全文中译。</li>
         <li><b>重要度标记</b>:🔴 必读 = 该讲核心;🟡 推荐 = 强烈建议;⚪ 补充 = 拓展阅读(编者判断,仅供参考)。</li>
-        <li><b>时效说明</b>:阅读材料下载于 2026-09-14(开课前);开课后官网放出的课程讲义(slides)与作业(HW1)已同步收录(见「课程讲义」「课程作业」)。</li>
+        <li><b>时效说明</b>:阅读材料下载于 2026-09-14(开课前);开课后官网放出的课程讲义(slides)与作业(HW1、HW2)均已同步收录(见「课程讲义」「课程作业」)。</li>
         <li><b>版权</b>:原文版权归原作者及机构所有,AI 辅助译文仅供个人学习研究使用,请勿商用。</li>
       </ul>
     </div>
