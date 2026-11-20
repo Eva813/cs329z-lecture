@@ -1,0 +1,897 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Lecture 13 導讀</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;800&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: 窄欄閱讀稿 + 左側頁碼欄（像講義旁註），段落導覽固定在頂部 */
+:root{
+  --paper:#f5f6f8; --sheet:#ffffff; --ink:#1a2130; --muted:#5b6475; --rule:#dde1e8;
+  --cardinal:#8c1515; --cardinal-soft:#f6e9e9; --link:#1d5c8f; --chip:#eef1f5; --key:#b5650d; --key-soft:#fbf0e2;
+  --f-display:"Noto Serif TC","Songti TC",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#12151b; --sheet:#1a1e26; --ink:#e6e9ef; --muted:#9aa3b3; --rule:#2c323d;
+  --cardinal:#e07a7a; --cardinal-soft:#2e1d20; --link:#7db5e3; --chip:#232934; --key:#e8a55a; --key-soft:#2d2318; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#12151b; --sheet:#1a1e26; --ink:#e6e9ef; --muted:#9aa3b3; --rule:#2c323d;
+  --cardinal:#e07a7a; --cardinal-soft:#2e1d20; --link:#7db5e3; --chip:#232934; --key:#e8a55a; --key-soft:#2d2318; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.75;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.wrap{max-width:860px;margin:0 auto}
+a{color:var(--link)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--cardinal);outline-offset:2px;border-radius:4px}
+h1,h2{font-family:var(--f-display);text-wrap:balance;line-height:1.3}
+
+header.top{padding-block:40px 20px}
+.eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;color:var(--cardinal);text-transform:uppercase}
+h1{font-size:clamp(28px,5vw,40px);margin:.2em 0 .3em;font-weight:800}
+.lede{color:var(--muted);max-width:62ch;margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-size:14px;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:500}
+
+.howto{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:18px 20px;margin-top:22px;display:grid;gap:10px}
+.howto h2{font-size:17px;margin:0}
+.howto ul{margin:0;padding-left:1.2em;color:var(--ink)}
+.howto li{margin:2px 0}
+.linkmode{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:999px;overflow:hidden}
+.seg button{font:inherit;font-size:13.5px;border:0;background:transparent;color:var(--muted);padding:4px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--cardinal);color:var(--sheet)}
+
+.best{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.best a{display:block;text-decoration:none;background:var(--cardinal-soft);border-radius:8px;padding:12px 14px;color:var(--ink);min-width:0}
+.best a small{display:block;font-family:var(--f-mono);font-size:12px;color:var(--cardinal)}
+.best a span{font-weight:700}
+
+nav.parts{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--rule);
+  margin-top:28px;padding-block:10px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav.parts a{flex:none;font-size:13.5px;text-decoration:none;color:var(--muted);border:1px solid var(--rule);border-radius:999px;padding:3px 12px;background:var(--sheet)}
+nav.parts a:hover{color:var(--cardinal);border-color:var(--cardinal)}
+
+section.part{margin-top:40px}
+.part-head{display:grid;gap:4px;margin-bottom:14px}
+.part-head .no{font-family:var(--f-mono);font-size:12.5px;color:var(--cardinal);letter-spacing:.06em}
+.part-head h2{font-size:clamp(22px,3.6vw,28px);margin:0}
+.part-head p{margin:0;color:var(--muted);max-width:64ch}
+
+.slide{display:grid;grid-template-columns:76px minmax(0,1fr);gap:16px;padding-block:18px;border-top:1px solid var(--rule)}
+.pg{font-family:var(--f-mono);font-size:13px;text-decoration:none;color:var(--muted);line-height:1.4;padding-top:3px}
+.pg b{display:block;font-size:17px;font-weight:600;color:var(--ink)}
+.pg:hover b{color:var(--cardinal)}
+.pg i{font-style:normal;font-size:11.5px}
+.body{min-width:0}
+.body h3{margin:0;font-size:18px;font-weight:700;line-height:1.45;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.body h3 .en{font-family:var(--f-mono);font-size:13px;font-weight:400;color:var(--muted)}
+.key{font-size:11.5px;font-weight:700;color:var(--key);background:var(--key-soft);border-radius:4px;padding:1px 7px;letter-spacing:.04em}
+.img-only{font-size:11.5px;color:var(--muted);border:1px dashed var(--rule);border-radius:4px;padding:0 6px}
+.body ul{margin:8px 0 0;padding-left:1.15em}
+.body li{margin:3px 0}
+.body p{margin:8px 0 0}
+.terms{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.terms span{font-size:13px;background:var(--chip);border-radius:5px;padding:1px 8px;color:var(--ink)}
+.terms span em{font-style:normal;font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-right:5px}
+.reads{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:14px}
+.reads::before{content:"對應閱讀";font-size:12px;color:var(--cardinal);font-weight:700;letter-spacing:.04em;padding-top:2px}
+.reads a{text-decoration-thickness:1px;text-underline-offset:3px}
+.reads .none{color:var(--muted)}
+
+.example{margin-top:10px;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;font-size:14.5px;overflow-x:auto}
+.example .row{display:grid;grid-template-columns:88px minmax(0,1fr);gap:10px;padding-block:3px}
+.example .lab{font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.ok{color:#2f7a3d}
+.bad{color:var(--cardinal)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ok{color:#7fcf8c}}
+:root[data-theme="dark"] .ok{color:#7fcf8c}
+
+.tbl{overflow-x:auto;margin-top:10px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-size:12.5px;color:var(--muted);font-weight:500}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px;font-size:14px}
+.flow span{background:var(--chip);border-radius:6px;padding:3px 10px}
+.flow i{font-style:normal;color:var(--muted)}
+
+.gloss{margin-top:48px}
+.gloss h2{font-size:26px;margin:0 0 6px}
+.gloss td:first-child{font-family:var(--f-mono);font-size:13.5px;white-space:nowrap}
+footer{margin-top:40px;font-size:13px;color:var(--muted)}
+
+@media (max-width:560px){
+  .slide{grid-template-columns:1fr;gap:6px}
+  .pg{display:flex;gap:8px;align-items:baseline}
+  .pg b{display:inline}
+  .example .row{grid-template-columns:1fr;gap:0}
+}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<style>
+pre.code{margin:10px 0 0;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;font-family:var(--f-mono);font-size:13px;line-height:1.6;overflow-x:auto;white-space:pre}
+pre.code .c{color:var(--muted)}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Stanford CS 329Z · Lecture 13 · 71 頁</div>
+  <h1>Evaluation Fundamentals &amp; Benchmark Design 中文導讀</h1>
+  <p class="lede">逐頁整理重點、翻譯術語，並標出每頁對應本站哪篇已翻譯的文章。前面幾講教怎麼<b>建</b> agent、怎麼<b>訓練</b> agent，這一講問：怎麼知道這些改進真的有用？答案是基準（benchmark）。本講先回顧非 agent 的 LM 基準（考試、聊天、安全），再把 agent 基準拆成<b>任務定義</b>（題目、環境、驗證）與<b>評測協定</b>（嘗試次數、預算、模型設定、harness）兩半，用 12 個 agent 基準套用這個框架。最後給兩份檢查清單：一份檢查<b>基準本身好不好</b>，一份檢查<b>你報出來的分數可不可信</b>。投影片多為圖表，本導讀已看過每張圖，把圖中內容整理出來。</p>
+  <div class="meta">
+    <span>講者 <b>Diyi Yang、Michael Ryan、John Yang</b></span>
+    <span>日期 <b>11/4（第 7 週）</b></span>
+    <span>原檔 <a href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf" target="_blank" rel="noopener">lecture13.pdf ↗</a></span>
+  </div>
+
+  <div class="howto">
+    <h2>怎麼用這頁</h2>
+    <ul>
+      <li>左側的<b>頁碼</b>可直接跳到官方 PDF 的那一頁。合併的卡片會跳到範圍的第一頁。</li>
+      <li>標了 <span class="key">重點</span> 的頁面是整講的核心，時間不夠時先讀這些。</li>
+      <li>標了 <span class="img-only">圖片頁</span> 的頁面幾乎沒有可抽取的文字，內容是從投影片圖片判讀的；字太小讀不清的數字不轉述，請看原頁。</li>
+      <li>p.33 的流程圖（題目 → agent → 環境 → 提交 → 驗證）是整講的骨架，PART 3 後半的 12 個案例、PART 4 的七個性質都是在這張圖的某一格上做文章。</li>
+      <li>p.3、13、18、21、25、29、51、63、70 是只有標題的章節分隔頁，已由 PART 的頁碼範圍涵蓋，不另做卡片。</li>
+    </ul>
+    <div class="linkmode">
+      <span>譯文連結指向：</span>
+      <span class="seg" role="group" aria-label="譯文連結指向">
+        <button type="button" id="mode-online" data-mode="online" aria-pressed="true">線上 cs.xuyili.com</button>
+        <button type="button" id="mode-local" data-mode="local" aria-pressed="false">本地 127.0.0.1:8329</button>
+      </span>
+    </div>
+  </div>
+
+  <div class="best">
+    <a class="rd" data-slug="Zhu2025_Rigorous_Agentic_Benchmarks" href="https://cs.xuyili.com/reading/Zhu2025_Rigorous_Agentic_Benchmarks.html" target="_blank" rel="noopener"><small>必讀 · PART 5「分數可信嗎」的完整版</small><span>Establishing Best Practices for Building Rigorous Agentic Benchmarks</span></a>
+    <a class="rd" data-slug="Press2024_How_to_Build_Good_LM_Benchmarks" href="https://cs.xuyili.com/reading/Press2024_How_to_Build_Good_LM_Benchmarks.html" target="_blank" rel="noopener"><small>推薦 · PART 4「好基準」的源頭之一（SWE-bench 作者）</small><span>How to Build Good Language Modeling Benchmarks</span></a>
+    <a class="rd" data-slug="Polo2024_tinyBenchmarks_ICML2024" href="https://cs.xuyili.com/reading/Polo2024_tinyBenchmarks_ICML2024.html" target="_blank" rel="noopener"><small>推薦 · 「容易執行」的延伸：用 100 題估整份基準</small><span>tinyBenchmarks</span></a>
+  </div>
+</header>
+
+<nav class="parts" aria-label="段落">
+  <a href="#part0">0 封面與大綱</a>
+  <a href="#part1">1 什麼是基準</a>
+  <a href="#part2">2 為何重要</a>
+  <a href="#part3">3 Agent 基準</a>
+  <a href="#part4">4 好基準</a>
+  <a href="#part5">5 可信分數</a>
+  <a href="#glossary">術語表</a>
+</nav>
+
+<!-- ============ PART 0 ============ -->
+<section class="part" id="part0">
+  <div class="part-head">
+    <span class="no">PART 0 · p.1–2</span>
+    <h2>封面與大綱</h2>
+    <p>評測講次的第一講，下一講接著談 agent 評測的細節。</p>
+  </div>
+
+  <article class="slide" id="p1">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=1" target="_blank" rel="noopener"><b>1–2</b></a>
+    <div class="body">
+    <h3>封面與本講路線圖 <span class="en">Evaluation Fundamentals &amp; Benchmark Design / Roadmap</span></h3>
+    <div class="flow"><span>什麼是基準？<br><small>25 分</small></span><i>→</i><span>為什麼重要<br><small>5 分</small></span><i>→</i><span>Agent 基準<br><small>25 分</small></span><i>→</i><span>好基準的條件<br><small>15 分</small></span><i>→</i><span>可信分數的條件<br><small>10 分</small></span></div>
+    <ul>
+      <li>一句話摘要：本講介紹設計 agent 基準的核心原則，用幾個例子示範，並討論怎樣才算好的基準。</li>
+      <li>投影片原文寫 <i>core tenants</i>，應為 <i>core tenets</i>（核心原則）的筆誤。</li>
+    </ul>
+    <div class="terms"><span><em>benchmark</em>基準（評測用的任務集加上計分方式）</span><span><em>evaluation</em>評測</span></div>
+    <div class="reads"><span class="none">大綱頁，無對應文章</span></div>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PART 1 ============ -->
+<section class="part" id="part1">
+  <div class="part-head">
+    <span class="no">PART 1 · p.3–24 · 25 分</span>
+    <h2>什麼是基準？從 loss 到考試、聊天、安全</h2>
+    <p>沿著 LM 能力變強的時間線，看評測怎麼從「預測下一個字」走到「在環境裡完成任務」。p.12 之後是一輪非 agent 基準的快速巡禮。</p>
+  </div>
+
+  <article class="slide" id="p4">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=4" target="_blank" rel="noopener"><b>4</b></a>
+    <div class="body">
+    <h3>我們怎麼知道這些改進有效？ <span class="en">How do we know that any of these advancements are working?</span></h3>
+    <p>回顧到目前為止的課程內容：</p>
+    <ol>
+      <li><b>怎麼建 LM agent 系統</b>：框架與 agent 設計、記憶與多 agent 系統。</li>
+      <li><b>怎麼訓練 agent 讓它更強</b>：最佳化、agent 系統的資料。</li>
+    </ol>
+    <p>這些都在「改」系統，但改完要有方法量出它變好了沒有。這就是評測與基準要回答的問題，也是本講和下一講的主題。</p>
+    <div class="reads"><span class="none">回顧頁，無對應文章</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p5">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=5" target="_blank" rel="noopener"><b>5–6</b></a>
+    <div class="body">
+    <h3>從訓練目標到自然語言任務 <span class="en">Modeling / Training Objective → NL tasks</span></h3>
+    <ul>
+      <li>p.5 回顧 LM 的基本式：序列機率是每個 token 在「前文條件下」機率的連乘，<code>P(x₁:T) = ∏ P(xₜ | x&lt;ₜ)</code>；訓練目標是交叉熵損失 <code>L = −Σ yᵢ log(pᵢ)</code>，其中 yᵢ 只在正確 token 上為 1。</li>
+      <li>p.6：你當然可以一直訓練到 loss 降不下去為止，但 loss 低不代表 LM 能做真實世界的自然語言任務。</li>
+      <li>語言學家早就研究過許多 NL 任務，圖中分五類：序列標註（詞性標註、命名實體辨識）、句法結構（成分／依存句法分析、共指消解）、分類（情感分析、意圖偵測）、語意與抽取（詞義消歧、關係抽取）、問答（抽取式 QA、多跳 QA、常識推理）。早期 LM 出現後，這些任務被改造成評測 LM 的<b>基準</b>。</li>
+    </ul>
+    <div class="terms"><span><em>cross-entropy loss</em>交叉熵損失</span><span><em>NL task</em>自然語言任務</span></div>
+    <div class="reads"><span class="none">本站未收錄。p.5 回顧的是本課 LLMs for Builders 那一講</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p7">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=7" target="_blank" rel="noopener"><b>7–9</b></a>
+    <div class="body">
+    <h3>評測的通式：response = LM(prompt) <span class="en">For such tasks, we can formulate evaluation generally as response = LM(prompt)</span></h3>
+    <p>三頁用三個例子說明同一件事：傳統 NL 任務都能寫成「給 prompt，看 response 對不對」。</p>
+    <div class="tbl"><table>
+      <thead><tr><th>頁</th><th>例子</th><th>怎麼計分</th></tr></thead>
+      <tbody>
+        <tr><td>7</td><td><b>SQuAD</b>（抽取式 QA）：給一段 Golden Gate Bridge 的維基段落，問「哪一年通車？」，標準答案是段落中的 span「1937」</td><td>完全符合（exact match）與 token 層級 F1</td></tr>
+        <tr><td>8</td><td><b>MultiNLI</b>（自然語言推論，三分類）：前提「博物館在參觀人數翻倍後延長週末開放」，三個假設分別是蘊含、中立、矛盾</td><td>準確率</td></tr>
+        <tr><td>9</td><td><b>T5</b>：把翻譯、分類、摘要等所有任務都寫成「文字進、文字出」</td><td>右側表格比較不同架構在 GLUE、SQuAD、SuperGLUE 等上的分數</td></tr>
+      </tbody>
+    </table></div>
+    <p>記住這個 <code>response = LM(prompt)</code>，p.30–31 會拿它和 agent 基準對比：agent 的輸入、互動、輸出三者都不一樣。</p>
+    <div class="terms"><span><em>extractive QA</em>抽取式問答（答案是原文中的一段）</span><span><em>exact match / F1</em>完全符合／F1</span><span><em>natural language inference (NLI)</em>自然語言推論</span><span><em>entailment / neutral / contradiction</em>蘊含／中立／矛盾</span></div>
+    <div class="reads"><span class="none">本站未收錄。出處：Rajpurkar et al. 2016（SQuAD）、Williams et al. 2018（MultiNLI）、Raffel et al. 2019（T5）</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p10">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=10" target="_blank" rel="noopener"><b>10</b></a>
+    <div class="body">
+    <h3>大型任務合集 <span class="en">Large task collection bundles of many NL tasks emerged for comprehensive evals</span> <span class="img-only">圖片頁</span></h3>
+    <p>單一任務不夠全面，於是出現把許多任務打包的評測集。頁面列出六篇論文的標題：</p>
+    <ul>
+      <li>SQuAD（Rajpurkar 2016）、GLUE 與 SuperGLUE（Wang 2019）、MMLU（Hendrycks 2021）、BIG-bench〈Beyond the Imitation Game〉（Srivastava 2023）、HELM〈Holistic Evaluation of Language Models〉（Liang 2023）。</li>
+    </ul>
+    <div class="terms"><span><em>task collection / suite</em>任務合集</span></div>
+    <div class="reads"><span class="none">本站未收錄</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p11">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=11" target="_blank" rel="noopener"><b>11–12</b></a>
+    <div class="body">
+    <h3>四大類更難的評測 <span class="en">As LMs became more capable, subsequent evaluations pose more difficult tasks</span></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>問的問題</th><th>類型</th></tr></thead>
+      <tbody>
+        <tr><td>LM 能不能通過人類常考的考試？（SAT、AMC 12、AIME、GRE、物理奧林匹亞、律師考試）</td><td><b>考試</b>基準</td></tr>
+        <tr><td>LM 能不能好好回答開放式問題，或進行多輪對話？</td><td><b>聊天</b>基準</td></tr>
+        <tr><td>LM 的行為是否安全？會拒絕惡意請求、遵守使用者的限制嗎？</td><td><b>安全</b>基準</td></tr>
+        <tr><td>LM 能不能透過多輪與數位或真實環境互動來完成任務？</td><td><b>Agent</b> 基準（本課重點）</td></tr>
+      </tbody>
+    </table></div>
+    <p>p.12：接下來快速看一輪熱門的非 agent 基準，但本課主要關心的是 LM agent 的評測。（投影片 <i>subsequence</i> 應為 <i>subsequent</i>。）</p>
+    <div class="reads"><span class="none">本站未收錄</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p14">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=14" target="_blank" rel="noopener"><b>14–17</b></a>
+    <div class="body">
+    <h3>考試基準：一個比一個難 <span class="en">Exam Benchmarks: MMLU → MMLU-Pro → GPQA → HLE</span></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>頁</th><th>基準</th><th>重點</th></tr></thead>
+      <tbody>
+        <tr><td>14</td><td><b>MMLU</b>（Hendrycks 2020）</td><td>四選一的知識題，涵蓋 57 個領域。圖示是 few-shot 提示的高中數學題，以及 GPT-3 不同尺寸的表現</td></tr>
+        <tr><td>15</td><td><b>MMLU-Pro</b>（Wang 2024）</td><td>選項從 4 個加到 10 個，並移除有雜訊（題目或答案有誤）的題目。圖中 GPT-4o、Llama-3-70B、Gemma-7B 在 MMLU-Pro 的分數都明顯低於 MMLU</td></tr>
+        <tr><td>16</td><td><b>GPQA</b>（Rein 2023）</td><td>由博士生出題的研究所程度題目，號稱「Google 不到」。圖示出題流程：出題 → 兩輪專家驗證與修訂 → 非專家驗證（非專家答錯才代表夠難）</td></tr>
+        <tr><td>17</td><td><b>Humanity's Last Exam</b>（Phan 2025）</td><td>更難的考試，有選擇題也有簡答題。例題包括翻譯羅馬墓碑上的帕爾米拉文字、問蜂鳥某塊籽骨上有幾條成對肌腱</td></tr>
+      </tbody>
+    </table></div>
+    <p>這條「出現 → 被做爆 → 換更難的」軌跡，p.61 會整理成基準的生命週期。</p>
+    <div class="terms"><span><em>few-shot</em>少樣本（提示中附幾個範例）</span><span><em>Google-proof</em>查不到答案的</span></div>
+    <div class="reads"><span class="none">本站未收錄</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p19">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=19" target="_blank" rel="noopener"><b>19–20</b></a>
+    <div class="body">
+    <h3>聊天基準：AlpacaEval 與 Chatbot Arena <span class="en">Chat Benchmarks</span></h3>
+    <ul>
+      <li><b>AlpacaEval</b>：聊天類評測的主要指標是<b>勝率</b>（win rate）或 <b>Elo</b>，也就是和參考模型比，誰的回答被判較好。排行榜標示「長度控制」（LC）勝率；圖中一列 Spearman 相關係數顯示 LC AlpacaEval 2.0 和 Chatbot Arena 的相關性最高（0.98），而「輸出長度」只有 0.35。</li>
+      <li><b>Chatbot Arena</b>（Chiang 2024）：把 AlpacaEval 的兩兩比較延伸到真實使用者的即時提問，由使用者自己投票選哪個回答比較好，再算出排名。</li>
+    </ul>
+    <p>聊天回答沒有標準答案，所以只能比較。這也帶出 p.58 的問題：用 LM 當評審，會偏好長回答。</p>
+    <div class="terms"><span><em>win rate</em>勝率</span><span><em>Elo rating</em>Elo 分數（由兩兩對戰結果算出的排名分數）</span><span><em>length-controlled</em>長度控制（扣除回答長度帶來的偏差）</span></div>
+    <div class="reads"><a class="rd" data-slug="Zheng2023_LLM_as_a_Judge_MT-Bench_NeurIPS2023" href="https://cs.xuyili.com/reading/Zheng2023_LLM_as_a_Judge_MT-Bench_NeurIPS2023.html" target="_blank" rel="noopener">LLM-as-a-Judge：MT-Bench 與 Chatbot Arena</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p22">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=22" target="_blank" rel="noopener"><b>22–23</b></a>
+    <div class="body">
+    <h3>安全基準：HarmBench 與 AIR-Bench <span class="en">Safety Benchmarks</span></h3>
+    <ul>
+      <li><b>HarmBench</b>（Mazeika 2024）：紅隊攻擊有多常能讓模型產出有害回應？例子是「教我怎麼雇殺手而不被抓」，模型拒絕並提供求助資訊，得到安全分數 1。</li>
+      <li><b>AIR-Bench</b>（Zeng 2024）：5,694 個模型應該拒絕的提示，分布在 314 個風險類別。資料由政策與法規的風險分類法產生，再經過方言、語法變形擴充，並為每個類別客製評審提示。</li>
+    </ul>
+    <div class="terms"><span><em>red-teaming</em>紅隊測試（刻意攻擊以找出弱點）</span><span><em>refusal</em>拒絕回答</span><span><em>risk taxonomy</em>風險分類法</span></div>
+    <div class="reads"><span class="none">本站未收錄</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p24">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=24" target="_blank" rel="noopener"><b>24</b></a>
+    <div class="body">
+    <h3>小結：基準是什麼 <span class="en">What is a benchmark? Summary</span> <span class="key">重點</span></h3>
+    <ul>
+      <li>基準用來衡量 LM 系統的行為或能力是否進步。</li>
+      <li>基準通常由一組<b>提示</b>（問題、指令、請求）加上一個<b>報告表現的指標</b>組成。</li>
+      <li>除此之外，基準的形式五花八門：任務類型、預期回應、計分方式都不一樣。</li>
+      <li>本講剩下的部分和下一講都只談 <b>LM agent</b> 的基準。</li>
+    </ul>
+    <div class="terms"><span><em>metric</em>指標</span></div>
+    <div class="reads"><a class="rd" data-slug="Grace2026_Demystifying_Evals_Anthropic" href="https://cs.xuyili.com/reading/Grace2026_Demystifying_Evals_Anthropic.html" target="_blank" rel="noopener">解構 AI Agent 評測（Anthropic）</a></div>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PART 2 ============ -->
+<section class="part" id="part2">
+  <div class="part-head">
+    <span class="no">PART 2 · p.25–28 · 5 分</span>
+    <h2>為什麼基準重要，以及它的陰暗面</h2>
+    <p>基準帶來測量、方向、共同語言；但一旦變成目標，就會被鑽漏洞。</p>
+  </div>
+
+  <article class="slide" id="p26">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=26" target="_blank" rel="noopener"><b>26–27</b></a>
+    <div class="body">
+    <h3>基準的三個作用 <span class="en">Why are benchmarks important?</span></h3>
+    <p>p.26：基準不是 NLP 或 AI 獨有的概念。圖例有電腦視覺的 MNIST 與 ImageNet、推薦系統的 Netflix Prize、機器人的 DARPA Grand Challenge，以及科學 ML 的一張結果圖。</p>
+    <ol>
+      <li><b>測量</b>：讓實作者能用實驗數據來開發模型、提示和 scaffold。</li>
+      <li><b>方向</b>：讓整個領域聚焦在共同問題上，反映大家集體決定要解決什麼。</li>
+      <li><b>溝通</b>：給研究者共同語言。「X 上 +5 分」對每個人意義相同，不同論文的結果才能比較。</li>
+    </ol>
+    <div class="terms"><span><em>scaffold</em>scaffold（包在 LM 外面的 agent 框架程式）</span></div>
+    <div class="reads"><span class="none">本站未收錄</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p28">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=28" target="_blank" rel="noopener"><b>28</b></a>
+    <div class="body">
+    <h3>基準的陰暗面：Goodhart 定律 <span class="en">The Dark Side of Benchmarks</span></h3>
+    <ul>
+      <li>Goodhart 原話：「任何觀察到的統計規律，一旦被當成控制手段施加壓力，就會傾向崩解。」</li>
+      <li>常見的簡化版：<b>當一個指標變成目標，它就不再是好指標。</b></li>
+      <li>投影片的比喻：「用長度給作文打分，你會收到長作文，但不一定是好作文。」</li>
+    </ul>
+    <p>圖中左邊是一個划船遊戲的畫面，右邊是一張「代理（proxy）獎勵 vs. 真實（gold）獎勵」隨 KL 距離變化的曲線圖。這兩個都是 reward hacking 的經典例子：模型把代理分數衝高，真正想要的表現卻沒有跟上。圖的細部數字請看原頁。</p>
+    <p>這頁是 PART 4「耐用」（p.60）和 PART 5「誠實」（p.68）的伏筆。</p>
+    <div class="terms"><span><em>Goodhart's Law</em>Goodhart 定律</span><span><em>proxy</em>代理指標（用來近似真正目標的可量測量）</span><span><em>reward hacking</em>獎勵駭取</span></div>
+    <div class="reads"><span class="none">本站未收錄</span></div>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PART 3 ============ -->
+<section class="part" id="part3">
+  <div class="part-head">
+    <span class="no">PART 3 · p.29–50 · 25 分</span>
+    <h2>Agent 基準：任務定義 + 評測協定</h2>
+    <p>先定義 agent 基準和一般 LM 基準差在哪，再拆成兩個部分。任務定義又分題目、環境、驗證三塊。最後用 12 個基準當案例。</p>
+  </div>
+
+  <article class="slide" id="p30">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=30" target="_blank" rel="noopener"><b>30–31</b></a>
+    <div class="body">
+    <h3>Agent 基準和一般基準差在哪 <span class="en">How do we generally define an agent benchmark?</span> <span class="key">重點</span></h3>
+    <p>定義：agent 基準要求系統<b>在環境中行動多個步驟</b>來完成任務，然後<b>根據它完成了什麼</b>來評分。</p>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th>考試／聊天／安全基準</th><th>Agent 基準</th></tr></thead>
+      <tbody>
+        <tr><td>輸入</td><td>一個 prompt</td><td>一個任務 + 可以在其中行動的環境</td></tr>
+        <tr><td>互動</td><td>一次回應</td><td>多輪「行動 ⇔ 觀察」</td></tr>
+        <tr><td>輸出</td><td>一段文字</td><td>一條軌跡 + 被改變的環境</td></tr>
+      </tbody>
+    </table></div>
+    <p>p.31 用兩張流程圖對照：LM 基準是 Prompt → LM → Response → Grader（比對答案或評審打分）→ Score；agent 基準則是 Task → Agent（LM + scaffold，含工具、提示、記憶）⇄ Environment（repo、網站、終端機、資料庫、模擬使用者），產出 Trajectory 與 Final State（改好的 repo、完成的購買、更新的資料庫），再交給 Verifier（跑測試或檢查狀態）→ Score。</p>
+    <div class="terms"><span><em>environment</em>環境</span><span><em>trajectory</em>軌跡（行動與觀察的完整紀錄）</span><span><em>final state</em>最終狀態</span><span><em>verifier</em>驗證器</span></div>
+    <div class="reads"><a class="rd" data-slug="Grace2026_Demystifying_Evals_Anthropic" href="https://cs.xuyili.com/reading/Grace2026_Demystifying_Evals_Anthropic.html" target="_blank" rel="noopener">解構 AI Agent 評測（Anthropic）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p32">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=32" target="_blank" rel="noopener"><b>32–33</b></a>
+    <div class="body">
+    <h3>兩大組成：任務定義 + 評測協定 <span class="en">Task formulation + Evaluation protocol</span> <span class="key">重點</span></h3>
+    <ol>
+      <li><b>任務定義</b>：定義你想要被解決的任務。</li>
+      <li><b>評測協定</b>：agent 專屬的參數，規定 LM agent 系統要怎麼在這個任務上執行。</li>
+    </ol>
+    <p>p.33 把任務定義畫成一條管線：</p>
+    <div class="flow"><span>題目<br><small>描述要做什麼</small></span><i>→</i><span>Agent<br><small>讀題（ReAct）</small></span><i>⇄</i><span>環境<br><small>終端機／瀏覽器／模擬器／真實世界</small></span><i>→</i><span>提交<br><small>產出物</small></span><i>→</i><span>驗證<br><small>單元／E2E 測試、評分標準、偏好</small></span></div>
+    <div class="example">
+      <div class="row"><span class="lab">題目</span><span>「我跑了 <code>ffmpeg -i input.mp4 -vf scale=1280:720 output.mp4</code>，預期輸出是 1280×720，但它太大了（1920×1080）。能幫我看看嗎？也許可以看 <code>parse_args.py</code>。」</span></div>
+      <div class="row ok"><span class="lab">結果</span><span>Agent 在環境中下指令、收觀察，最後提交修改，驗證後判為 Pass 或 Fail。</span></div>
+    </div>
+    <p>接下來 p.34、35、36 依序放大題目、環境、驗證三格，p.37 講評測協定。</p>
+    <div class="terms"><span><em>task formulation</em>任務定義</span><span><em>evaluation protocol</em>評測協定</span><span><em>submission</em>提交</span></div>
+    <div class="reads"><a class="rd" data-slug="Yao2023_ReAct_ICLR2023" href="https://cs.xuyili.com/reading/Yao2023_ReAct_ICLR2023.html" target="_blank" rel="noopener">ReAct（圖中 agent 的運作方式）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p34">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=34" target="_blank" rel="noopener"><b>34</b></a>
+    <div class="body">
+    <h3>題目：從完整指令到開放目標 <span class="en">Task Formulation: Problem Statement</span></h3>
+    <p>要 agent 做什麼？預期它交出什麼？題目可以放在一條光譜上：</p>
+    <div class="tbl"><table>
+      <thead><tr><th>基準</th><th>題目範例</th><th>特性</th></tr></thead>
+      <tbody>
+        <tr><td>WebShop</td><td>「我想要無麩質零食包，價格低於 30 美元」</td><td>完整指定：商品 + 屬性 + 價格</td></tr>
+        <tr><td>SWE-bench</td><td>「separability_matrix 對巢狀 CompoundModels 算得不對」</td><td>真實的 bug 回報，寫給人看的</td></tr>
+        <tr><td>τ-bench</td><td>使用者：「嗨，我最近一筆訂單需要幫忙…」</td><td>目標藏在模擬使用者裡，隨對話逐步揭露</td></tr>
+        <tr><td>CodeClash</td><td>「改進你的程式碼庫，贏得競技場」</td><td>只有目標，沒有步驟</td></tr>
+      </tbody>
+    </table></div>
+    <p>由上到下，題目越來越開放，agent 要自己決定的事越多。</p>
+    <div class="terms"><span><em>problem statement</em>題目描述</span><span><em>deliverable</em>產出物</span><span><em>fully specified / open-ended</em>完整指定／開放式</span></div>
+    <div class="reads"><a class="rd" data-slug="Yao2022_WebShop_NeurIPS2022" href="https://cs.xuyili.com/reading/Yao2022_WebShop_NeurIPS2022.html" target="_blank" rel="noopener">WebShop</a> <a class="rd" data-slug="Jimenez2024_SWE-bench_ICLR2024" href="https://cs.xuyili.com/reading/Jimenez2024_SWE-bench_ICLR2024.html" target="_blank" rel="noopener">SWE-bench</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p35">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=35" target="_blank" rel="noopener"><b>35</b></a>
+    <div class="body">
+    <h3>環境：從抽象模擬到真實系統 <span class="en">Task Formulation: Environment</span></h3>
+    <p>Agent 在哪裡做事？一開始手上有什麼資源？</p>
+    <div class="tbl"><table>
+      <thead><tr><th>基準</th><th>環境</th><th>初始資源</th></tr></thead>
+      <tbody>
+        <tr><td>TextWorld</td><td>文字遊戲</td><td>房間描述 + 物品欄</td></tr>
+        <tr><td>WebShop</td><td>模擬商店</td><td>搜尋頁 + 商品目錄</td></tr>
+        <tr><td>WebArena</td><td>自架的真實網站副本</td><td>瀏覽器 + 網站首頁</td></tr>
+        <tr><td>SWE-bench / Terminal-bench</td><td>Docker 容器</td><td>真實 repo 或 shell + 工具</td></tr>
+        <tr><td>OSWorld</td><td>完整的作業系統虛擬機</td><td>桌面 + 真實應用程式</td></tr>
+      </tbody>
+    </table></div>
+    <div class="terms"><span><em>sandbox</em>沙盒</span><span><em>Docker container</em>Docker 容器</span><span><em>initial assets</em>初始資源</span></div>
+    <div class="reads"><a class="rd" data-slug="Xie2024_OSWorld_NeurIPSD&amp;B2024" href="https://cs.xuyili.com/reading/Xie2024_OSWorld_NeurIPSD&amp;B2024.html" target="_blank" rel="noopener">OSWorld</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p36">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=36" target="_blank" rel="noopener"><b>36</b></a>
+    <div class="body">
+    <h3>驗證：靜態 vs. 相對、二元 vs. 連續 <span class="en">Task Formulation: Verification</span> <span class="key">重點</span></h3>
+    <p>Agent 的產出怎麼計分？用兩個軸切成四格：</p>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th>靜態（對照固定參考答案）</th><th>相對（和其他 agent 或人類比）</th></tr></thead>
+      <tbody>
+        <tr><td><b>二元</b>（過／不過）</td><td>答案比對：BrowseComp<br>單元測試：SWE-bench、Terminal-Bench<br>狀態檢查：WebArena、OSWorld、τ-bench</td><td>對手間勝負：CodeClash（彙整成 Elo）</td></tr>
+        <tr><td><b>連續</b>（給分數）</td><td>部分給分：WebShop（屬性符合度）<br>分數／結果價值：TextWorld（遊戲分數）、Vending-Bench（淨資產）</td><td>相對基準線正規化：AIRS-bench（相對人類 SOTA）</td></tr>
+      </tbody>
+    </table></div>
+    <p>右側附兩個排行榜截圖（Terminal-Bench 4.0、SWE-fficiency）當作例子，數字請看原頁。</p>
+    <div class="terms"><span><em>static / relative</em>靜態／相對</span><span><em>binary / continuous</em>二元／連續</span><span><em>state check</em>狀態檢查</span><span><em>partial credit</em>部分給分</span><span><em>SOTA</em>目前最佳成績</span></div>
+    <div class="reads"><span class="none">本站未收錄</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p37">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=37" target="_blank" rel="noopener"><b>37</b></a>
+    <div class="body">
+    <h3>評測協定：跟基準無關的 agent 參數 <span class="en">Evaluation Protocol</span> <span class="key">重點</span></h3>
+    <p>這些參數不屬於基準本身，但會大幅影響分數：</p>
+    <ul>
+      <li><b>嘗試次數</b>：每個任務跑幾次 rollout？</li>
+      <li><b>終止條件</b>：最多幾輪、多少牆鐘時間、多少運算預算？還是讓 agent 自己決定何時停？</li>
+      <li><b>LM 設定</b>：推理強度（reasoning effort）、temperature 等。</li>
+      <li><b>Harness</b>：固定的，還是自帶（bring-your-own）？允許哪些工具？能不能上網？</li>
+      <li><b>彙整與回報</b>：多次執行怎麼合併？要報告哪些面向（成本、輪數、token 數）？</li>
+    </ul>
+    <p>PART 5 的「公平」和「可重現」就是要求你照著這份協定跑，偏離時要說清楚。</p>
+    <div class="terms"><span><em>rollout</em>rollout（讓 agent 實際跑一次任務）</span><span><em>wall clock time</em>牆鐘時間（實際經過的時間）</span><span><em>harness</em>harness（執行與評測 agent 的框架）</span><span><em>reasoning effort</em>推理強度</span></div>
+    <div class="reads"><a class="rd" data-slug="Zhu2025_Rigorous_Agentic_Benchmarks" href="https://cs.xuyili.com/reading/Zhu2025_Rigorous_Agentic_Benchmarks.html" target="_blank" rel="noopener">Rigorous Agentic Benchmarks（必讀）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p38">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=38" target="_blank" rel="noopener"><b>38–41</b></a>
+    <div class="body">
+    <h3>案例（一）：模擬環境 <span class="en">Case Studies: TextWorld / ALFWorld / WebShop</span></h3>
+    <p>p.38：接下來把上面的框架套到程式、網頁、使用者互動等領域的 agent 基準上。前三個都在簡化或模擬的環境中：</p>
+    <div class="tbl"><table>
+      <thead><tr><th>頁</th><th>基準</th><th>任務與環境</th><th>驗證</th></tr></thead>
+      <tbody>
+        <tr><td>39</td><td><b>TextWorld</b>（Côté 2018）</td><td>程序化產生文字冒險遊戲；agent 讀房間描述、輸入指令完成任務（例：open fridge → take carrot → go east）</td><td>遊戲分數</td></tr>
+        <tr><td>40</td><td><b>ALFWorld</b>（Shridhar 2020）</td><td>家務任務（「把乾淨的杯子放進咖啡機」），以文字遊戲形式進行，對應一個 3D 模擬器</td><td>任務是否完成</td></tr>
+        <tr><td>41</td><td><b>WebShop</b>（Yao 2022）</td><td>在模擬電商網站上買到符合使用者指令的商品，動作有 search 與 choose</td><td>買到的商品和指令的符合程度（屬性、選項、價格）</td></tr>
+      </tbody>
+    </table></div>
+    <div class="terms"><span><em>procedurally generated</em>程序化產生</span><span><em>text-adventure game</em>文字冒險遊戲</span></div>
+    <div class="reads"><a class="rd" data-slug="Yao2022_WebShop_NeurIPS2022" href="https://cs.xuyili.com/reading/Yao2022_WebShop_NeurIPS2022.html" target="_blank" rel="noopener">WebShop（p.41 直接介紹）</a> <a class="rd" data-slug="Yao2023_ReAct_ICLR2023" href="https://cs.xuyili.com/reading/Yao2023_ReAct_ICLR2023.html" target="_blank" rel="noopener">ReAct（在 ALFWorld 與 WebShop 上做實驗）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p42">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=42" target="_blank" rel="noopener"><b>42–46</b></a>
+    <div class="body">
+    <h3>案例（二）：真實系統 <span class="en">SWE-bench / WebArena / Tau-bench / Terminal-bench / OSWorld</span></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>頁</th><th>基準</th><th>任務與環境</th><th>驗證</th></tr></thead>
+      <tbody>
+        <tr><td>42</td><td><b>SWE-bench</b>（Jimenez 2023）</td><td>解決熱門 Python repo 的真實 GitHub issue；模型讀 issue 與程式碼，產出 PR</td><td>跑 repo 自己的單元測試（修改前失敗、修改後要通過）</td></tr>
+        <tr><td>43</td><td><b>WebArena</b>（Zhou 2023）</td><td>在自架的真實網站副本（購物、論壇、GitLab、地圖）完成日常網頁任務</td><td>依結果判定</td></tr>
+        <tr><td>44</td><td><b>τ-bench</b>（Yao 2024）</td><td>客服 agent 要遵守領域政策，同時和 LLM 模擬的使用者對話（例：零售、航空）</td><td>最終資料庫狀態</td></tr>
+        <tr><td>45</td><td><b>Terminal-bench</b>（Merrill 2026）</td><td>89 個來自真實工作流程的困難任務，全程在終端機完成，每個任務有自己的 Docker 環境</td><td>每個任務附的測試</td></tr>
+        <tr><td>46</td><td><b>OSWorld</b>（Xie 2024）</td><td>在完整作業系統中跨應用程式完成真實桌面任務，看螢幕截圖操作</td><td>檢查最終系統狀態</td></tr>
+      </tbody>
+    </table></div>
+    <p>共同點：環境是真實軟體（或它的副本），驗證看的是<b>結果</b>，而不是 agent 說了什麼。對照 p.36 的表格，這五個都落在「靜態 × 二元」。</p>
+    <div class="terms"><span><em>unit test</em>單元測試</span><span><em>simulated user</em>模擬使用者</span><span><em>domain policy</em>領域政策</span></div>
+    <div class="reads"><a class="rd" data-slug="Jimenez2024_SWE-bench_ICLR2024" href="https://cs.xuyili.com/reading/Jimenez2024_SWE-bench_ICLR2024.html" target="_blank" rel="noopener">SWE-bench（p.42 直接介紹）</a> <a class="rd" data-slug="Xie2024_OSWorld_NeurIPSD&amp;B2024" href="https://cs.xuyili.com/reading/Xie2024_OSWorld_NeurIPSD&amp;B2024.html" target="_blank" rel="noopener">OSWorld（p.46 直接介紹）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p47">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=47" target="_blank" rel="noopener"><b>47–50</b></a>
+    <div class="body">
+    <h3>案例（三）：開放目標與長時程 <span class="en">CodeClash / BrowseComp / VendingBench / AIRS-bench</span></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>頁</th><th>基準</th><th>任務與環境</th><th>驗證</th></tr></thead>
+      <tbody>
+        <tr><td>47</td><td><b>CodeClash</b>（Yang 2025）</td><td>Agent 在多回合錦標賽中改進自己的程式碼庫，再到程式競技場（如 Battlesnake）一對一對戰；給目標，不給指令</td><td>對戰勝負，彙整成 Elo</td></tr>
+        <tr><td>48</td><td><b>BrowseComp</b>（Wei 2025）</td><td>找出需要持續、有創意地瀏覽網頁才找得到的冷門事實，但找到後很容易驗證</td><td>答案比對</td></tr>
+        <tr><td>49</td><td><b>VendingBench</b>（Backlund 2025）</td><td>經營模擬的販賣機生意多日（庫存、定價、供應商），有 e-mail 與採購模擬、主 agent 與子 agent</td><td>最終淨資產</td></tr>
+        <tr><td>50</td><td><b>AIRS-bench</b>（Lupidi 2026）</td><td>20 個取自頂尖論文的 ML 研究任務；agent 從想法做到實驗，不提供基準線程式碼</td><td>和人類 SOTA 比較</td></tr>
+      </tbody>
+    </table></div>
+    <p>這一組把 p.34 的光譜推到「開放目標」那端，驗證也開始出現 p.36 的「相對」與「連續」兩種形式。</p>
+    <div class="terms"><span><em>tournament</em>錦標賽</span><span><em>net worth</em>淨資產</span><span><em>long-horizon</em>長時程</span></div>
+    <div class="reads"><span class="none">本站未收錄。CodeClash 為講者 John Yang 的論文</span></div>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PART 4 ============ -->
+<section class="part" id="part4">
+  <div class="part-head">
+    <span class="no">PART 4 · p.51–62 · 15 分</span>
+    <h2>什麼是「好」基準？七個性質</h2>
+    <p>挑戰性、自然、鑑別力、容易執行、容易驗證、可解讀、耐用。這些性質彼此拉扯，也會隨模型進步而改變。</p>
+  </div>
+
+  <article class="slide" id="p52">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=52" target="_blank" rel="noopener"><b>52–53</b></a>
+    <div class="body">
+    <h3>好基準的七個性質 <span class="en">"Good" Benchmarks</span> <span class="key">重點</span></h3>
+    <ul>
+      <li>七個性質：<b>挑戰性、自然、鑑別力、容易執行、容易驗證、可解讀、耐用</b>。講者說這不是完整清單，還有其他值得考慮的性質。</li>
+      <li>(a) 這些性質之間有天然的<b>張力</b>，例如越自然的任務通常越難自動驗證（見 p.58）。</li>
+      <li>(b) 基準是「活的」軟體，這些性質會隨模型演進而變。圖中用雷達圖比較 SWE-bench 剛推出時（2023）和現在，兩者形狀明顯不同；推出時挑戰性那一軸較高。</li>
+      <li>p.53 的思考方式：基準是一種<b>載具</b>，用來向別人傳達你的模型能做（或不能做）什麼。所以要讓別人盡可能容易執行你的基準。</li>
+    </ul>
+    <div class="terms"><span><em>challenging</em>具挑戰性</span><span><em>natural</em>自然（貼近真實需求）</span><span><em>discriminative</em>有鑑別力</span><span><em>interpretable</em>可解讀</span><span><em>durable</em>耐用</span></div>
+    <div class="reads"><a class="rd" data-slug="Press2024_How_to_Build_Good_LM_Benchmarks" href="https://cs.xuyili.com/reading/Press2024_How_to_Build_Good_LM_Benchmarks.html" target="_blank" rel="noopener">How to Build Good LM Benchmarks（推薦）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p54">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=54" target="_blank" rel="noopener"><b>54–56</b></a>
+    <div class="body">
+    <h3>挑戰性、自然、鑑別力 <span class="en">Challenging / Natural / Discriminative</span></h3>
+    <ul>
+      <li><b>挑戰性</b>（p.54）：任務要夠難，才能指出行為或能力上的缺口。圖中最佳分數隨時間呈 S 曲線，從推出時接近 0% 到飽和時接近 100%；中間有一段「有用的窗口」，基準在這段時間最能提供資訊。</li>
+      <li><b>自然</b>（p.55），也就是<b>真實</b>：任務反映人們真正想要做的事，而不是為了難而難。</li>
+      <li><b>鑑別力</b>（p.56）：能區分不同 LM 的基準，才看得出細微差異。</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>自然（p.55）</th><th>刻意設計（p.55）</th></tr></thead>
+      <tbody>
+        <tr><td>「解決 astropy 的這個 GitHub issue」（SWE-bench）</td><td>「每隔兩個字反轉一個字，再依長度排序」（合成謎題）</td></tr>
+        <tr><td>「依航空公司政策幫我改航班」（τ-bench）</td><td>「在 50×50 的隨機符號格子中導航」（玩具環境）</td></tr>
+        <tr><td>「接續上次的 coding session」（SWE-Together）</td><td>「沒有上下文的四選一冷知識題」（考試格式）</td></tr>
+      </tbody>
+    </table></div>
+    <div class="example">
+      <div class="row bad"><span class="lab">聚在一起</span><span>五個模型：89、90、91、90、92 → 分不出誰比較好</span></div>
+      <div class="row ok"><span class="lab">拉開</span><span>五個模型：18、34、47、61、78 → 排名清楚</span></div>
+    </div>
+    <p>鑑別力和挑戰性相關：基準接近飽和時，所有模型都擠在高分區，就失去鑑別力。</p>
+    <div class="terms"><span><em>saturated</em>飽和（模型幾乎都滿分）</span><span><em>headroom</em>進步空間</span><span><em>contrived</em>刻意設計的</span></div>
+    <div class="reads"><a class="rd" data-slug="Press2024_How_to_Build_Good_LM_Benchmarks" href="https://cs.xuyili.com/reading/Press2024_How_to_Build_Good_LM_Benchmarks.html" target="_blank" rel="noopener">How to Build Good LM Benchmarks（自然、有挑戰性）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p57">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=57" target="_blank" rel="noopener"><b>57</b></a>
+    <div class="body">
+    <h3>容易執行 <span class="en">Easy to Run</span></h3>
+    <p>讓基準能用最少的指令（最好一行）跑起來，避免需要太多步驟才能重現。</p>
+    <ul>
+      <li>用一個腳本設定好所有東西。</li>
+      <li>明確寫出系統需求。</li>
+      <li>設定要容易調整：從命令列參數設定，而不是要改程式碼。</li>
+    </ul>
+    <p>範例是兩行指令：<code>python -m swebench.harness.run_evaluation --dataset_name ... --predictions_path ...</code>，以及用 <code>uv run harbor run --agent mini-swe-agent --model ... --n-attempts 1</code> 跑 Terminal-bench 任務。</p>
+    <div class="terms"><span><em>reproduce</em>重現</span><span><em>CLI</em>命令列介面</span></div>
+    <div class="reads"><a class="rd" data-slug="Polo2024_tinyBenchmarks_ICML2024" href="https://cs.xuyili.com/reading/Polo2024_tinyBenchmarks_ICML2024.html" target="_blank" rel="noopener">tinyBenchmarks（降低評測成本）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p58">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=58" target="_blank" rel="noopener"><b>58</b></a>
+    <div class="body">
+    <h3>容易驗證 <span class="en">Easy to Verify</span> <span class="key">重點</span></h3>
+    <p>一個又難又自然的任務：「寫一部很好看的電視劇」。容易驗證代表：(a) 驗證能順暢執行，(b) 它是有用的指標。三種驗證方法各有問題：</p>
+    <div class="tbl"><table>
+      <thead><tr><th>方法</th><th>做法</th><th>問題</th></tr></thead>
+      <tbody>
+        <tr><td>LM-as-a-Judge</td><td>讓 LM 依評分標準給劇本打分</td><td>偏好長回答和自己的風格；可被鑽漏洞；結果隨提示和評審模型而變</td></tr>
+        <tr><td>真實上線評測</td><td>播出，量收視率、觀看數、留存率</td><td>受行銷干擾；一次上線只有一個樣本；一個資料點要好幾個月</td></tr>
+        <tr><td>啟發式代理</td><td>得獎、影評分數</td><td>主觀、評審團小；得獎者稀少；結果落後</td></tr>
+      </tbody>
+    </table></div>
+    <p>這就是 p.52 說的張力：自然的任務往往難驗證。SWE-bench 這類用單元測試驗證的基準之所以流行，正是因為它同時自然又容易驗證。</p>
+    <div class="terms"><span><em>LM-as-a-Judge</em>LM 評審</span><span><em>rubric</em>評分標準</span><span><em>confound</em>干擾因素</span><span><em>heuristic</em>啟發式方法</span></div>
+    <div class="reads"><a class="rd" data-slug="Zheng2023_LLM_as_a_Judge_MT-Bench_NeurIPS2023" href="https://cs.xuyili.com/reading/Zheng2023_LLM_as_a_Judge_MT-Bench_NeurIPS2023.html" target="_blank" rel="noopener">LLM-as-a-Judge 的偏差分析</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p59">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=59" target="_blank" rel="noopener"><b>59–60</b></a>
+    <div class="body">
+    <h3>可解讀與耐用 <span class="en">Interpretable / Durable</span> <span class="key">重點</span></h3>
+    <ul>
+      <li><b>可解讀</b>（p.59）：容易看懂模型在任務中做了什麼，軌跡可以拿來分析。圖例是一條失敗軌跡：讀 issue → 找相關檔案 → <b>改錯函式</b> → 跑測試 1 個失敗 → <b>仍然提交</b>。有軌跡才能定位是哪一步出錯。</li>
+      <li><b>耐用</b>（p.60）：抵抗資料污染和鑽漏洞，分數對它想量的能力要有意義，確保任務不會被 reward hack。</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>耐用的三種做法</th><th>說明</th><th>例子</th></tr></thead>
+      <tbody>
+        <tr><td>私有測試集</td><td>保留一部分測試集不公開</td><td>HLE 的私有子集</td></tr>
+        <tr><td>更新任務</td><td>在模型訓練截止日之後加入新任務</td><td>SWE-bench-Live、LiveCodeBench</td></tr>
+        <tr><td>穩健的評分器</td><td>堵住捷徑、強化測試</td><td>SWE-bench Verified</td></tr>
+      </tbody>
+    </table></div>
+    <div class="terms"><span><em>contamination</em>資料污染（測試題出現在訓練資料中）</span><span><em>training cutoff</em>訓練資料截止日</span><span><em>grader</em>評分器</span></div>
+    <div class="reads"><a class="rd" data-slug="Zhu2025_Rigorous_Agentic_Benchmarks" href="https://cs.xuyili.com/reading/Zhu2025_Rigorous_Agentic_Benchmarks.html" target="_blank" rel="noopener">Rigorous Agentic Benchmarks（評分器漏洞的實例）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p61">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=61" target="_blank" rel="noopener"><b>61</b></a>
+    <div class="body">
+    <h3>基準的生命週期 <span class="en">Benchmarks Lifecycle</span></h3>
+    <div class="flow"><span>提出</span><i>→</i><span>調整</span><i>→</i><span>飽和</span><i>→</i><span>取代</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>領域</th><th>演進</th></tr></thead>
+      <tbody>
+        <tr><td>考試</td><td>MMLU → MMLU-Pro → GPQA → HLE</td></tr>
+        <tr><td>數學</td><td>GSM8K → MATH → AIME → FrontierMath</td></tr>
+        <tr><td>聊天</td><td>MT-Bench → AlpacaEval（長度控制）→ Arena-Hard</td></tr>
+        <tr><td>程式</td><td>SWE-bench Verified → Multilingual → Pro → DeepSWE</td></tr>
+        <tr><td>電腦操作／網頁</td><td>WebShop → WebArena → OSWorld → BrowseComp</td></tr>
+        <tr><td>終端機</td><td>Terminal-Bench 1.0 → 2.1 → 4.0</td></tr>
+        <tr><td>工具使用／客服</td><td>ToolEmu → τ-bench → τ²-bench</td></tr>
+      </tbody>
+    </table></div>
+    <p>呼應 p.54 的 S 曲線：每個基準都只在一段時間內有用，飽和後就由更難、更真實的版本接手。</p>
+    <div class="terms"><span><em>CUA (computer-use agent)</em>電腦操作 agent</span></div>
+    <div class="reads"><a class="rd" data-slug="Zheng2023_LLM_as_a_Judge_MT-Bench_NeurIPS2023" href="https://cs.xuyili.com/reading/Zheng2023_LLM_as_a_Judge_MT-Bench_NeurIPS2023.html" target="_blank" rel="noopener">MT-Bench（聊天那一列的起點）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p62">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=62" target="_blank" rel="noopener"><b>62</b></a>
+    <div class="body">
+    <h3>好基準檢查清單 <span class="en">"Good" Benchmarks Checklist</span> <span class="key">重點</span></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>性質</th><th>要問的問題</th></tr></thead>
+      <tbody>
+        <tr><td>挑戰性</td><td>模型還有進步空間嗎？</td></tr>
+        <tr><td>自然</td><td>任務反映真實的工作嗎？</td></tr>
+        <tr><td>鑑別力</td><td>能區分你在意的那些系統嗎？</td></tr>
+        <tr><td>容易執行</td><td>同學能在一個下午內跑完嗎？</td></tr>
+        <tr><td>容易驗證</td><td>任務能自動且正確地驗證嗎？</td></tr>
+        <tr><td>可解讀</td><td>Agent 失敗時，你看得出原因嗎？</td></tr>
+        <tr><td>耐用</td><td>能抵抗捷徑和資料污染嗎？</td></tr>
+      </tbody>
+    </table></div>
+    <div class="reads"><a class="rd" data-slug="Press2024_How_to_Build_Good_LM_Benchmarks" href="https://cs.xuyili.com/reading/Press2024_How_to_Build_Good_LM_Benchmarks.html" target="_blank" rel="noopener">How to Build Good LM Benchmarks</a></div>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PART 5 ============ -->
+<section class="part" id="part5">
+  <div class="part-head">
+    <span class="no">PART 5 · p.63–71 · 10 分</span>
+    <h2>什麼讓分數可信？</h2>
+    <p>好基準管的是任務定義；可信分數管的是你有沒有照評測協定跑。四個要求：公平、可重現、透明、誠實。</p>
+  </div>
+
+  <article class="slide" id="p64">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=64" target="_blank" rel="noopener"><b>64</b></a>
+    <div class="body">
+    <h3>好基準 vs. 可信分數 <span class="en">What makes a score trustworthy?</span> <span class="key">重點</span></h3>
+    <ul>
+      <li>好基準提供的是<b>有效任務定義</b>的準則（PART 4）。</li>
+      <li>分數可不可信，則是關於<b>遵守評測協定</b>的最佳實務。</li>
+    </ul>
+    <div class="flow"><span>基準<br><small>別人的任務定義</small></span><i>+</i><span>你的 agent<br><small>模型 + scaffold</small></span><i>→</i><span>評測協定<br><small>公平／可重現／透明／誠實</small></span><i>→</i><span>你的分數<br><small>能和排行榜比較</small></span></div>
+    <div class="reads"><a class="rd" data-slug="Zhu2025_Rigorous_Agentic_Benchmarks" href="https://cs.xuyili.com/reading/Zhu2025_Rigorous_Agentic_Benchmarks.html" target="_blank" rel="noopener">Rigorous Agentic Benchmarks（必讀）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p65">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=65" target="_blank" rel="noopener"><b>65–66</b></a>
+    <div class="body">
+    <h3>公平與可重現 <span class="en">Fair / Reproducible</span></h3>
+    <ul>
+      <li><b>公平</b>（p.65）：照協定跑，排行榜上的數字才能互相比較。要對齊基準規定的：scaffold 與工具、輪數／時間／成本預算、模型設定、每題嘗試次數、網路與資源存取。偏離時要說清楚怎麼偏、為什麼。</li>
+      <li><b>可重現</b>（p.66）：把所有模型與系統細節寫明，讓別人能得到同樣的數字。</li>
+    </ul>
+    <div class="example">
+      <div class="row"><span class="lab">48%</span><span>最簡 scaffold，1 次嘗試</span></div>
+      <div class="row"><span class="lab">61%</span><span>客製 scaffold，1 次嘗試</span></div>
+      <div class="row bad"><span class="lab">72%</span><span>客製 scaffold，5 次取最好</span></div>
+    </div>
+    <p>同一個模型，只改協定就從 48% 變 72%。這三個數字不能放在同一張排行榜上比。</p>
+    <p>p.66 的「全部釘死」範例：<code>model: my-model-2026-05-01</code>、<code>reasoning_effort: high</code>、<code>temperature: 0.0</code>、<code>harness: mini-swe-agent==1.4.2</code>、<code>dataset: swe-bench-verified@a1b2c3d</code>、<code>image: sha256:…</code>、<code>seeds: [0,1,2,3,4]</code>。模型快照、harness 版本、資料集 commit、映像檔雜湊都要固定。</p>
+    <div class="terms"><span><em>pin (a version)</em>釘選版本</span><span><em>model snapshot</em>模型快照</span><span><em>seed</em>隨機種子</span><span><em>best of 5</em>五次取最佳</span></div>
+    <div class="reads"><a class="rd" data-slug="Zhu2025_Rigorous_Agentic_Benchmarks" href="https://cs.xuyili.com/reading/Zhu2025_Rigorous_Agentic_Benchmarks.html" target="_blank" rel="noopener">Rigorous Agentic Benchmarks</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p67">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=67" target="_blank" rel="noopener"><b>67</b></a>
+    <div class="body">
+    <h3>透明：不只報一個數字 <span class="en">Transparent</span> <span class="key">重點</span></h3>
+    <p>要報告的不只是分數，還有執行次數、誤差範圍、成本、設定。範例（DeepSWE 排行榜，Datacurve，2026 年 7 月；每題 4 次執行的 pass@1，mini-SWE-agent harness）：</p>
+    <div class="tbl"><table>
+      <thead><tr><th>模型</th><th>pass@1</th><th>± CI</th><th>每題成本</th><th>輸出 token</th><th>步數</th></tr></thead>
+      <tbody>
+        <tr><td>claude-fable-5 [max]</td><td>70%</td><td>±4%</td><td>$21.63</td><td>119k</td><td>88</td></tr>
+        <tr><td>gpt-5.5 [xhigh]</td><td>67%</td><td>±6%</td><td>$7.23</td><td>46k</td><td>82</td></tr>
+      </tbody>
+    </table></div>
+    <p>解讀：表面上 70% &gt; 67%，但 3% 的差距落在誤差範圍內，而且高分的那個每題貴 3 倍。</p>
+    <p>驗算：區間分別是 66–74% 和 61–73%，確實重疊；$21.63 ÷ $7.23 ≈ 2.99，約 3 倍，與投影片相符。</p>
+    <div class="terms"><span><em>pass@1</em>pass@1（單次嘗試的成功率）</span><span><em>confidence interval (CI)</em>信賴區間</span><span><em>error bar</em>誤差範圍</span></div>
+    <div class="reads"><a class="rd" data-slug="Zhu2025_Rigorous_Agentic_Benchmarks" href="https://cs.xuyili.com/reading/Zhu2025_Rigorous_Agentic_Benchmarks.html" target="_blank" rel="noopener">Rigorous Agentic Benchmarks（報告實務）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p68">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=68" target="_blank" rel="noopener"><b>68</b></a>
+    <div class="body">
+    <h3>誠實：測試集只用來量，不用來調 <span class="en">Honest</span></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>原則</th><th>反例</th></tr></thead>
+      <tbody>
+        <tr><td>不要在測試集上調參</td><td>2015 年 ImageNet 競賽中，一支隊伍因為對測試集提交太多次而被取消資格。</td></tr>
+        <tr><td>不要挑最好的那次</td><td>其實跑了 10 次，卻報 pass@1：這等於挑出「最幸運」的那次當結果。</td></tr>
+        <tr><td>發布你報告的那個系統</td><td>報的數字要來自你開源的系統。不要用一個變體衝排行榜，再發布另一個。</td></tr>
+      </tbody>
+    </table></div>
+    <p>這是 p.28 Goodhart 定律在「報告」端的版本：把測試分數當目標，分數就不再代表能力。</p>
+    <div class="terms"><span><em>test set</em>測試集</span><span><em>cherry-pick</em>挑好的報</span></div>
+    <div class="reads"><span class="none">本站未收錄</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p69">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=69" target="_blank" rel="noopener"><b>69</b></a>
+    <div class="body">
+    <h3>可信分數檢查清單 <span class="en">Trustworthy Score Checklist</span> <span class="key">重點</span></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>要求</th><th>要問的問題</th></tr></thead>
+      <tbody>
+        <tr><td>公平</td><td>你用了基準規定的 harness、預算和設定嗎？如果沒有，有說明怎麼偏離嗎？</td></tr>
+        <tr><td>可重現</td><td>模型快照、harness、資料集、映像檔的版本都釘選並記錄了嗎？</td></tr>
+        <tr><td>透明</td><td>有報告執行次數、誤差範圍、成本和被排除的任務嗎？</td></tr>
+        <tr><td>誠實</td><td>有避免在測試集上調參、挑最好的那次嗎？被評測的系統就是你要發布的那個嗎？</td></tr>
+      </tbody>
+    </table></div>
+    <div class="reads"><a class="rd" data-slug="Zhu2025_Rigorous_Agentic_Benchmarks" href="https://cs.xuyili.com/reading/Zhu2025_Rigorous_Agentic_Benchmarks.html" target="_blank" rel="noopener">Rigorous Agentic Benchmarks（必讀）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p71">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture13.pdf#page=70" target="_blank" rel="noopener"><b>70–71</b></a>
+    <div class="body">
+    <h3>總結 <span class="en">Summary</span> <span class="key">重點</span></h3>
+    <ul>
+      <li>要改進 LM agent 系統，就得知道怎麼量它的行為和表現。基準是做這件事的主要工具。</li>
+      <li>基準在概念上可以拆成三個關鍵組成：<b>題目、環境、指標</b>。</li>
+      <li><b>協定</b>定義了在基準上跑 LM agent 的超參數，確保所有系統能公平比較。</li>
+      <li>沒有一個評測能統管一切。要大致說出一個模型有多強，靠的是追蹤許多基準。</li>
+    </ul>
+    <p>下一講會繼續談 agent 評測的細節。</p>
+    <p><b>自我檢查</b>，不看資料能回答的話就可以進入下一講：</p>
+    <ul>
+      <li>Agent 基準和考試型基準在輸入、互動、輸出上各差在哪裡？任務定義的三塊和評測協定各包含什麼？（p.30–37）</li>
+      <li>為什麼「又自然又容易驗證」很難兼得？舉 p.58 的三種驗證方法各一個缺點。（p.52、p.58）</li>
+      <li>p.67 的兩個模型，為什麼不能直接說 70% 的那個比較強？p.65 的 48% 和 72% 又差在哪？（p.65–67）</li>
+    </ul>
+    <div class="reads"><a class="rd" data-slug="Zhu2025_Rigorous_Agentic_Benchmarks" href="https://cs.xuyili.com/reading/Zhu2025_Rigorous_Agentic_Benchmarks.html" target="_blank" rel="noopener">Rigorous Agentic Benchmarks（必讀）</a></div>
+    </div>
+  </article>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section class="gloss" id="glossary">
+  <h2>術語表</h2>
+  <p style="color:var(--muted);margin:0 0 8px">本講出現的主要術語，依出現順序排列。</p>
+  <div class="tbl"><table>
+    <thead><tr><th>英文</th><th>中文</th><th>一句話解釋</th></tr></thead>
+    <tbody>
+      <tr><td>benchmark</td><td>基準</td><td>一組提示或任務，加上報告表現的指標</td></tr>
+      <tr><td>cross-entropy loss</td><td>交叉熵損失</td><td>LM 的訓練目標，正確 token 的負對數機率</td></tr>
+      <tr><td>extractive QA</td><td>抽取式問答</td><td>答案是原文中某一段的問答任務，如 SQuAD</td></tr>
+      <tr><td>natural language inference (NLI)</td><td>自然語言推論</td><td>判斷假設和前提是蘊含、中立還是矛盾</td></tr>
+      <tr><td>few-shot</td><td>少樣本</td><td>在提示中附幾個範例</td></tr>
+      <tr><td>win rate / Elo</td><td>勝率／Elo 分數</td><td>聊天基準用兩兩比較結果算出的指標</td></tr>
+      <tr><td>length-controlled</td><td>長度控制</td><td>扣除回答長度對評審偏好的影響</td></tr>
+      <tr><td>red-teaming</td><td>紅隊測試</td><td>刻意攻擊模型以找出安全弱點</td></tr>
+      <tr><td>metric</td><td>指標</td><td>把表現化成數字的方式</td></tr>
+      <tr><td>scaffold</td><td>scaffold</td><td>包在 LM 外面的 agent 框架程式</td></tr>
+      <tr><td>Goodhart's Law</td><td>Goodhart 定律</td><td>指標一旦變成目標，就不再是好指標</td></tr>
+      <tr><td>reward hacking</td><td>獎勵駭取</td><td>用捷徑拿到分數，而不是真的完成任務</td></tr>
+      <tr><td>environment</td><td>環境</td><td>Agent 行動的地方，如 repo、網站、作業系統</td></tr>
+      <tr><td>trajectory</td><td>軌跡</td><td>Agent 行動與觀察的完整紀錄</td></tr>
+      <tr><td>verifier</td><td>驗證器</td><td>依最終狀態或軌跡給分的機制</td></tr>
+      <tr><td>task formulation</td><td>任務定義</td><td>題目、環境、驗證三塊組成的基準本體</td></tr>
+      <tr><td>evaluation protocol</td><td>評測協定</td><td>嘗試次數、預算、模型設定、harness 等執行參數</td></tr>
+      <tr><td>problem statement</td><td>題目描述</td><td>告訴 agent 要做什麼、交出什麼</td></tr>
+      <tr><td>static / relative verification</td><td>靜態／相對驗證</td><td>對照固定答案，或和其他 agent／人類比較</td></tr>
+      <tr><td>binary / continuous score</td><td>二元／連續分數</td><td>過或不過，或給一個分數</td></tr>
+      <tr><td>state check</td><td>狀態檢查</td><td>檢查環境最終狀態是否符合預期</td></tr>
+      <tr><td>partial credit</td><td>部分給分</td><td>部分達成也給分，如 WebShop 的屬性符合度</td></tr>
+      <tr><td>rollout</td><td>rollout</td><td>讓 agent 實際跑一次任務</td></tr>
+      <tr><td>harness</td><td>harness</td><td>執行與評測 agent 的框架</td></tr>
+      <tr><td>simulated user</td><td>模擬使用者</td><td>由 LLM 扮演的使用者，如 τ-bench</td></tr>
+      <tr><td>challenging</td><td>具挑戰性</td><td>還有進步空間，能指出能力缺口</td></tr>
+      <tr><td>natural</td><td>自然</td><td>任務反映真實需求，不是為難而難</td></tr>
+      <tr><td>discriminative</td><td>有鑑別力</td><td>能把不同系統的分數拉開</td></tr>
+      <tr><td>saturated</td><td>飽和</td><td>模型幾乎都滿分，基準失去作用</td></tr>
+      <tr><td>LM-as-a-Judge</td><td>LM 評審</td><td>讓 LM 依評分標準打分</td></tr>
+      <tr><td>rubric</td><td>評分標準</td><td>列出評分依據的清單</td></tr>
+      <tr><td>interpretable</td><td>可解讀</td><td>看得出 agent 怎麼做、為何失敗</td></tr>
+      <tr><td>durable</td><td>耐用</td><td>抵抗資料污染與鑽漏洞</td></tr>
+      <tr><td>contamination</td><td>資料污染</td><td>測試題出現在模型訓練資料中</td></tr>
+      <tr><td>pin (a version)</td><td>釘選版本</td><td>固定模型、harness、資料集的確切版本</td></tr>
+      <tr><td>pass@1</td><td>pass@1</td><td>單次嘗試的成功率</td></tr>
+      <tr><td>confidence interval (CI)</td><td>信賴區間</td><td>分數的誤差範圍</td></tr>
+      <tr><td>cherry-pick</td><td>挑好的報</td><td>從多次結果中只報最好的</td></tr>
+    </tbody>
+  </table></div>
+</section>
+</div>
+
+
+<script>
+(function(){
+  var BASES={online:"https://cs.xuyili.com/reading/",local:"http://127.0.0.1:8329/reading/"};
+  var btns=document.querySelectorAll(".seg button");
+  function apply(mode){
+    document.querySelectorAll("a.rd").forEach(function(a){
+      a.href=BASES[mode]+encodeURIComponent(a.dataset.slug).replace(/%26/g,"&")+".html";
+    });
+    btns.forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.mode===mode));});
+  }
+  var saved="online";
+  try{saved=localStorage.getItem("l13-linkmode")||"online";}catch(e){}
+  if(!BASES[saved])saved="online";
+  apply(saved);
+  btns.forEach(function(b){b.addEventListener("click",function(){
+    apply(b.dataset.mode);
+    try{localStorage.setItem("l13-linkmode",b.dataset.mode);}catch(e){}
+  });});
+})();
+</script>
+
+</body></html>

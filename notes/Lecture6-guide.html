@@ -1,0 +1,943 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>CS329Z Lecture 6 導讀</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;800&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: 窄欄閱讀稿 + 左側頁碼欄（像講義旁註），段落導覽固定在頂部 */
+:root{
+  --paper:#f5f6f8; --sheet:#ffffff; --ink:#1a2130; --muted:#5b6475; --rule:#dde1e8;
+  --cardinal:#8c1515; --cardinal-soft:#f6e9e9; --link:#1d5c8f; --chip:#eef1f5; --key:#b5650d; --key-soft:#fbf0e2;
+  --f-display:"Noto Serif TC","Songti TC",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#12151b; --sheet:#1a1e26; --ink:#e6e9ef; --muted:#9aa3b3; --rule:#2c323d;
+  --cardinal:#e07a7a; --cardinal-soft:#2e1d20; --link:#7db5e3; --chip:#232934; --key:#e8a55a; --key-soft:#2d2318; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#12151b; --sheet:#1a1e26; --ink:#e6e9ef; --muted:#9aa3b3; --rule:#2c323d;
+  --cardinal:#e07a7a; --cardinal-soft:#2e1d20; --link:#7db5e3; --chip:#232934; --key:#e8a55a; --key-soft:#2d2318; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.75;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.wrap{max-width:860px;margin:0 auto}
+a{color:var(--link)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--cardinal);outline-offset:2px;border-radius:4px}
+h1,h2{font-family:var(--f-display);text-wrap:balance;line-height:1.3}
+
+header.top{padding-block:40px 20px}
+.eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;color:var(--cardinal);text-transform:uppercase}
+h1{font-size:clamp(28px,5vw,40px);margin:.2em 0 .3em;font-weight:800}
+.lede{color:var(--muted);max-width:62ch;margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-size:14px;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:500}
+
+.howto{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:18px 20px;margin-top:22px;display:grid;gap:10px}
+.howto h2{font-size:17px;margin:0}
+.howto ul{margin:0;padding-left:1.2em;color:var(--ink)}
+.howto li{margin:2px 0}
+.linkmode{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:999px;overflow:hidden}
+.seg button{font:inherit;font-size:13.5px;border:0;background:transparent;color:var(--muted);padding:4px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--cardinal);color:var(--sheet)}
+
+.best{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.best a{display:block;text-decoration:none;background:var(--cardinal-soft);border-radius:8px;padding:12px 14px;color:var(--ink);min-width:0}
+.best a small{display:block;font-family:var(--f-mono);font-size:12px;color:var(--cardinal)}
+.best a span{font-weight:700}
+
+nav.parts{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--rule);
+  margin-top:28px;padding-block:10px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav.parts a{flex:none;font-size:13.5px;text-decoration:none;color:var(--muted);border:1px solid var(--rule);border-radius:999px;padding:3px 12px;background:var(--sheet)}
+nav.parts a:hover{color:var(--cardinal);border-color:var(--cardinal)}
+
+section.part{margin-top:40px}
+.part-head{display:grid;gap:4px;margin-bottom:14px}
+.part-head .no{font-family:var(--f-mono);font-size:12.5px;color:var(--cardinal);letter-spacing:.06em}
+.part-head h2{font-size:clamp(22px,3.6vw,28px);margin:0}
+.part-head p{margin:0;color:var(--muted);max-width:64ch}
+
+.slide{display:grid;grid-template-columns:76px minmax(0,1fr);gap:16px;padding-block:18px;border-top:1px solid var(--rule)}
+.pg{font-family:var(--f-mono);font-size:13px;text-decoration:none;color:var(--muted);line-height:1.4;padding-top:3px}
+.pg b{display:block;font-size:17px;font-weight:600;color:var(--ink)}
+.pg:hover b{color:var(--cardinal)}
+.pg i{font-style:normal;font-size:11.5px}
+.body{min-width:0}
+.body h3{margin:0;font-size:18px;font-weight:700;line-height:1.45;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.body h3 .en{font-family:var(--f-mono);font-size:13px;font-weight:400;color:var(--muted)}
+.key{font-size:11.5px;font-weight:700;color:var(--key);background:var(--key-soft);border-radius:4px;padding:1px 7px;letter-spacing:.04em}
+.img-only{font-size:11.5px;color:var(--muted);border:1px dashed var(--rule);border-radius:4px;padding:0 6px}
+.body ul{margin:8px 0 0;padding-left:1.15em}
+.body li{margin:3px 0}
+.body p{margin:8px 0 0}
+.terms{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.terms span{font-size:13px;background:var(--chip);border-radius:5px;padding:1px 8px;color:var(--ink)}
+.terms span em{font-style:normal;font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-right:5px}
+.reads{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:14px}
+.reads::before{content:"對應閱讀";font-size:12px;color:var(--cardinal);font-weight:700;letter-spacing:.04em;padding-top:2px}
+.reads a{text-decoration-thickness:1px;text-underline-offset:3px}
+.reads .none{color:var(--muted)}
+
+.example{margin-top:10px;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;font-size:14.5px;overflow-x:auto}
+.example .row{display:grid;grid-template-columns:88px minmax(0,1fr);gap:10px;padding-block:3px}
+.example .lab{font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.ok{color:#2f7a3d}
+.bad{color:var(--cardinal)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ok{color:#7fcf8c}}
+:root[data-theme="dark"] .ok{color:#7fcf8c}
+
+.tbl{overflow-x:auto;margin-top:10px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-size:12.5px;color:var(--muted);font-weight:500}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px;font-size:14px}
+.flow span{background:var(--chip);border-radius:6px;padding:3px 10px}
+.flow i{font-style:normal;color:var(--muted)}
+
+.gloss{margin-top:48px}
+.gloss h2{font-size:26px;margin:0 0 6px}
+.gloss td:first-child{font-family:var(--f-mono);font-size:13.5px;white-space:nowrap}
+footer{margin-top:40px;font-size:13px;color:var(--muted)}
+
+@media (max-width:560px){
+  .slide{grid-template-columns:1fr;gap:6px}
+  .pg{display:flex;gap:8px;align-items:baseline}
+  .pg b{display:inline}
+  .example .row{grid-template-columns:1fr;gap:0}
+}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<style>
+pre.code{margin:10px 0 0;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;font-family:var(--f-mono);font-size:13px;line-height:1.6;overflow-x:auto;white-space:pre}
+pre.code .c{color:var(--muted)}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Stanford CS 329Z · Lecture 6 · 86 頁</div>
+  <h1>Agent Design Patterns &amp; Scaffolds 中文導讀</h1>
+  <p class="lede">逐頁整理重點、翻譯術語，並標出每頁對應本站哪篇已翻譯的文章。這講把前幾講的零件組成「設計模式」：先回顧 workflow 與 agent 的差別，接著介紹五種 workflow 模式、四類 agent 推理／行動模式（ReAct、Reflexion、CodeAct、先規劃再執行），再講五種管理上下文的模式，最後拆解一個極簡的 agent harness：Pi。投影片大多是論文圖表，本導讀已看過抽得出的圖，把例子和數字整理出來。</p>
+  <div class="meta">
+    <span>講者 <b>Diyi Yang、Michael Ryan、John Yang</b></span>
+    <span>日期 <b>10/12（第 4 週）</b></span>
+    <span>原檔 <a href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf" target="_blank" rel="noopener">lecture06.pdf ↗</a></span>
+  </div>
+
+  <div class="howto">
+    <h2>怎麼用這頁</h2>
+    <ul>
+      <li>左側的<b>頁碼</b>可直接跳到官方 PDF 的那一頁。合併的卡片會跳到範圍的第一頁。</li>
+      <li>標了 <span class="key">重點</span> 的頁面是整講的核心，時間不夠時先讀這些。</li>
+      <li>標了 <span class="img-only">圖片頁</span> 的頁面以向量圖為主，抽不出文字也抽不出圖，請直接看 PDF 原頁。</li>
+      <li>整講的主軸是一個問題：<b>控制流程交給程式還是交給模型？</b>每一種模式都是在這兩端之間找平衡。開場那句「模式只做了一半，剩下要你自己完成」，也是讀這講的心態。</li>
+    </ul>
+    <div class="linkmode">
+      <span>譯文連結指向：</span>
+      <span class="seg" role="group" aria-label="譯文連結指向">
+        <button type="button" id="mode-online" data-mode="online" aria-pressed="true">線上 cs.xuyili.com</button>
+        <button type="button" id="mode-local" data-mode="local" aria-pressed="false">本地 127.0.0.1:8329</button>
+      </span>
+    </div>
+  </div>
+
+  <div class="best">
+    <a class="rd" data-slug="Schluntz2024_Building_Effective_Agents_Anthropic" href="https://cs.xuyili.com/reading/Schluntz2024_Building_Effective_Agents_Anthropic.html" target="_blank" rel="noopener"><small>必讀 · Part 1–3 的圖全出自這篇</small><span>Building Effective Agents</span></a>
+    <a class="rd" data-slug="Yao2023_ReAct_ICLR2023" href="https://cs.xuyili.com/reading/Yao2023_ReAct_ICLR2023.html" target="_blank" rel="noopener"><small>必讀 · Part 3 第一個模式</small><span>ReAct</span></a>
+    <a class="rd" data-slug="Rajasekaran2025_Effective_Context_Engineering_Anthropic" href="https://cs.xuyili.com/reading/Rajasekaran2025_Effective_Context_Engineering_Anthropic.html" target="_blank" rel="noopener"><small>搭配 · Part 4 上下文工程</small><span>Effective Context Engineering</span></a>
+  </div>
+</header>
+
+<nav class="parts" aria-label="段落">
+  <a href="#part0">0 開場</a>
+  <a href="#part1">1 Workflow vs Agent</a>
+  <a href="#part2">2 Workflow 模式</a>
+  <a href="#part3">3 推理／行動模式</a>
+  <a href="#part4">4 上下文模式</a>
+  <a href="#part5">5 案例：Pi</a>
+  <a href="#part6">6 總結</a>
+  <a href="#glossary">術語表</a>
+</nav>
+
+<!-- ============ PART 0 ============ -->
+<section class="part" id="part0">
+  <div class="part-head">
+    <span class="no">PART 0 · p.1–7</span>
+    <h2>開場：什麼是設計模式</h2>
+    <p>借用軟體工程「設計模式」的概念，說明今天要學的是可以改造的範本，而不是標準答案。</p>
+  </div>
+
+  <article class="slide" id="p1">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=1" target="_blank" rel="noopener"><b>1–2</b></a>
+    <div class="body">
+      <h3>封面與公告 <span class="en">Agent Design Patterns and Scaffolds · Announcements</span></h3>
+      <ul>
+        <li>公告：Google 雲端額度申請請盡快完成；專題報告要用 ICLR 格式，提案階段從寬，但期中與期末報告會嚴格要求。</li>
+        <li>時程：HW1 10/30（週五）截止；期中 demo 11/4、期中報告 11/6。</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="slide" id="p3">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=3" target="_blank" rel="noopener"><b>3–5</b></a>
+    <div class="body">
+      <h3>設計模式只做了一半 <span class="en">Design Patterns · Martin Fowler</span></h3>
+      <ul>
+        <li>p.3 放了 refactoring.guru 的 Singleton（單例）設計模式插圖，用軟體工程裡熟悉的「設計模式」開場。</li>
+        <li>p.4 引用 Martin Fowler（《企業應用架構模式》作者）：「模式都是半成品，你永遠得自己把它完成，並調整到適合你的環境。」</li>
+        <li>p.5：做 agent 系統時要做很多設計決策。今天介紹的是設計模式，實務上你會再依需求客製。</li>
+      </ul>
+      <div class="terms"><span><em>design pattern</em>設計模式</span><span><em>scaffold</em>腳手架（包在模型外的程式結構）</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p6">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=6" target="_blank" rel="noopener"><b>6–7</b></a>
+    <div class="body">
+      <h3>學習目標與大綱 <span class="en">Learning Objectives · Lecture Overview</span></h3>
+      <ul>
+        <li><b>學習目標</b>：定義 workflow 和 agent 常見的設計模式；比較各種管理 agent 上下文的模式；分析一個實際上線的 agent harness（Pi）裡做了哪些設計決策。</li>
+        <li>大綱：回顧 workflow vs agent（5 分）→ workflow 設計模式（15 分）→ agent 模式：推理／行動（20 分）→ agent 模式：上下文（20 分）→ 案例 Pi（10 分）。</li>
+        <li>p.8、13、31、55、76、84 是同一張進度條當分隔頁，標示目前講到哪一段。</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PART 1 ============ -->
+<section class="part" id="part1">
+  <div class="part-head">
+    <span class="no">PART 1 · p.8–12 · 約 5 分鐘</span>
+    <h2>回顧：Workflow 與 Agent</h2>
+    <p>差別只有一個：控制流程在程式手上，還是在模型手上。</p>
+  </div>
+
+  <article class="slide" id="p9">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=9" target="_blank" rel="noopener"><b>9–10</b></a>
+    <div class="body">
+      <h3>控制流程在哪裡？ <span class="en">Where does the control flow lie?</span><span class="key">重點</span></h3>
+      <p>p.9 是 Lecture 5 那張光譜圖的簡化版：</p>
+      <div class="tbl"><table>
+        <thead><tr><th></th><th>模型 Model</th><th>Workflow／複合 AI 系統</th><th>Agent</th></tr></thead>
+        <tbody>
+          <tr><td>角色</td><td>大系統裡的一小塊</td><td>邏輯和編排<b>寫在程式裡</b></td><td>控制流程<b>交給 AI 模型</b></td></tr>
+          <tr><td>例子</td><td>GPT-6 Sol、Claude Fable 5.1</td><td>email 分類器、新聞摘要器</td><td>客服 agent、coding agent</td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li>p.10（圖出自 LangChain〈How to think about agent frameworks〉）：workflow 的控制流程在程式邏輯裡，所以<b>比較好預測</b>；agent 的控制流程由 LLM 決定，所以<b>比較能適應、比較彈性</b>。</li>
+      </ul>
+      <div class="terms"><span><em>control flow</em>控制流程</span><span><em>compound AI system</em>複合 AI 系統</span><span><em>orchestration</em>編排</span></div>
+      <div class="reads">
+        <a class="rd" data-slug="Zaharia2024_Compound_AI_Systems_BAIR_blog" href="https://cs.xuyili.com/reading/Zaharia2024_Compound_AI_Systems_BAIR_blog.html" target="_blank" rel="noopener">Compound AI Systems（BAIR 部落格）</a>
+        <a class="rd" data-slug="Schluntz2024_Building_Effective_Agents_Anthropic" href="https://cs.xuyili.com/reading/Schluntz2024_Building_Effective_Agents_Anthropic.html" target="_blank" rel="noopener">Building Effective Agents（workflow 與 agent 的定義）</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="slide" id="p11">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=11" target="_blank" rel="noopener"><b>11</b></a>
+    <div class="body">
+      <h3>Workflow vs Agent 的例子 <span class="en">Workflows vs Agents (Example)</span><span class="img-only">圖片頁</span></h3>
+      <p>這頁只抽得到標題，內容是一張對照圖，請看原頁。下一頁的表格用文字整理了同一個比較。</p>
+    </div>
+  </article>
+
+  <article class="slide" id="p12">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=12" target="_blank" rel="noopener"><b>12</b></a>
+    <div class="body">
+      <h3>Workflow 與 Agent 對照表 <span class="en">Workflows vs Agents</span><span class="key">重點</span></h3>
+      <div class="tbl"><table>
+        <thead><tr><th></th><th>Workflow</th><th>Agent</th></tr></thead>
+        <tbody>
+          <tr><td>控制流程</td><td>程式</td><td>LLM</td></tr>
+          <tr><td>如何應變</td><td>事先寫死的分支、路由和迴圈</td><td>依觀察結果決定下一步</td></tr>
+          <tr><td>適合</td><td>結構清楚、會重複的任務</td><td>需要探索和彈性判斷的任務</td></tr>
+          <tr><td>例子</td><td>分類客服單 → 撈出相關規定 → 草擬自動回覆</td><td>用工具調查並解決客服單上的問題</td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li><b>真實系統常常同時用到 workflow 和 agent。</b>後面的 STORM、ReWOO、Pi 都是例子。</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PART 2 ============ -->
+<section class="part" id="part2">
+  <div class="part-head">
+    <span class="no">PART 2 · p.13–30 · 約 15 分鐘</span>
+    <h2>Workflow 設計模式</h2>
+    <p>Anthropic 整理的五種基本模式，以及兩個把它們組合起來的研究系統：STORM 與 Archon。</p>
+  </div>
+
+  <article class="slide" id="p14">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=14" target="_blank" rel="noopener"><b>14–15</b></a>
+    <div class="body">
+      <h3>五種 workflow 模式總覽 <span class="en">Anthropic Workflow Taxonomy · Workflow Design Patterns</span><span class="key">重點</span></h3>
+      <p>p.14 是 Anthropic〈Building Effective Agents〉的分類圖（向量圖，請看原頁）。p.15 用文字列出五種：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>模式</th><th>做法</th><th>什麼時候用</th></tr></thead>
+        <tbody>
+          <tr><td>提示鏈 Prompt Chaining</td><td>把問題拆成幾個小步驟，前一步輸出接到下一步</td><td>任務複雜、拆開會比較準</td></tr>
+          <tr><td>路由 Routing</td><td>先分類，再交給合適的 LLM 處理</td><td>輸入有幾種明顯不同的類型</td></tr>
+          <tr><td>平行化 Parallelization</td><td>把工作分給多條平行的呼叫</td><td>子任務彼此獨立，或想多跑幾次取共識</td></tr>
+          <tr><td>協調者–工作者 Orchestrator-Workers</td><td>一個 LLM 找出子任務，再派給工作者完成</td><td>事先不知道要拆成哪些、幾個子任務</td></tr>
+          <tr><td>評估者–優化者 Evaluator-Optimizer</td><td>產生輸出 → 評語 → 修改，反覆進行</td><td>有清楚的評分標準，而且修改確實有幫助</td></tr>
+        </tbody>
+      </table></div>
+      <div class="terms"><span><em>prompt chaining</em>提示鏈</span><span><em>routing</em>路由</span><span><em>parallelization</em>平行化</span><span><em>orchestrator-workers</em>協調者–工作者</span><span><em>evaluator-optimizer</em>評估者–優化者</span></div>
+      <div class="reads">
+        <a class="rd" data-slug="Schluntz2024_Building_Effective_Agents_Anthropic" href="https://cs.xuyili.com/reading/Schluntz2024_Building_Effective_Agents_Anthropic.html" target="_blank" rel="noopener">Building Effective Agents（本頁直接引用）</a>
+        <a class="rd" data-slug="Ng2024_Agentic_Design_Patterns_TheBatch" href="https://cs.xuyili.com/reading/Ng2024_Agentic_Design_Patterns_TheBatch.html" target="_blank" rel="noopener">Agentic Design Patterns（吳恩達的另一種分法）</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="slide" id="p16">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=16" target="_blank" rel="noopener"><b>16–17</b></a>
+    <div class="body">
+      <h3>提示鏈與路由 <span class="en">Prompt Chaining · Routing</span></h3>
+      <ul>
+        <li><b>提示鏈</b>（p.16）：把大任務拆成一連串小步驟。這是<b>用延遲換準確度</b>：多了幾次呼叫，但每次只做一件簡單的事。適合複雜、拆開會更好做的任務。</li>
+        <li><b>路由</b>（p.17）：先把輸入分類，再交給適合的 LLM，可以是不同模型，也可以是不同 prompt。適合一個大任務底下有幾種要分開處理的類別。</li>
+        <li>路由也能<b>省錢、省時間</b>：簡單的情況交給較弱、較便宜的模型。</li>
+      </ul>
+      <p>兩張圖都出自〈Building Effective Agents〉，原文對每個模式都有附例子，例如提示鏈的「先寫行銷文案，再翻譯」。</p>
+    </div>
+  </article>
+
+  <article class="slide" id="p18">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=18" target="_blank" rel="noopener"><b>18–19</b></a>
+    <div class="body">
+      <h3>平行化與協調者–工作者 <span class="en">Parallelization · Orchestrator-Workers</span></h3>
+      <ul>
+        <li>平行化有兩種（p.18）：
+          <ul>
+            <li><b>分段 Sectioning</b>：把獨立的工作拆開同時做，例如一邊判斷查詢是否安全、一邊處理這個查詢。</li>
+            <li><b>投票 Voting</b>：一種推論時擴展（inference-time scaling），把同一個輸入跑好幾次，再由彙整者做最後結論。</li>
+          </ul>
+        </li>
+        <li>平行化的好處是讓每次呼叫只專注一個面向。</li>
+        <li><b>協調者–工作者</b>（p.19）：一個 LLM 動態拆解任務，再分派給工作者 LLM。和平行化很像，差別在<b>子任務是執行時才動態產生的</b>，適合事先難以預料要拆成哪些、幾個子任務的情況。</li>
+      </ul>
+      <div class="terms"><span><em>sectioning</em>分段</span><span><em>voting</em>投票</span><span><em>inference-time scaling</em>推論時擴展</span><span><em>aggregator</em>彙整者</span></div>
+      <div class="reads"><a class="rd" data-slug="Snell2025_Scaling_Test_Time_Compute_ICLR2025" href="https://cs.xuyili.com/reading/Snell2025_Scaling_Test_Time_Compute_ICLR2025.html" target="_blank" rel="noopener">Scaling Test-Time Compute（投票背後的推論時擴展）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p20">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=20" target="_blank" rel="noopener"><b>20</b></a>
+    <div class="body">
+      <h3>評估者–優化者 <span class="en">Evaluator-Optimizer</span></h3>
+      <div class="flow"><span>輸入</span><i>→</i><span>LLM 產生者</span><i>→</i><span>LLM 評估者</span><i>→</i><span>通過 → 輸出</span></div>
+      <ul>
+        <li>一個 LLM 產生回答，另一個 LLM 給評估和回饋，形成迴圈：被退回時附上回饋，產生者再改。</li>
+        <li>要成立有兩個<b>必要條件</b>：(1) 回饋要清楚、說得出來；(2) 有 LLM 能給出這種回饋。</li>
+        <li>另外，產生者也要真的能根據回饋改進。</li>
+      </ul>
+      <p>這三個條件在 Part 3 會再出現：Reflexion 和 CRITIC 有效，是因為回饋來自外部環境或工具；純粹讓模型自己評自己，第 (2) 個條件常常不成立（p.41）。</p>
+    </div>
+  </article>
+
+  <article class="slide" id="p21">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=21" target="_blank" rel="noopener"><b>21–25</b></a>
+    <div class="body">
+      <h3>模式的組合：STORM <span class="en">Composition of Workflow Patterns · Example: STORM</span><span class="key">重點</span></h3>
+      <ul>
+        <li>p.21：<b>真實系統都是這些基本模式的組合。</b>（p.21 的圖請看原頁。）</li>
+        <li>p.22：STORM（Stanford OVAL）輸入一個主題，例如「2024 花蓮地震」，自動寫出一篇有目錄、有引用的維基百科式長文。</li>
+      </ul>
+      <p>p.23 的流程圖（出自 STORM 論文）：</p>
+      <div class="example">
+        <div class="row"><span class="lab">① 調查</span><span>找主題的相關文章</span></div>
+        <div class="row"><span class="lab">② 找觀點</span><span>從相關文章歸納出幾種不同的視角 𝒫</span></div>
+        <div class="row"><span class="lab">③ 讀與問</span><span>扮成「維基作者」的 LLM 帶著某個視角向「專家」發問</span></div>
+        <div class="row"><span class="lab">④–⑥</span><span>專家把問題拆成查詢 → 搜尋並篩選 → 綜合出答案；可信來源加進參考文獻 ℛ</span></div>
+        <div class="row"><span class="lab">⑦ 直接生成</span><span>只靠模型知識先寫出草稿大綱</span></div>
+        <div class="row"><span class="lab">⑧ 精修</span><span>用所有對話紀錄把草稿大綱修成最終大綱</span></div>
+      </div>
+      <p>p.24 在同一張圖上標出對應的模式：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>STORM 的部分</th><th>對應模式</th></tr></thead>
+        <tbody>
+          <tr><td>調查 → 大綱 → 精修，一步接一步</td><td>提示鏈</td></tr>
+          <tr><td>多個視角各自進行對話</td><td>平行化</td></tr>
+          <tr><td>依視角分派對話</td><td>協調者–工作者*（投影片註明：這裡其實接近平行化）</td></tr>
+          <tr><td>作者與專家一問一答的迴圈</td><td>大致是評估者–優化者</td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li>p.25 結果表：和人寫的文章比，STORM 的 ROUGE-1 45.82、實體召回 14.10，都高於最強基準 oRAG（44.26、12.57）；拿掉大綱階段後 ROUGE-1 掉到 26.77。評分（1–5 分）的關聯性 4.45、涵蓋度 4.88 也最高。</li>
+      </ul>
+      <div class="terms"><span><em>perspective</em>視角</span><span><em>outline</em>大綱</span><span><em>entity recall</em>實體召回率</span><span><em>rubric grading</em>評分量表評分</span></div>
+      <div class="reads none">本站未收錄 STORM。原論文：<a href="https://arxiv.org/abs/2402.14207" target="_blank" rel="noopener">arXiv 2402.14207</a>（本頁直接引用）</div>
+    </div>
+  </article>
+
+  <article class="slide" id="p26">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=26" target="_blank" rel="noopener"><b>26–29</b></a>
+    <div class="body">
+      <h3>Archon：自動搜尋模式組合 <span class="en">Archon: An Architecture Search Framework for Inference-Time Techniques</span></h3>
+      <p>STORM 的組合是人設計的；Archon 讓程式<b>自動搜尋</b>最好的組合。</p>
+      <ul>
+        <li>p.26：輸入目標基準、推論呼叫預算、可用的 LLM、可用的推論時技巧；用貝氏優化反覆提出架構、跑基準取樣，最後輸出優化好的 Archon 架構。</li>
+        <li>p.27 列出七種「積木」：</li>
+      </ul>
+      <div class="tbl"><table>
+        <thead><tr><th>技巧</th><th>作用</th><th>適用</th></tr></thead>
+        <tbody>
+          <tr><td>產生器 Generator</td><td>依指令產生候選回答</td><td>所有領域</td></tr>
+          <tr><td>融合器 Fuser</td><td>把多個候選合併成一個</td><td>所有領域</td></tr>
+          <tr><td>評論者 Critic</td><td>列出每個候選的優缺點</td><td>所有領域</td></tr>
+          <tr><td>排序器 Ranker</td><td>回傳前 K 名候選</td><td>所有領域</td></tr>
+          <tr><td>驗證器 Verifier</td><td>只留下推理經過驗證的候選</td><td>推理任務</td></tr>
+          <tr><td>單元測試產生器／評估器</td><td>生成單元測試，再用它替候選打分</td><td>推理任務</td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li>p.28 是搜出來的架構例子：4 個不同模型的產生器（GPT-4o、Llama 3.1 405B、Qwen 2.5 72B、WizardLM 8x22B，各取 5 個樣本）→ 評論者 → 排序器 → 4 個融合器 → 驗證器 → 融合器 → 輸出。另附一張「數學用的全來源架構」。</li>
+        <li>p.29：在 ArenaHardAuto、MATH、CodeContests 的平均分數上，Archon 隨 token 預算（10K → 100K）一路上升到約 76%，超過 AFlow、ADAS 等自動設計方法，也超過圖中 o1 的水準線。</li>
+      </ul>
+      <p>重點不是 Archon 本身，而是它把「推論時技巧」當成可以排列組合的模組，這正是 workflow 模式的延伸。</p>
+      <div class="terms"><span><em>architecture search</em>架構搜尋</span><span><em>Bayesian optimization</em>貝氏優化</span><span><em>fuser</em>融合器</span><span><em>verifier</em>驗證器</span></div>
+      <div class="reads">
+        <a class="rd" data-slug="Snell2025_Scaling_Test_Time_Compute_ICLR2025" href="https://cs.xuyili.com/reading/Snell2025_Scaling_Test_Time_Compute_ICLR2025.html" target="_blank" rel="noopener">Scaling Test-Time Compute（相關）</a>
+        <a href="https://arxiv.org/abs/2409.15254" target="_blank" rel="noopener">Archon 原論文 arXiv 2409.15254（本站未收錄）</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="slide" id="p30">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=30" target="_blank" rel="noopener"><b>30</b></a>
+    <div class="body">
+      <h3>Workflow 小結 <span class="en">Recap</span></h3>
+      <ul>
+        <li>Workflow 比 agent <b>更容易重現和除錯</b>。</li>
+        <li>五種常見模式：提示鏈、路由、平行化、協調者–工作者、評估者–優化者。</li>
+        <li>實務上，真正的 workflow 通常是這些元件組成的更大系統。</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PART 3 ============ -->
+<section class="part" id="part3">
+  <div class="part-head">
+    <span class="no">PART 3 · p.31–54 · 約 20 分鐘</span>
+    <h2>Agent 設計模式：推理與行動</h2>
+    <p>四個關鍵想法：先想再做（ReAct）、從失敗中反思（Reflexion）、用程式碼當行動（CodeAct）、先規劃再執行（ReWOO、LLMCompiler）。</p>
+  </div>
+
+  <article class="slide" id="p32">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=32" target="_blank" rel="noopener"><b>32</b></a>
+    <div class="body">
+      <h3>Agent 迴圈 <span class="en">Agents</span></h3>
+      <div class="flow"><span>人類</span><i>↔</i><span>LLM 呼叫</span><i>→ 行動 →</i><span>環境</span><i>→ 回饋 →</i><span>LLM 呼叫</span><i>…</i><span>停止</span></div>
+      <ul>
+        <li>除了工具本身，我們還要設計 LLM <b>怎麼</b>推理、怎麼和環境互動。這一段的四種模式都是在回答這個問題。</li>
+      </ul>
+      <div class="reads"><a class="rd" data-slug="Schluntz2024_Building_Effective_Agents_Anthropic" href="https://cs.xuyili.com/reading/Schluntz2024_Building_Effective_Agents_Anthropic.html" target="_blank" rel="noopener">Building Effective Agents（圖片出處）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p33">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=33" target="_blank" rel="noopener"><b>33–36</b></a>
+    <div class="body">
+      <h3>ReAct：先推理再行動 <span class="en">ReAct (2023) · Reason + Act</span><span class="key">重點</span></h3>
+      <p><b>關鍵想法：在採取行動前先推理。</b>p.34 用一題 HotpotQA 比較四種做法：「除了 Apple Remote，還有什麼裝置能控制 Apple Remote 原本設計要搭配的程式？」</p>
+      <div class="example">
+        <div class="row"><span class="lab">標準</span><span>直接回答「iPod」<span class="bad">✗</span></span></div>
+        <div class="row"><span class="lab">只推理 CoT</span><span>憑記憶推理，以為是 Apple TV，答「iPhone、iPad、iPod Touch」<span class="bad">✗</span></span></div>
+        <div class="row"><span class="lab">只行動 Act</span><span>搜尋 Apple Remote → 搜 Front Row 找不到 → 搜 Front Row (software) → 卻答「yes」<span class="bad">✗</span></span></div>
+        <div class="row"><span class="lab">ReAct</span><span>想：先查 Apple Remote → 得知它原本控制 Front Row → 想：查 Front Row → 找不到，改查 Front Row (software) → 得知可用 Apple Remote 或<b>鍵盤功能鍵</b>控制 → 回答「keyboard function keys」<span class="ok">✓</span></span></div>
+      </div>
+      <ul>
+        <li>p.35：原論文發現要<b>微調</b>才有最好的效果。只用 prompt 時，8B 小模型的 ReAct 表現最差；微調後 8B、62B 的 ReAct 都是四種方法中最好的。現在在後訓練階段微調模型扮演 agent 已經是常態。</li>
+        <li>p.36（PaLM-540B，HotpotQA EM／FEVER 準確率）：ReAct 27.4／60.9，高於只行動的 Act 25.7／58.9，說明<b>行動前先推理有幫助</b>。最好的是兩者搭配：ReAct→CoT-SC 在 HotpotQA 得 35.1，CoT-SC→ReAct 在 FEVER 得 64.6。</li>
+        <li>在行動前先寫出想法，到今天仍然非常普遍。</li>
+      </ul>
+      <p>補充：表上單用 ReAct 在 HotpotQA 其實略低於 CoT（27.4 vs 29.4），原論文的解釋是搜尋結果不一定有用，推理容易被打斷；所以才提出在兩者之間切換。</p>
+      <div class="terms"><span><em>ReAct</em>推理＋行動</span><span><em>thought / action / observation</em>想法／行動／觀察</span><span><em>chain-of-thought (CoT)</em>思維鏈</span><span><em>self-consistency (SC)</em>自洽性（多次取樣投票）</span><span><em>post-training</em>後訓練</span></div>
+      <div class="reads"><a class="rd" data-slug="Yao2023_ReAct_ICLR2023" href="https://cs.xuyili.com/reading/Yao2023_ReAct_ICLR2023.html" target="_blank" rel="noopener">ReAct（本頁直接引用）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p37">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=37" target="_blank" rel="noopener"><b>37–40</b></a>
+    <div class="body">
+      <h3>Reflexion：把反思變成記憶 <span class="en">Reflexion (2023)</span><span class="key">重點</span></h3>
+      <p><b>關鍵想法：自我反思有用。</b>p.38 的架構與演算法：</p>
+      <div class="flow"><span>Actor 執行一次</span><i>→</i><span>Evaluator 評分</span><i>→</i><span>Self-reflection 寫反思</span><i>→</i><span>存進長期記憶</span><i>→</i><span>Actor 再試</span></div>
+      <ul>
+        <li>三個 LM：行動者 M<sub>a</sub>、評估者 M<sub>e</sub>、自我反思者 M<sub>sr</sub>。行動軌跡是短期記憶，反思文字是長期記憶（mem）。重複「產生軌跡 → 評估 → 產生反思 → 加進 mem」，直到評估通過或到達最大次數。</li>
+        <li><b>核心：把評估和反思轉成行動者的「記憶」，也就是上下文。</b>模型權重不變，改的是下一次看到的 prompt。</li>
+        <li>p.39 三個例子：決策（以為鍋子在爐子 1，其實不在 → 下次去爐子 2）、寫程式（自己生成的單元測試沒過 → 發現只檢查了括號數量、沒檢查順序）、推理（環境回饋 0 分 → 反思「誤以為兩人都有多重職業」）。</li>
+        <li>p.40 左：HotpotQA 上，ReAct+Reflexion 隨嘗試次數從約 0.32 升到約 0.54；CoT+Reflexion 升到約 0.40；沒有反思的基準幾乎不動。</li>
+        <li>p.40 右：只給上一輪軌跡（EPM）從 0.61 升到 0.66，再加反思到 0.74。<b>有幫助的是 LLM 的反思，不只是過去的軌跡。</b></li>
+      </ul>
+      <div class="terms"><span><em>self-reflection</em>自我反思</span><span><em>actor / evaluator</em>行動者／評估者</span><span><em>trajectory</em>行動軌跡</span><span><em>episodic memory</em>情節記憶</span><span><em>trial</em>嘗試（第幾輪）</span></div>
+      <div class="reads">
+        <a class="rd" data-slug="Ng2024_Agentic_Design_Patterns_TheBatch" href="https://cs.xuyili.com/reading/Ng2024_Agentic_Design_Patterns_TheBatch.html" target="_blank" rel="noopener">Agentic Design Patterns（Reflection 模式）</a>
+        <a href="https://arxiv.org/abs/2303.11366" target="_blank" rel="noopener">Reflexion 原論文 arXiv 2303.11366（本站未收錄）</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="slide" id="p41">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=41" target="_blank" rel="noopener"><b>41–42</b></a>
+    <div class="body">
+      <h3>自我反思的限制與 CRITIC <span class="en">Limitations of Self-Reflection · CRITIC (2024)</span></h3>
+      <ul>
+        <li>p.41 引用〈Large Language Models Cannot Self-Correct Reasoning Yet〉（Google DeepMind）：<b>叫 LLM 評自己的回答，反而會讓表現變差。</b>表中 GPT-4-Turbo 標準提示在 GSM8K 得 91.5、CommonSenseQA 84.0；換三種「請檢查你的答案」提示自我修正後，分數都持平或下降（例如 CommonSenseQA 降到 74.5–83.5）。</li>
+        <li>Reflexion 避開這個問題的方法，是用<b>外部環境的回饋</b>（測試結果、環境獎勵），而不是模型自己的判斷。</li>
+        <li>這個發現早於推理模型。推理模型在推理過程中展現了不錯的自我修正能力，所以<b>今天自我反思通常內建在 LLM 的推理裡</b>，不再需要外部強制。</li>
+        <li>p.42 <b>CRITIC</b>：讓驗證者也能用外部工具（搜尋引擎、程式直譯器、計算機、維基百科等），變成一個「agent 式驗證者」。AmbigNQ 上 CRITIC 的 F1 隨修正輪數從約 64 升到約 75；拿掉工具（CRITIC w/o Tool）只到約 67。</li>
+      </ul>
+      <p>回到 p.20 的兩個必要條件：回饋要清楚、要有東西能給出回饋。外部工具和環境就是讓這兩個條件成立的方法。（註：p.42 標示的出處和 p.41 相同，是 2310.01798；CRITIC 論文本身是 Gou et al., arXiv 2305.11738。）</p>
+      <div class="terms"><span><em>self-correction</em>自我修正</span><span><em>external feedback</em>外部回饋</span><span><em>agentic verifier</em>agent 式驗證者</span></div>
+      <div class="reads">
+        <a href="https://arxiv.org/abs/2310.01798" target="_blank" rel="noopener">LLMs Cannot Self-Correct Reasoning Yet（arXiv 2310.01798，本頁直接引用）</a>
+        <a href="https://arxiv.org/abs/2305.11738" target="_blank" rel="noopener">CRITIC（arXiv 2305.11738）</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="slide" id="p43">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=43" target="_blank" rel="noopener"><b>43–46</b></a>
+    <div class="body">
+      <h3>CodeAct：用程式碼當行動 <span class="en">CodeAct (2024) · JSON Actions vs Code Actions</span><span class="key">重點</span></h3>
+      <p><b>關鍵想法：程式碼是行動最合適的形式。</b>p.44–45 用同一題比較：「在美國、日本、德國、印度中，找出買手機型號 CodeAct 1 最划算的國家。」可用 5 個 API：查匯率與稅率、查手機價格、換算含稅價、估運費、算最終價格。</p>
+      <div class="example">
+        <div class="row"><span class="lab">JSON 行動</span><span>每次只能呼叫一個工具：<code>{"tool": "lookup_rates", "country": "Germany"}</code> → 1.1, 0.19 → 查價格 → 700 → 換算含稅價 → 916.3 → …對每個國家重複一遍</span></div>
+        <div class="row"><span class="lab">程式碼行動</span><span>一次寫完：<code>for country in countries:</code> 迴圈裡依序呼叫五個 API，最後 <code>min(final_prices, key=final_prices.get)</code> 找最便宜的</span></div>
+        <div class="row"><span class="lab">結果</span><span class="ok">兩者都答日本，904.00 美元；但程式碼版需要的行動次數少很多</span></div>
+      </div>
+      <ul>
+        <li>p.45 圖上的兩個標註說出優勢：程式碼的<b>控制流程與資料流</b>（迴圈、變數）讓複雜操作變簡單；還能<b>直接重用現有軟體</b>，例如 Python 內建的 <code>min</code>。</li>
+        <li>p.46：在 GPT-4、Claude 2、Gemini Pro、Llama-2 等 8 個模型上，Code as Action 的成功率較高，完成任務所需的互動回合也較少。</li>
+      </ul>
+      <p>驗算：德國 700 × 1.1 × 1.19 = 916.3，和圖上一致（表示「換算含稅價」是先乘匯率、再乘 1 + 稅率）。</p>
+      <div class="terms"><span><em>CodeAct</em>程式碼即行動</span><span><em>JSON tool call</em>JSON 工具呼叫</span><span><em>data flow</em>資料流</span><span><em>interaction turn</em>互動回合</span></div>
+      <div class="reads">
+        <a class="rd" data-slug="Wang2025_OpenHands_ICLR2025" href="https://cs.xuyili.com/reading/Wang2025_OpenHands_ICLR2025.html" target="_blank" rel="noopener">OpenHands（同團隊，預設 agent 就是 CodeAct）</a>
+        <a href="https://arxiv.org/abs/2402.01030" target="_blank" rel="noopener">CodeAct 原論文 arXiv 2402.01030（本站未收錄）</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="slide" id="p47">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=47" target="_blank" rel="noopener"><b>47–49</b></a>
+    <div class="body">
+      <h3>先規劃再執行：ReWOO <span class="en">Planning then Executing · ReWOO: Reasoning WithOut Observation (2023)</span><span class="key">重點</span></h3>
+      <p><b>關鍵想法：先做規劃，就能把 agent 的行動執行變回 workflow。</b></p>
+      <div class="flow"><span>Planner 一次寫完計畫</span><i>→</i><span>Worker 依序呼叫工具</span><i>→</i><span>Solver 讀計畫＋證據作答</span></div>
+      <ul>
+        <li>p.48 例子：「做 Hennchata 這款調酒的主要原料，是哪家干邑酒廠生產的？」Planner 一次寫出 4 步，並用 <code>#E1</code>、<code>#E2</code> 這類<b>變數</b>代表還沒拿到的結果：
+          <ul>
+            <li><code>#E1 = Wikipedia[The Hennchata]</code></li>
+            <li><code>#E2 = LLM[主要原料是什麼？context: #E1]</code> → Hennessy cognac</li>
+            <li><code>#E3 = Wikipedia[#E2]</code>、<code>#E4 = LLM[哪家酒廠？context: #E3]</code></li>
+          </ul>
+          Worker 依序填入證據，Solver 回答「Jas Hennessy &amp; Co.」。</li>
+        <li>名字的意思是「推理時不看觀察結果」：規劃時不等工具回傳，所以 LLM 不用每一步都重讀整段歷史。</li>
+        <li>p.49：先規劃再執行，<b>準確度更高、token 更少</b>。圖上 ReAct → ReWOO 的箭頭往左上：公開基準從約 0.58 準確度、約 3,600 token，變成約 0.61、約 1,300 token；自建基準從約 0.65、約 1,850 token，變成約 0.70、約 1,050 token。</li>
+      </ul>
+      <div class="terms"><span><em>planner / worker / solver</em>規劃者／工作者／解題者</span><span><em>evidence</em>證據</span><span><em>token consumption</em>token 用量</span></div>
+      <div class="reads none">本站未收錄 ReWOO。原論文：<a href="https://arxiv.org/abs/2305.18323" target="_blank" rel="noopener">arXiv 2305.18323</a>（本頁直接引用）</div>
+    </div>
+  </article>
+
+  <article class="slide" id="p50">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=50" target="_blank" rel="noopener"><b>50–52</b></a>
+    <div class="body">
+      <h3>LLMCompiler：平行執行與動態重新規劃 <span class="en">LLMCompiler (2024)</span></h3>
+      <ul>
+        <li>和 ReWOO 的差別（p.50）：<b>平行執行</b>與<b>動態重新規劃</b>。</li>
+        <li>架構：函式呼叫規劃器把任務寫成一張 <b>DAG（有向無環圖）</b>，例如 <code>$1 = search(Microsoft 市值)</code>、<code>$2 = search(Apple 市值)</code>、<code>$3 = math($1 / $2)</code>；任務擷取單元處理依賴關係，沒有依賴的任務交給執行器同時跑。</li>
+        <li>p.51 例子：「Scott Derrickson 和 Ed Wood 國籍相同嗎？」ReAct 要先搜一人、再搜另一人；LLMCompiler 一開始就規劃兩個搜尋<b>平行</b>執行，延遲快 1.8 倍。</li>
+        <li>p.52 結果表（GPT）：HotpotQA 準確度 62.00%，延遲 3.95 秒，比 ReAct 的 7.12 秒快 1.80 倍；Movie Rec. 快 3.74 倍；ParallelQA 快 2.15 倍；Game of 24 對 Tree-of-Thoughts 快 2.89 倍。準確度和 ReAct 相當或略高。</li>
+      </ul>
+      <p>驗算：7.12 ÷ 3.95 ≈ 1.80、20.47 ÷ 5.47 ≈ 3.74、35.90 ÷ 16.69 ≈ 2.15，和表上一致。</p>
+      <div class="terms"><span><em>DAG (directed acyclic graph)</em>有向無環圖</span><span><em>parallel tool calls</em>平行工具呼叫</span><span><em>replanning</em>重新規劃</span><span><em>latency speedup</em>延遲加速比</span></div>
+      <div class="reads none">本站未收錄 LLMCompiler。原論文：<a href="https://arxiv.org/abs/2312.04511" target="_blank" rel="noopener">arXiv 2312.04511</a>（本頁直接引用）</div>
+    </div>
+  </article>
+
+  <article class="slide" id="p53">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=53" target="_blank" rel="noopener"><b>53–54</b></a>
+    <div class="body">
+      <h3>推理／行動模式小結 <span class="en">Recap</span><span class="key">重點</span></h3>
+      <p>p.53 是小結前的圖片頁（請看原頁）。p.54 說明每個模式今天變成什麼樣子：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>模式</th><th>今天的狀況</th></tr></thead>
+        <tbody>
+          <tr><td>ReAct</td><td>行動前先推理很有用，至今仍是標準做法</td></tr>
+          <tr><td>Reflexion</td><td>自我反思已經內建在模型的推理裡</td></tr>
+          <tr><td>CodeAct</td><td>程式碼是很好的行動形式</td></tr>
+          <tr><td>ReWOO／LLMCompiler</td><td>「把行動編譯成 workflow」今天主要靠<b>平行工具呼叫</b>實現；規劃仍然重要</td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li>有時仍會用 workflow 來編排「子 agent」。</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PART 4 ============ -->
+<section class="part" id="part4">
+  <div class="part-head">
+    <span class="no">PART 4 · p.55–75 · 約 20 分鐘</span>
+    <h2>Agent 設計模式：上下文管理</h2>
+    <p>上下文越長模型越容易漏資訊。兩個原則、五種模式：事件日誌、記憶卸載、壓縮、觀察遮蔽、上下文隔離。</p>
+  </div>
+
+  <article class="slide" id="p56">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=56" target="_blank" rel="noopener"><b>56–57</b></a>
+    <div class="body">
+      <h3>上下文工程 <span class="en">Agents: Context · Context Engineering</span><span class="key">重點</span></h3>
+      <ul>
+        <li>p.56：同一張 agent 迴圈圖，多加了一個「<b>上下文管理器</b>」：每次呼叫 LLM 前，由它決定這次要放進哪些內容。</li>
+        <li>p.57（出自 Anthropic〈Effective context engineering for AI agents〉）對比兩件事：
+          <ul>
+            <li><b>提示工程</b>：單輪問答，上下文只有系統提示和使用者訊息。</li>
+            <li><b>上下文工程</b>：agent 會有很多可能的內容（文件、工具、記憶檔、詳細指示、領域知識、訊息歷史），每一輪都要<b>篩選</b>放哪些進上下文視窗；工具結果回來後再重新篩選。</li>
+          </ul>
+        </li>
+      </ul>
+      <div class="terms"><span><em>context window</em>上下文視窗</span><span><em>context engineering</em>上下文工程</span><span><em>context manager</em>上下文管理器</span><span><em>curation</em>篩選</span></div>
+      <div class="reads"><a class="rd" data-slug="Rajasekaran2025_Effective_Context_Engineering_Anthropic" href="https://cs.xuyili.com/reading/Rajasekaran2025_Effective_Context_Engineering_Anthropic.html" target="_blank" rel="noopener">Effective Context Engineering（本頁直接引用）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p58">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=58" target="_blank" rel="noopener"><b>58–59</b></a>
+    <div class="body">
+      <h3>大海撈針與兩個原則 <span class="en">Needle in a Haystack · Context Engineering: Principles</span><span class="key">重點</span></h3>
+      <ul>
+        <li>p.58 大海撈針測試：在文件中放一個事實，要 Claude 2.1（200K）找出來，用 GPT-4 判斷對錯。測了 35 種上下文長度（1K 到 200K token）× 35 種放置深度。熱力圖顯示：<b>上下文越長，找回的準確度越差</b>。</li>
+        <li>p.59 據此提出兩個原則：</li>
+      </ul>
+      <div class="tbl"><table>
+        <thead><tr><th>聚焦上下文 Focus the Context</th><th>保持連續 Preserve Continuity</th></tr></thead>
+        <tbody><tr>
+          <td>上下文視窗裡只留當下任務需要的東西。完整歷史不必都放進去；資訊太多就是<b>上下文膨脹</b>。</td>
+          <td>操作上下文時要保住需求、目標、限制、進度等。實務上這也代表要<b>保住 KV Cache</b>。</td>
+        </tr></tbody>
+      </table></div>
+      <p>補充：KV Cache 是模型對已處理過的 token 存下的中間結果。只要上下文開頭不變，下次呼叫就能重用，省時間也省錢（API 的 prompt caching）。一旦改動前面的內容，後面的快取全部失效，所以上下文管理不能隨意重排舊內容。</p>
+      <div class="terms"><span><em>needle in a haystack</em>大海撈針測試</span><span><em>context bloat</em>上下文膨脹</span><span><em>continuity</em>連續性</span><span><em>KV cache</em>KV 快取</span></div>
+      <div class="reads none">測試出處：<a href="https://github.com/gkamradt/needle-in-a-haystack" target="_blank" rel="noopener">gkamradt/needle-in-a-haystack</a>（本頁直接引用）</div>
+    </div>
+  </article>
+
+  <article class="slide" id="p60">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=60" target="_blank" rel="noopener"><b>60–61</b></a>
+    <div class="body">
+      <h3>五種上下文管理模式 <span class="en">Context Management Patterns · Overview</span><span class="key">重點</span></h3>
+      <p>p.60 是標題圖片頁（請看原頁）。p.61 列出五種：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>模式</th><th>做法</th><th>代表例子</th></tr></thead>
+        <tbody>
+          <tr><td>持久事件日誌 Persistent Event Log</td><td>從系統事件重建上下文</td><td>OpenHands</td></tr>
+          <tr><td>記憶卸載 Memory Offloading</td><td>把知識存到記憶裡，才能刪掉上下文</td><td>MemGPT</td></tr>
+          <tr><td>壓縮 Compaction</td><td>把之前的上下文摘要成精簡描述</td><td>—</td></tr>
+          <tr><td>觀察遮蔽 Observation Masking</td><td>隱藏或截短舊的工具輸出</td><td>coding agent</td></tr>
+          <tr><td>上下文隔離 Context Isolation</td><td>交給子 agent 做特定任務，只放當下需要的</td><td>子 agent、skill 檔</td></tr>
+        </tbody>
+      </table></div>
+      <div class="terms"><span><em>event log</em>事件日誌</span><span><em>memory offloading</em>記憶卸載</span><span><em>compaction</em>壓縮</span><span><em>observation masking</em>觀察遮蔽</span><span><em>context isolation</em>上下文隔離</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p62">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=62" target="_blank" rel="noopener"><b>62–63</b></a>
+    <div class="body">
+      <h3>持久事件日誌：OpenHands <span class="en">Persistent Event Log: OpenHands</span></h3>
+      <ul>
+        <li>p.62：OpenHands 的架構分三塊：使用者介面（命令列、Web UI、IDE 外掛）、<b>事件流</b>（記錄所有行動與觀察）、agent 執行環境（Docker 沙盒，含 IPython、Bash、瀏覽器）。Agent 讀事件歷史 → 產生新行動 → 執行環境執行 → 產生觀察 → 寫回事件流。</li>
+        <li>p.63：所有事情都<b>照實保存</b>，即使送給 LLM 的輸入需要改。事件日誌可以是<b>不可變、只能附加</b>的。</li>
+        <li>每次呼叫 LLM，輸入都從事件日誌<b>重建</b>：</li>
+      </ul>
+      <div class="flow"><span>事件清單</span><i>→</i><span>篩出可轉給 LLM 的事件</span><i>→</i><span>依 llm_response_id 分組</span><i>→</i><span>轉成訊息</span><i>→</i><span>LLM 輸入</span></div>
+      <ul>
+        <li>事件日誌也讓外部觀察者能掛上 hook，監控系統狀態。</li>
+      </ul>
+      <p>這個模式把「發生過什麼」（日誌）和「這次給模型看什麼」（上下文）分開。後面的壓縮、遮蔽都可以只改後者，原始紀錄不會丟。</p>
+      <div class="terms"><span><em>event stream</em>事件流</span><span><em>append-only</em>只能附加</span><span><em>immutable</em>不可變</span><span><em>hook</em>掛鉤</span><span><em>sandbox</em>沙盒</span></div>
+      <div class="reads"><a class="rd" data-slug="Wang2025_OpenHands_ICLR2025" href="https://cs.xuyili.com/reading/Wang2025_OpenHands_ICLR2025.html" target="_blank" rel="noopener">OpenHands（本頁直接引用）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p64">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=64" target="_blank" rel="noopener"><b>64</b></a>
+    <div class="body">
+      <h3>記憶卸載：MemGPT <span class="en">Memory Offloading: MemGPT</span></h3>
+      <ul>
+        <li><b>把東西存到記憶或檔案，就能空出上下文、刪掉舊內容。</b></li>
+      </ul>
+      <div class="example">
+        <div class="row"><span class="lab">2/7 對話</span><span>使用者：「今天很開心，男友 James 幫我烤了生日蛋糕。」</span></div>
+        <div class="row"><span class="lab">記憶壓力</span><span>系統警告上下文快滿 → agent 自己呼叫 <code>working_context.append("Birthday is February 7")</code>、<code>append("Boyfriend named James")</code></span></div>
+        <div class="row"><span class="lab">之後</span><span>使用者提到「我們去了六旗樂園」→ agent 呼叫 <code>recall_storage.search("six flags")</code>，找到過去「我和 James 第一次是在六旗認識的」</span></div>
+        <div class="row"><span class="lab">回覆</span><span class="ok">「你是和 James 一起去的嗎？你們在那裡認識真浪漫！」</span></div>
+      </div>
+      <p>這是 Lecture 7「記憶」的預告：模型像作業系統一樣，自己決定什麼留在「記憶體」（上下文）、什麼放到「硬碟」（外部儲存）。</p>
+      <div class="terms"><span><em>working context</em>工作上下文</span><span><em>recall storage</em>回憶儲存</span><span><em>memory pressure</em>記憶壓力</span></div>
+      <div class="reads"><a class="rd" data-slug="Packer2023_MemGPT" href="https://cs.xuyili.com/reading/Packer2023_MemGPT.html" target="_blank" rel="noopener">MemGPT（本頁直接引用）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p65">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=65" target="_blank" rel="noopener"><b>65</b></a>
+    <div class="body">
+      <h3>壓縮 <span class="en">Compaction</span></h3>
+      <ul>
+        <li>讓 LLM 把之前的「推理、行動、觀察」摘要起來，用更少的 token 表示歷史。</li>
+        <li>讓壓縮本身也是 agent 式的（例如讓模型自己決定保留什麼、何時壓縮）會有幫助。</li>
+      </ul>
+      <p>p.65 的圖（出自 p.66 的同一篇論文）比較三種上下文：(a) 原始 agent 保留 T₁–T₃ 完整的推理／行動／觀察；(b) 觀察遮蔽只把舊的觀察換成「Mask」；(c) LLM 摘要把 T₁、T₂ 換成一段「Summary 1」。下一張卡會再用到這張圖。</p>
+      <div class="terms"><span><em>summary</em>摘要</span><span><em>agentic compaction</em>agent 式壓縮</span></div>
+      <div class="reads"><a class="rd" data-slug="Rajasekaran2025_Effective_Context_Engineering_Anthropic" href="https://cs.xuyili.com/reading/Rajasekaran2025_Effective_Context_Engineering_Anthropic.html" target="_blank" rel="noopener">Effective Context Engineering（compaction 一節）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p66">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=66" target="_blank" rel="noopener"><b>66–68</b></a>
+    <div class="body">
+      <h3>觀察遮蔽 <span class="en">Observation Masking</span></h3>
+      <ul>
+        <li>p.66：軟體工程 agent 的上下文裡，<b>環境觀察佔了 83.9%</b> 的 token，推理 9.6%、行動 6.5%。</li>
+        <li>p.67：不用叫 LLM 把上下文摘要，<b>直接把舊的觀察截短</b>就好。對 coding agent 特別有用，因為觀察（檔案內容、測試輸出）往往很長。</li>
+        <li>p.68：三個模型（Gemini 2.5 Flash、Gemini 2.5 Flash Thinking、Qwen3-Coder 480B）上的散佈圖，比較三種做法的表現與成本。抽得到的圖沒有軸標與圖例，請看原頁。</li>
+      </ul>
+      <p>補充（論文結論，非投影片原文）：這篇論文的標題是〈The Complexity Trap〉，主要發現是簡單的觀察遮蔽在成本大約減半的同時，解題率能和 LLM 摘要打平甚至略好。</p>
+      <div class="terms"><span><em>observation</em>觀察（工具或環境的輸出）</span><span><em>truncate</em>截短</span></div>
+      <div class="reads">
+        <a class="rd" data-slug="Yang2024_SWE-agent_NeurIPS2024" href="https://cs.xuyili.com/reading/Yang2024_SWE-agent_NeurIPS2024.html" target="_blank" rel="noopener">SWE-agent（相關：coding agent 如何處理冗長觀察）</a>
+        <a href="https://arxiv.org/abs/2508.21433" target="_blank" rel="noopener">原論文 arXiv 2508.21433（本頁直接引用，本站未收錄）</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="slide" id="p69">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=69" target="_blank" rel="noopener"><b>69–70</b></a>
+    <div class="body">
+      <h3>上下文隔離與漸進揭露 <span class="en">Context Isolation · Progressive Disclosure</span></h3>
+      <ul>
+        <li>p.69（出自 LangChain〈Context engineering for agents〉）：先規劃，再把工作分給 Agent 1、Agent 2，每個 agent 有<b>各自隔離的上下文視窗</b>，可以平行計算。</li>
+        <li>p.70 <b>漸進揭露</b>：一開始不必把所有工具和上下文都放進 prompt，需要時再揭露。例子是 Anthropic 的 skill 檔（SKILL.md）：開頭的 YAML 只有 <code>name</code> 和 <code>description</code>，平常只放這幾行；要用時才讀下面的 Markdown 正文，正文還可以再指向其他檔案（例如 <code>forms.md</code>）。</li>
+      </ul>
+      <div class="terms"><span><em>subagent</em>子 agent</span><span><em>progressive disclosure</em>漸進揭露</span><span><em>skill file</em>技能檔</span><span><em>YAML frontmatter</em>YAML 前置資料</span></div>
+      <div class="reads">
+        <a class="rd" data-slug="Neubig2024_Dont_Sleep_On_Single_Agent_Systems" href="https://cs.xuyili.com/reading/Neubig2024_Dont_Sleep_On_Single_Agent_Systems.html" target="_blank" rel="noopener">Don’t Sleep on Single-Agent Systems（拆子 agent 前先想清楚）</a>
+        <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" target="_blank" rel="noopener">Anthropic〈Equipping agents… with Agent Skills〉（本頁直接引用）</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="slide" id="p71">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=71" target="_blank" rel="noopener"><b>71–75</b></a>
+    <div class="body">
+      <h3>模式可以組合，與上下文管理分類 <span class="en">Context Management · Taxonomy · Recap</span></h3>
+      <ul>
+        <li>p.71：<b>這些策略彼此相容。</b>可以先把知識卸載到記憶再壓縮上下文；也可以一邊用事件日誌建上下文、一邊截短觀察。真實系統會組合其中很多甚至全部。</li>
+        <li>p.72 是小結前的圖片頁（請看原頁）。</li>
+        <li>p.73 LangChain 的四類分法：
+          <ul>
+            <li><b>寫出 Write</b>：存到長期記憶（跨 session）、草稿區或狀態（同一 session 內）。</li>
+            <li><b>選取 Select</b>：撈出相關工具、草稿、長期記憶或知識。</li>
+            <li><b>壓縮 Compress</b>：摘要以保留相關 token；修剪以移除無關 token。</li>
+            <li><b>隔離 Isolate</b>：在狀態中分區、放在環境／沙盒裡、分給多個 agent。</li>
+          </ul>
+        </li>
+        <li>p.74 在圖上標了「This Wednesday」「Next Monday」，表示有些類別之後會細講（依課表是週三 Lecture 7 記憶、下週一 Lecture 8 多 agent 系統）；確切標在哪一欄請看原頁。</li>
+        <li>p.75 小結：事件日誌、記憶、壓縮、觀察遮蔽、上下文隔離是幾個關鍵模式；真實系統會組合使用；上下文工程由兩個原則驅動：<b>保持聚焦、保持連續</b>。</li>
+      </ul>
+      <div class="terms"><span><em>scratchpad</em>草稿區</span><span><em>trim</em>修剪</span></div>
+      <div class="reads">
+        <a href="https://www.langchain.com/blog/context-engineering-for-agents" target="_blank" rel="noopener">LangChain〈Context Engineering for Agents〉（本頁直接引用）</a>
+        <a class="rd" data-slug="Letta2025_Agent_Memory_blog" href="https://cs.xuyili.com/reading/Letta2025_Agent_Memory_blog.html" target="_blank" rel="noopener">Agent Memory（Letta，Lecture 7 預習）</a>
+      </div>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PART 5 ============ -->
+<section class="part" id="part5">
+  <div class="part-head">
+    <span class="no">PART 5 · p.76–83 · 約 10 分鐘</span>
+    <h2>案例：Pi 極簡 agent harness</h2>
+    <p>用前面學的模式拆解一個真實的 harness：它選了哪些、刻意不做哪些。</p>
+  </div>
+
+  <article class="slide" id="p77">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=77" target="_blank" rel="noopener"><b>77–78</b></a>
+    <div class="body">
+      <h3>Pi 的設計哲學 <span class="en">Pi Minimalist Agent Harness · Pi Design Philosophy</span><span class="key">重點</span></h3>
+      <ul>
+        <li>p.77 是 Pi 的介紹圖片頁（請看原頁）。</li>
+        <li>Pi 的口號：「Pi 是極簡的 agent harness。<b>讓 Pi 配合你的工作流程，而不是反過來。</b>」</li>
+        <li>Pi 本身非常陽春，使用者在上面做了大量擴充，補上其他主流 harness 有的功能。</li>
+        <li>Pi <b>沒有</b>的東西：子 agent、權限檢查、規劃模式、agent 待辦清單、背景執行 bash。</li>
+      </ul>
+      <p>對照 Part 4：不做子 agent，就等於放棄了「上下文隔離」這個模式；這些都是刻意的取捨，交給擴充去補。</p>
+      <div class="terms"><span><em>harness</em>執行框架（包在 LLM 外、提供工具與上下文管理的程式）</span><span><em>extension</em>擴充</span><span><em>plan mode</em>規劃模式</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p79">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=79" target="_blank" rel="noopener"><b>79–80</b></a>
+    <div class="body">
+      <h3>Pi 的工具與 agent 迴圈 <span class="en">Pi Tools · Pi Agent Loop</span></h3>
+      <ul>
+        <li>p.79 內建工具表：<code>read</code>（讀文字檔與圖片）、<code>bash</code>、<code>powershell</code>（Windows）、<code>edit</code>（對既有檔案做精確文字替換）、<code>write</code>（建立或覆寫檔案）、<code>grep</code>、<code>find</code>（glob 找路徑）、<code>ls</code>。</li>
+        <li>預設<b>只開 read、bash、edit、write</b>。工具越少，工具說明佔的上下文越少；其他工具其實都是 bash 能做的事的子集。</li>
+        <li>p.80：Pi 是 <b>ReAct 式</b>迴圈，先推理再發出 JSON 工具呼叫。</li>
+        <li>上下文是一棵<b>樹</b>：可以回到之前的分支，從那裡接續另一條對話。</li>
+      </ul>
+      <p>對照 Part 3：Pi 選了 ReAct＋JSON 行動，而不是 CodeAct；但因為有 bash，模型其實隨時能寫程式來執行，某種程度上兼得兩者。</p>
+      <div class="terms"><span><em>tool bloat</em>工具膨脹</span><span><em>branch</em>分支</span></div>
+      <div class="reads none">官方文件：<a href="https://pi.dev/docs/latest/cli#tools" target="_blank" rel="noopener">pi.dev · Tools</a>（本頁直接引用）</div>
+    </div>
+  </article>
+
+  <article class="slide" id="p81">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=81" target="_blank" rel="noopener"><b>81</b></a>
+    <div class="body">
+      <h3>Pi 的上下文管理 <span class="en">Pi Context Management</span><span class="key">重點</span></h3>
+      <p>Pi 用了 Part 4 的三個模式：</p>
+      <ol>
+        <li><b>事件日誌轉成 LLM 輸入</b>（持久事件日誌）</li>
+        <li><b>透過 skill 檔做漸進揭露</b>（上下文隔離）</li>
+        <li><b>壓縮</b></li>
+      </ol>
+      <p>圖上是「LLM 實際看到的內容」：</p>
+      <div class="flow"><span>system（prompt）</span><span>summary（來自壓縮）</span><span>usr · ass · tool · tool · ass · tool（從 firstKeptEntryId 開始保留的訊息）</span></div>
+      <p>也就是：系統提示固定在最前面，比較舊的對話被壓成一段摘要，只有某個位置之後的訊息原樣保留。</p>
+      <div class="reads">
+        <a href="https://pi.dev/docs/latest/compaction" target="_blank" rel="noopener">pi.dev · Compaction（本頁直接引用）</a>
+        <a class="rd" data-slug="Young2025_Effective_Harnesses_Long_Running_Agents" href="https://cs.xuyili.com/reading/Young2025_Effective_Harnesses_Long_Running_Agents.html" target="_blank" rel="noopener">Effective Harnesses for Long-Running Agents（相關）</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="slide" id="p82">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=82" target="_blank" rel="noopener"><b>82–83</b></a>
+    <div class="body">
+      <h3>Pi 的安全性與小結 <span class="en">Pi Safety · Recap</span></h3>
+      <ul>
+        <li>p.82：Pi 以和自己行程<b>相同的權限</b>執行，也不會跳出視窗請你確認，所以要把它當成<b>永遠在自動模式、沒有任何保護</b>。</li>
+        <li>p.83 小結：Pi 是極簡 harness，社群做了許多擴充；預設工具是 bash、read、write、edit；是 ReAct 式 agent；上下文透過事件日誌、漸進揭露和壓縮管理；<b>沒有內建任何防護</b>。</li>
+      </ul>
+      <p>沒有權限檢查的 agent 能直接執行任何 bash 指令，最好在容器或沙盒裡跑（像 OpenHands 的 Docker 沙盒）。安全會在後面的講次再談。</p>
+      <div class="terms"><span><em>permission check</em>權限檢查</span><span><em>auto-mode</em>自動模式</span><span><em>safeguard</em>防護措施</span></div>
+      <div class="reads"><a class="rd" data-slug="Anthropic2025_Claude_Code_Best_Practices" href="https://cs.xuyili.com/reading/Anthropic2025_Claude_Code_Best_Practices.html" target="_blank" rel="noopener">Claude Code Best Practices（對照有權限機制的 harness）</a></div>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PART 6 ============ -->
+<section class="part" id="part6">
+  <div class="part-head">
+    <span class="no">PART 6 · p.84–86</span>
+    <h2>總結</h2>
+    <p>回到五個段落，以及下一講的預告。</p>
+  </div>
+
+  <article class="slide" id="p84">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture06.pdf#page=84" target="_blank" rel="noopener"><b>84–86</b></a>
+    <div class="body">
+      <h3>總結與下一講 <span class="en">Summary</span></h3>
+      <ul>
+        <li>p.85 重列五段：workflow vs agent → workflow 設計模式 → agent 模式：推理／行動 → agent 模式：上下文 → 案例 Pi。</li>
+        <li>p.86：週三上課講<b>記憶</b>（Lecture 7）。</li>
+      </ul>
+      <p><b>自我檢查</b>，不看資料能回答的話就可以進入 Lecture 7：</p>
+      <ul>
+        <li>Workflow 和 agent 的差別是什麼？STORM 用到了五種 workflow 模式中的哪幾種，各在哪個環節？（p.9–12、p.24）</li>
+        <li>純粹讓 LLM 檢查自己的答案常常沒用，為什麼 Reflexion 和 CRITIC 卻有效？（p.38–42）</li>
+        <li>觀察遮蔽和壓縮各怎麼做？為什麼觀察遮蔽特別適合 coding agent？（p.65–67）</li>
+      </ul>
+      <div class="reads">
+        <a class="rd" data-slug="Packer2023_MemGPT" href="https://cs.xuyili.com/reading/Packer2023_MemGPT.html" target="_blank" rel="noopener">MemGPT（Lecture 7 預習）</a>
+        <a class="rd" data-slug="Letta2025_Agent_Memory_blog" href="https://cs.xuyili.com/reading/Letta2025_Agent_Memory_blog.html" target="_blank" rel="noopener">Agent Memory（Lecture 7 預習）</a>
+      </div>
+    </div>
+  </article>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section class="gloss" id="glossary">
+  <h2>術語表</h2>
+  <p style="color:var(--muted);margin:0 0 8px">本講出現的主要術語，依出現順序排列。</p>
+  <div class="tbl"><table>
+    <thead><tr><th>英文</th><th>中文</th><th>一句話解釋</th></tr></thead>
+    <tbody>
+      <tr><td>design pattern</td><td>設計模式</td><td>可重複使用、但要依情境調整的解法範本</td></tr>
+      <tr><td>scaffold</td><td>腳手架</td><td>包在模型外面、決定呼叫方式和流程的程式結構</td></tr>
+      <tr><td>control flow</td><td>控制流程</td><td>下一步做什麼由誰決定：程式還是模型</td></tr>
+      <tr><td>compound AI system</td><td>複合 AI 系統</td><td>由多次模型呼叫、工具和程式邏輯組成的系統</td></tr>
+      <tr><td>prompt chaining</td><td>提示鏈</td><td>把任務拆成幾步，前一步輸出接到下一步</td></tr>
+      <tr><td>routing</td><td>路由</td><td>先分類，再交給合適的模型或 prompt</td></tr>
+      <tr><td>parallelization (sectioning / voting)</td><td>平行化（分段／投票）</td><td>拆開同時做，或同一輸入跑多次取共識</td></tr>
+      <tr><td>orchestrator-workers</td><td>協調者–工作者</td><td>一個 LLM 動態拆出子任務，派給其他 LLM</td></tr>
+      <tr><td>evaluator-optimizer</td><td>評估者–優化者</td><td>產生 → 評語 → 修改的迴圈</td></tr>
+      <tr><td>inference-time scaling</td><td>推論時擴展</td><td>推論時多花計算（多次取樣、驗證）換取更好的結果</td></tr>
+      <tr><td>ReAct</td><td>推理＋行動</td><td>想法、行動、觀察交替進行的 agent 模式</td></tr>
+      <tr><td>chain-of-thought (CoT)</td><td>思維鏈</td><td>先寫出推理步驟再作答</td></tr>
+      <tr><td>Reflexion / self-reflection</td><td>自我反思</td><td>失敗後寫下反思，當作下一輪的上下文</td></tr>
+      <tr><td>self-correction</td><td>自我修正</td><td>模型在沒有外部回饋下檢查並修改自己的答案</td></tr>
+      <tr><td>agentic verifier</td><td>agent 式驗證者</td><td>能使用外部工具來驗證答案的驗證者（如 CRITIC）</td></tr>
+      <tr><td>CodeAct</td><td>程式碼即行動</td><td>讓模型用可執行的程式碼表達行動</td></tr>
+      <tr><td>ReWOO</td><td>先規劃再執行</td><td>規劃時不等觀察，用變數串起工具呼叫</td></tr>
+      <tr><td>DAG</td><td>有向無環圖</td><td>表示任務依賴關係的圖；沒有依賴的節點可平行執行</td></tr>
+      <tr><td>parallel tool calls</td><td>平行工具呼叫</td><td>一次回合中同時發出多個工具呼叫</td></tr>
+      <tr><td>context engineering</td><td>上下文工程</td><td>每一輪決定把哪些內容放進上下文視窗</td></tr>
+      <tr><td>context bloat</td><td>上下文膨脹</td><td>上下文塞了太多不需要的資訊</td></tr>
+      <tr><td>KV cache</td><td>KV 快取</td><td>模型對已處理 token 的中間結果；前綴不變才能重用</td></tr>
+      <tr><td>event log / event stream</td><td>事件日誌／事件流</td><td>照實記錄所有行動與觀察，每次從中重建上下文</td></tr>
+      <tr><td>memory offloading</td><td>記憶卸載</td><td>把資訊存到外部記憶，才能從上下文刪掉</td></tr>
+      <tr><td>compaction</td><td>壓縮</td><td>用 LLM 把舊歷史摘要成較短的描述</td></tr>
+      <tr><td>observation masking</td><td>觀察遮蔽</td><td>把舊的工具輸出隱藏或截短</td></tr>
+      <tr><td>context isolation</td><td>上下文隔離</td><td>讓子 agent 只拿到自己任務需要的上下文</td></tr>
+      <tr><td>progressive disclosure</td><td>漸進揭露</td><td>先只給摘要，需要時才載入完整內容（如 skill 檔）</td></tr>
+      <tr><td>harness</td><td>執行框架</td><td>包在 LLM 外面，提供工具、上下文管理和執行環境的程式</td></tr>
+      <tr><td>permission check</td><td>權限檢查</td><td>執行危險操作前先請使用者確認</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer>
+  依據 Stanford CS 329Z 官方投影片 lecture06.pdf 整理，僅供個人學習。頁碼依 PDF 頁數；圖表數字依投影片圖片判讀，標「約」者為從圖上估讀；標註「補充」的段落與比較表等內容不是投影片原文。
+</footer>
+</div>
+
+<script>
+(function(){
+  var BASES={online:"https://cs.xuyili.com/reading/",local:"http://127.0.0.1:8329/reading/"};
+  var btns=document.querySelectorAll(".seg button");
+  function apply(mode){
+    document.querySelectorAll("a.rd").forEach(function(a){
+      a.href=BASES[mode]+encodeURIComponent(a.dataset.slug).replace(/%26/g,"&")+".html";
+    });
+    btns.forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.mode===mode));});
+  }
+  var saved="online";
+  try{saved=localStorage.getItem("l6-linkmode")||"online";}catch(e){}
+  if(!BASES[saved])saved="online";
+  apply(saved);
+  btns.forEach(function(b){b.addEventListener("click",function(){
+    apply(b.dataset.mode);
+    try{localStorage.setItem("l6-linkmode",b.dataset.mode);}catch(e){}
+  });});
+})();
+</script>
+
+
+</body></html>

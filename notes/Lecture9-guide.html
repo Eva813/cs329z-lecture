@@ -1,0 +1,1111 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>CS329Z Lecture 9 導讀</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;800&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: 窄欄閱讀稿 + 左側頁碼欄（像講義旁註），段落導覽固定在頂部 */
+:root{
+  --paper:#f5f6f8; --sheet:#ffffff; --ink:#1a2130; --muted:#5b6475; --rule:#dde1e8;
+  --cardinal:#8c1515; --cardinal-soft:#f6e9e9; --link:#1d5c8f; --chip:#eef1f5; --key:#b5650d; --key-soft:#fbf0e2;
+  --f-display:"Noto Serif TC","Songti TC",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#12151b; --sheet:#1a1e26; --ink:#e6e9ef; --muted:#9aa3b3; --rule:#2c323d;
+  --cardinal:#e07a7a; --cardinal-soft:#2e1d20; --link:#7db5e3; --chip:#232934; --key:#e8a55a; --key-soft:#2d2318; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#12151b; --sheet:#1a1e26; --ink:#e6e9ef; --muted:#9aa3b3; --rule:#2c323d;
+  --cardinal:#e07a7a; --cardinal-soft:#2e1d20; --link:#7db5e3; --chip:#232934; --key:#e8a55a; --key-soft:#2d2318; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.75;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.wrap{max-width:860px;margin:0 auto}
+a{color:var(--link)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--cardinal);outline-offset:2px;border-radius:4px}
+h1,h2{font-family:var(--f-display);text-wrap:balance;line-height:1.3}
+
+header.top{padding-block:40px 20px}
+.eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;color:var(--cardinal);text-transform:uppercase}
+h1{font-size:clamp(28px,5vw,40px);margin:.2em 0 .3em;font-weight:800}
+.lede{color:var(--muted);max-width:62ch;margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-size:14px;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:500}
+
+.howto{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:18px 20px;margin-top:22px;display:grid;gap:10px}
+.howto h2{font-size:17px;margin:0}
+.howto ul{margin:0;padding-left:1.2em;color:var(--ink)}
+.howto li{margin:2px 0}
+.linkmode{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:999px;overflow:hidden}
+.seg button{font:inherit;font-size:13.5px;border:0;background:transparent;color:var(--muted);padding:4px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--cardinal);color:var(--sheet)}
+
+.best{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.best a{display:block;text-decoration:none;background:var(--cardinal-soft);border-radius:8px;padding:12px 14px;color:var(--ink);min-width:0}
+.best a small{display:block;font-family:var(--f-mono);font-size:12px;color:var(--cardinal)}
+.best a span{font-weight:700}
+
+nav.parts{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--rule);
+  margin-top:28px;padding-block:10px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav.parts a{flex:none;font-size:13.5px;text-decoration:none;color:var(--muted);border:1px solid var(--rule);border-radius:999px;padding:3px 12px;background:var(--sheet)}
+nav.parts a:hover{color:var(--cardinal);border-color:var(--cardinal)}
+
+section.part{margin-top:40px}
+.part-head{display:grid;gap:4px;margin-bottom:14px}
+.part-head .no{font-family:var(--f-mono);font-size:12.5px;color:var(--cardinal);letter-spacing:.06em}
+.part-head h2{font-size:clamp(22px,3.6vw,28px);margin:0}
+.part-head p{margin:0;color:var(--muted);max-width:64ch}
+
+.slide{display:grid;grid-template-columns:76px minmax(0,1fr);gap:16px;padding-block:18px;border-top:1px solid var(--rule)}
+.pg{font-family:var(--f-mono);font-size:13px;text-decoration:none;color:var(--muted);line-height:1.4;padding-top:3px}
+.pg b{display:block;font-size:17px;font-weight:600;color:var(--ink)}
+.pg:hover b{color:var(--cardinal)}
+.pg i{font-style:normal;font-size:11.5px}
+.body{min-width:0}
+.body h3{margin:0;font-size:18px;font-weight:700;line-height:1.45;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.body h3 .en{font-family:var(--f-mono);font-size:13px;font-weight:400;color:var(--muted)}
+.key{font-size:11.5px;font-weight:700;color:var(--key);background:var(--key-soft);border-radius:4px;padding:1px 7px;letter-spacing:.04em}
+.img-only{font-size:11.5px;color:var(--muted);border:1px dashed var(--rule);border-radius:4px;padding:0 6px}
+.body ul{margin:8px 0 0;padding-left:1.15em}
+.body li{margin:3px 0}
+.body p{margin:8px 0 0}
+.terms{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.terms span{font-size:13px;background:var(--chip);border-radius:5px;padding:1px 8px;color:var(--ink)}
+.terms span em{font-style:normal;font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-right:5px}
+.reads{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:14px}
+.reads::before{content:"對應閱讀";font-size:12px;color:var(--cardinal);font-weight:700;letter-spacing:.04em;padding-top:2px}
+.reads a{text-decoration-thickness:1px;text-underline-offset:3px}
+.reads .none{color:var(--muted)}
+
+.example{margin-top:10px;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;font-size:14.5px;overflow-x:auto}
+.example .row{display:grid;grid-template-columns:88px minmax(0,1fr);gap:10px;padding-block:3px}
+.example .lab{font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.ok{color:#2f7a3d}
+.bad{color:var(--cardinal)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ok{color:#7fcf8c}}
+:root[data-theme="dark"] .ok{color:#7fcf8c}
+
+.tbl{overflow-x:auto;margin-top:10px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-size:12.5px;color:var(--muted);font-weight:500}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px;font-size:14px}
+.flow span{background:var(--chip);border-radius:6px;padding:3px 10px}
+.flow i{font-style:normal;color:var(--muted)}
+
+.gloss{margin-top:48px}
+.gloss h2{font-size:26px;margin:0 0 6px}
+.gloss td:first-child{font-family:var(--f-mono);font-size:13.5px;white-space:nowrap}
+footer{margin-top:40px;font-size:13px;color:var(--muted)}
+
+@media (max-width:560px){
+  .slide{grid-template-columns:1fr;gap:6px}
+  .pg{display:flex;gap:8px;align-items:baseline}
+  .pg b{display:inline}
+  .example .row{grid-template-columns:1fr;gap:0}
+}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<style>
+pre.code{margin:10px 0 0;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;font-family:var(--f-mono);font-size:13px;line-height:1.6;overflow-x:auto;white-space:pre}
+pre.code .c{color:var(--muted)}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Stanford CS 329Z · Lecture 9 · 125 頁</div>
+  <h1>Optimization 中文導讀</h1>
+  <p class="lede">逐頁整理重點、翻譯術語，並標出每頁對應本站哪篇已翻譯的文章。這講要回答的是：手上有資料和評測之後，怎麼讓 AI 系統自動變好？先講什麼條件下值得優化，再分兩大類拆解：<b>上下文優化</b>（改 prompt 與少樣本示例，不動模型）和<b>權重優化</b>（SFT、強化學習、on-policy 蒸餾）。接著看讓 agent 自己當優化器（自我改進、自動研究），最後整理兩類方法各適合什麼情境。投影片大多是論文圖表，本導讀已看過每張圖，把例子和數字整理出來。</p>
+  <div class="meta">
+    <span>講者 <b>Diyi Yang、Michael Ryan、John Yang</b></span>
+    <span>日期 <b>10/21（第 5 週）</b></span>
+    <span>原檔 <a href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf" target="_blank" rel="noopener">lecture09.pdf ↗</a></span>
+  </div>
+
+  <div class="howto">
+    <h2>怎麼用這頁</h2>
+    <ul>
+      <li>左側的<b>頁碼</b>可直接跳到官方 PDF 的那一頁。合併的卡片會跳到範圍的第一頁。</li>
+      <li>標了 <span class="key">重點</span> 的頁面是整講的核心，時間不夠時先讀這些。</li>
+      <li>標了 <span class="img-only">圖片頁</span> 的頁面幾乎沒有文字；圖表數字是從投影片圖片判讀的，從折線圖估讀的數字會標「約」。</li>
+      <li>MIPROv2 的逐步示範（p.27–63）是同一張圖的動畫，本導讀把它合併成幾張卡，用流程列出每一步。</li>
+      <li>整講的主線（p.8）：<b>要優化一個 AI 系統，資料、系統、評測指標三樣缺一不可</b>；而指標一旦交給自動優化器，就是你最需要守好的東西（p.116）。</li>
+    </ul>
+    <div class="linkmode">
+      <span>譯文連結指向：</span>
+      <span class="seg" role="group" aria-label="譯文連結指向">
+        <button type="button" id="mode-online" data-mode="online" aria-pressed="true">線上 cs.xuyili.com</button>
+        <button type="button" id="mode-local" data-mode="local" aria-pressed="false">本地 127.0.0.1:8329</button>
+      </span>
+    </div>
+  </div>
+
+  <div class="best">
+    <a class="rd" data-slug="Agrawal2026_GEPA" href="https://cs.xuyili.com/reading/Agrawal2026_GEPA.html" target="_blank" rel="noopener"><small>必讀 · Part 3、6 反思式優化</small><span>GEPA: Reflective Prompt Evolution</span></a>
+    <a class="rd" data-slug="Opsahl-Ong2024_MIPROv2" href="https://cs.xuyili.com/reading/Opsahl-Ong2024_MIPROv2.html" target="_blank" rel="noopener"><small>推薦 · Part 3 逐步示範的原論文</small><span>MIPROv2</span></a>
+    <a class="rd" data-slug="Soylu2024_FineTuning_and_Prompt_Optimization_EMNLP2024" href="https://cs.xuyili.com/reading/Soylu2024_FineTuning_and_Prompt_Optimization_EMNLP2024.html" target="_blank" rel="noopener"><small>推薦 · Part 6 先 prompt 再權重</small><span>BetterTogether</span></a>
+  </div>
+</header>
+
+<nav class="parts" aria-label="段落">
+  <a href="#part0">0 開場</a>
+  <a href="#part1">1 優化的條件</a>
+  <a href="#part2">2 少樣本優化</a>
+  <a href="#part3">3 反思式優化</a>
+  <a href="#part4">4 權重優化</a>
+  <a href="#part5">5 用 agent 優化</a>
+  <a href="#part6">6 該用哪一種</a>
+  <a href="#part7">7 總結</a>
+  <a href="#glossary">術語表</a>
+</nav>
+
+<!-- ============ PART 0 ============ -->
+<section class="part" id="part0">
+  <div class="part-head">
+    <span class="no">PART 0 · p.1–6</span>
+    <h2>開場：哪個 prompt 最好？</h2>
+    <p>公告、一個小投票，以及本講的學習目標與時間分配。</p>
+  </div>
+
+  <article class="slide" id="p1">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=1" target="_blank" rel="noopener"><b>1–2</b></a>
+    <div class="body">
+    <h3>封面與公告 <span class="en">Optimization · Announcements</span></h3>
+    <ul>
+      <li>下週一有客座演講；作業 2 下週一發布。</li>
+      <li>作業 1 下週五截止，再下一週是期中報告（midway report）。</li>
+    </ul>
+      </div>
+  </article>
+
+  <article class="slide" id="p3">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=3" target="_blank" rel="noopener"><b>3</b></a>
+    <div class="body">
+    <h3>小投票：哪個 prompt 對 PaLM 2 最好？ <span class="en">Quick Poll: Which Prompt is best for PaLM 2-L-IT</span></h3>
+    <p>同一道數學題，只在後面接不同的一句話：</p>
+    <div class="tbl"><table>
+      <thead><tr><th>選項</th><th>接在題目後的句子</th><th>GSM8K 準確率</th></tr></thead>
+      <tbody>
+        <tr><td>A</td><td>Let's think step by step.</td><td class="num">71.8%</td></tr>
+        <tr><td>B</td><td>Take a deep breath and work on this problem step-by-step.</td><td class="num"><b>80.2%</b></td></tr>
+        <tr><td>C</td><td>Let's combine our numerical command and clear thinking to quickly and accurately decipher the answer.</td><td class="num">74.5%</td></tr>
+      </tbody>
+    </table></div>
+    <p>答案在 p.25 揭曉（OPRO 論文 Table 1）：B 最好。投影片上的數字是按大小排的，對應關係以 p.25 的表為準。重點是，三句意思差不多的話能差 8 個百分點，而最好的那句是 LLM 自己搜出來的，人很難猜到。</p>
+    <p>（小提醒：OPRO 表中負責打分的模型是預訓練版 PaLM 2-L；PaLM 2-L-IT 是<b>產生</b> B 這句話的優化器模型。投票題目把兩者寫在一起了。）</p>
+      </div>
+  </article>
+
+  <article class="slide" id="p4">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=4" target="_blank" rel="noopener"><b>4–6</b></a>
+    <div class="body">
+    <h3>本講主旨、學習目標與大綱 <span class="en">Learning Objectives · Lecture Overview</span> <span class="key">重點</span></h3>
+    <ul>
+      <li>p.4：優化讓我們能<b>透過資料和評測來表達意圖</b>，並據此改進系統。今天要拆解常見的優化演算法，以及各自什麼時候用。</li>
+      <li>學習目標：判斷什麼時候該對 AI 系統做優化；說明常見的上下文優化與權重優化演算法；分辨各種策略的使用時機。</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>段落</th><th>時間</th><th>本導讀</th></tr></thead>
+      <tbody>
+        <tr><td>優化的條件</td><td class="num">5 分</td><td>Part 1</td></tr>
+        <tr><td>上下文優化</td><td class="num">25 分</td><td>Part 2–3</td></tr>
+        <tr><td>權重優化</td><td class="num">25 分</td><td>Part 4</td></tr>
+        <tr><td>用 agent 做優化</td><td class="num">10 分</td><td>Part 5</td></tr>
+        <tr><td>該用哪種策略</td><td class="num">10 分</td><td>Part 6</td></tr>
+      </tbody>
+    </table></div>
+    <p>每段開頭都有一張分隔頁（p.7、12、70、105、117），列出五個段落並標出目前位置；各段內還有小標題頁（p.13、23、71、80、96、106、112）。這些頁本導讀不另外成卡。</p>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 1 ============ -->
+<section class="part" id="part1">
+  <div class="part-head">
+    <span class="no">PART 1 · p.7–11 · 5 分鐘</span>
+    <h2>優化的條件</h2>
+    <p>優化需要什麼材料、什麼時候值得做、能換到什麼好處。</p>
+  </div>
+
+  <article class="slide" id="p8">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=8" target="_blank" rel="noopener"><b>8</b></a>
+    <div class="body">
+    <h3>AI 系統的三根支柱 <span class="en">Three Pillars of AI Systems</span> <span class="key">重點</span></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>資料 Data</th><th>系統或模型 System or Model</th><th>評測與指標 Evaluation + Metric</th></tr></thead>
+      <tbody>
+        <tr><td>訓練資料、rollout（實際執行軌跡）、示範、人類回饋……</td><td>語言模型、複合 AI 系統／workflow、agent 系統……</td><td>通過率、完全比對、LLM 評審、成本／延遲……</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>要優化一個 AI 系統，三樣都要有。</b>後面每個演算法都可以用這三格去拆：它吃什麼資料、改系統的哪個部分（prompt 還是權重）、用什麼指標判斷變好。</p>
+    <div class="terms"><span><em>rollout</em>rollout（實際跑一次任務的軌跡）</span><span><em>metric</em>指標</span><span><em>compound AI system</em>複合 AI 系統</span></div>
+    <div class="reads"><a class="rd" data-slug="Zaharia2024_Compound_AI_Systems_BAIR_blog" href="https://cs.xuyili.com/reading/Zaharia2024_Compound_AI_Systems_BAIR_blog.html" target="_blank" rel="noopener">The Shift to Compound AI Systems（「優化整個系統」的出發點）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p9">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=9" target="_blank" rel="noopener"><b>9</b></a>
+    <div class="body">
+    <h3>上下文優化還有必要嗎？ <span class="en">Is (Context) Optimization Necessary?</span></h3>
+    <ul>
+      <li>常見質疑：還需要調 prompt 嗎？模型不是規模一大就自然變好？</li>
+      <li>回答：優化的價值在<b>最後一哩</b>的調適。模型提供很好的通用解，一旦知道你的確切場景，就能針對細節再調整。</li>
+    </ul>
+    <p>配圖出自一篇談「最後一哩問題」的 Substack 文章（msukhareva.substack.com），請看原頁。</p>
+    <div class="terms"><span><em>last-mile adaptation</em>最後一哩調適</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p10">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=10" target="_blank" rel="noopener"><b>10</b></a>
+    <div class="body">
+    <h3>什麼時候該優化 <span class="en">When to Optimize</span> <span class="key">重點</span></h3>
+    <ul>
+      <li>你有符合自己領域的資料和評測。</li>
+      <li>有些需求很難完整寫進 prompt 或系統設計，但可以用例子和回饋傳達。</li>
+      <li>有時好的評測比文字更能表達意圖，這時就把系統調到符合你的評測。</li>
+      <li>系統元件很多、很複雜，手動調不動。</li>
+    </ul>
+    <p>第三點和 Lecture 6（評測）呼應：寫出好的評測，本身就是在寫規格。</p>
+    <div class="reads"><a class="rd" data-slug="Shankar2024_Who_Validates_the_Validators_UIST2024" href="https://cs.xuyili.com/reading/Shankar2024_Who_Validates_the_Validators_UIST2024.html" target="_blank" rel="noopener">Who Validates the Validators?（評測標準本身怎麼對齊意圖）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p11">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=11" target="_blank" rel="noopener"><b>11</b></a>
+    <div class="body">
+    <h3>優化的好處 <span class="en">Benefits of Optimization</span></h3>
+    <ul>
+      <li><b>更可靠</b>：減少反覆出現的錯誤，提高不同任務間的一致性。</li>
+      <li><b>領域調適</b>：在專門任務、流程與需求上表現更好。</li>
+      <li><b>更低成本與延遲</b>：用更小的模型、更短的 prompt 或更少的工具呼叫維持品質。</li>
+      <li><b>從經驗學習</b>：把成功軌跡和失敗回饋變成持久的改進。</li>
+      <li><b>適應變化</b>：模型、工具和任務需求改變時，能跟著調整行為。</li>
+    </ul>
+    <div class="reads"><a class="rd" data-slug="Shankar2024_Data_Flywheels_blog" href="https://cs.xuyili.com/reading/Shankar2024_Data_Flywheels_blog.html" target="_blank" rel="noopener">Data Flywheels（把線上回饋變成持續改進）</a></div>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 2 ============ -->
+<section class="part" id="part2">
+  <div class="part-head">
+    <span class="no">PART 2 · p.12–22 · 上下文優化（上）</span>
+    <h2>少樣本優化</h2>
+    <p>不改 prompt 的指令，只挑選與排列放進 prompt 的範例，甚至讓模型自己產生帶推理的範例。</p>
+  </div>
+
+  <article class="slide" id="p13">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=13" target="_blank" rel="noopener"><b>13–14</b></a>
+    <div class="body">
+    <h3>少樣本提示 <span class="en">Fewshot Prompting</span> <span class="img-only">圖片頁</span></h3>
+    <ul>
+      <li>p.13 是小標題頁「少樣本優化」。</li>
+      <li>p.14 引用 GPT-3 論文（arXiv 2005.14165）的示意圖：在 prompt 裡放幾個「輸入 → 輸出」範例，模型就能照著做新的題目，不需要更新權重。</li>
+    </ul>
+    <p>接下來幾頁的問題是：放哪幾個範例、什麼順序、範例裡要不要有推理過程？</p>
+    <div class="terms"><span><em>few-shot prompting</em>少樣本提示</span><span><em>in-context learning</em>上下文學習</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p15">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=15" target="_blank" rel="noopener"><b>15–18</b></a>
+    <div class="body">
+    <h3>範例順序也會影響結果 <span class="en">Fantastically Ordered Prompts and Where to Find Them · Lu et al., 2022</span></h3>
+    <p>同樣四個範例換個順序，準確率可能差很多。Lu et al. 的做法是不用標註資料就挑出好順序：</p>
+    <div class="flow"><span>列舉範例排列<br><small>Train 1–4 的各種順序</small></span><i>→</i><span>讓模型自己生成<br><small>一組探測集 probing set</small></span><i>→</i><span>用每種順序預測探測集<br><small>看標籤分佈</small></span><i>→</i><span>挑熵高的順序</span></div>
+    <ul>
+      <li>p.15：探測集的句子和標籤都是模型自己生成的；評分時<b>不看探測集的正確答案</b>，只看預測分佈。（投影片把這頁的圖片出處標成 GPT-3 論文，但圖其實來自 Lu et al.，arXiv 2104.08786。）</li>
+      <li>p.16 <b>全域熵</b>：整個探測集的預測標籤分佈。四句預測成 0、0、1、1 是高熵；全部預測成 0 是低熵，代表這個順序讓模型偏向某一類，是壞順序。</li>
+      <li>p.17 <b>局部熵</b>：對每一句看模型在各標籤上的機率，再對探測集取平均。機率分得較開的是高熵、極度篤定的是低熵；同樣偏好高熵順序，避免過度自信的排列。</li>
+      <li>p.18 結果表（11 個分類資料集 × GPT-2 0.1B 到 GPT-3 175B）：用 GlobalE／LocalE 挑順序，大多比隨機順序好，並接近 Oracle（在開發集上試遍所有順序選最好的）。例：GPT-2 0.8B 在 SST-2 上，隨機 74.5 → GlobalE 84.8，Oracle 88.9。</li>
+    </ul>
+    <div class="terms"><span><em>probing set</em>探測集</span><span><em>global entropy</em>全域熵</span><span><em>local entropy</em>局部熵</span><span><em>oracle</em>Oracle（理想上限）</span></div>
+    <div class="reads"><span class="none">本站未收錄：Lu et al., ACL 2022（arXiv 2104.08786）</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p19">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=19" target="_blank" rel="noopener"><b>19–20</b></a>
+    <div class="body">
+    <h3>自舉推理：STaR <span class="en">Bootstrap Reasoning · STaR [Zelikman et al., 2022]</span></h3>
+    <ul>
+      <li>p.19：我們知道思維鏈（CoT）很重要（圖出自 CoT 論文 arXiv 2201.11903），但有標註的少樣本範例通常只有答案、沒有推理過程。</li>
+      <li>p.20：STaR 用<b>拒絕採樣</b>把推理過程「挖」出來：</li>
+    </ul>
+    <div class="flow"><span>問題 → 模型<br><small>生成推理＋答案</small></span><i>→</i><span>答對<br><small>保留這組推理</small></span><i>→</i><span>答錯<br><small>給提示（正確答案）請模型「合理化」</small></span><i>→</i><span>用保留的推理微調<br><small>再跑下一輪</small></span></div>
+    <div class="example">
+      <div class="row"><span class="lab">問題</span><span>什麼可以用來搬運小狗？(a) 游泳池 (b) 籃子 (c) 狗展 (d) 後院 (e) 自己家</span></div>
+      <div class="row"><span class="lab">推理</span><span class="ok">答案必須是能裝著小狗移動的東西。籃子就是設計來裝東西的，所以答案是籃子 (b)。</span></div>
+    </div>
+    <div class="terms"><span><em>chain of thought (CoT)</em>思維鏈</span><span><em>rejection sampling</em>拒絕採樣</span><span><em>rationale</em>推理過程（理由）</span><span><em>rationalization</em>合理化</span></div>
+    <div class="reads"><span class="none">本站未收錄：STaR（arXiv 2203.14465）</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p21">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=21" target="_blank" rel="noopener"><b>21–22</b></a>
+    <div class="body">
+    <h3>自舉推理：DSPy <span class="en">Bootstrap Reasoning · DSPy [Khattab et al., 2023]</span> <span class="key">重點</span></h3>
+    <ul>
+      <li>p.21：連微調都不用，只要拒絕採樣出成功的推理。跑「輸入 → 模型 → 推理＋輸出 → 指標」，分數好的保留、差的丟掉；再在開發集上試不同組合，找出表現最好的少樣本範例。</li>
+      <li>p.22 左圖（Bootstrap Random Search）：① 對程式的每個模組，從訓練資料跑出 N×K 組通過指標的示範；② 隨機搜尋 I 種示範組合，比較分數（圖中示意 32%／16%／54%）挑最好的。</li>
+      <li>p.22 右表（DSPy 論文，GSM8K）：自舉推理加隨機搜尋，可以勝過人寫的推理或只給標準答案。</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>程式</th><th>編譯方式</th><th>GPT-3.5 開發集</th><th>Llama2-13b 開發集</th></tr></thead>
+      <tbody>
+        <tr><td>vanilla</td><td>none（零樣本）</td><td class="num">24.0</td><td class="num">7.0</td></tr>
+        <tr><td>vanilla</td><td>bootstrap×2</td><td class="num">64.7</td><td class="num">37.3</td></tr>
+        <tr><td>CoT</td><td>fewshot＋人寫推理</td><td class="num">78.6</td><td class="num">34.3</td></tr>
+        <tr><td>CoT</td><td>bootstrap</td><td class="num">80.3</td><td class="num">43.3</td></tr>
+        <tr><td>CoT</td><td>bootstrap＋ensemble</td><td class="num"><b>88.3</b></td><td class="num">43.7</td></tr>
+      </tbody>
+    </table></div>
+    <p>模型自己產生、並通過指標驗證的推理（80.3），比人寫的推理（78.6）還好用。Lecture 5 的 DSPy demo 用的就是這套。</p>
+    <div class="terms"><span><em>bootstrapping</em>自舉</span><span><em>demonstration</em>示範（少樣本範例）</span><span><em>random search</em>隨機搜尋</span></div>
+    <div class="reads"><a class="rd" data-slug="Khattab2024_DSPy_ICLR2024" href="https://cs.xuyili.com/reading/Khattab2024_DSPy_ICLR2024.html" target="_blank" rel="noopener">DSPy（本頁直接引用）</a></div>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 3 ============ -->
+<section class="part" id="part3">
+  <div class="part-head">
+    <span class="no">PART 3 · p.23–69 · 上下文優化（下）</span>
+    <h2>反思式優化</h2>
+    <p>讓 LLM 看過去的嘗試與結果，自己寫出更好的指令：OPRO、MIPROv2、TextGrad、GEPA。</p>
+  </div>
+
+  <article class="slide" id="p24">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=24" target="_blank" rel="noopener"><b>24–25</b></a>
+    <div class="body">
+    <h3>LLM 當優化器：OPRO <span class="en">Large Language Models as Optimizers [Yang et al., 2024]</span> <span class="key">重點</span></h3>
+    <ul>
+      <li>p.24：讓 LLM 看到過去的指令和各自的分數，再請它寫一條新指令。圖中的「元提示」（meta-prompt）結構：</li>
+    </ul>
+    <div class="example">
+      <div class="row"><span class="lab">說明</span><span>以下是一些文字和分數，依分數由低到高排列，分數越高品質越好。</span></div>
+      <div class="row"><span class="lab">歷史</span><span>「Let's figure it out!」得 61；「Let's solve the problem.」得 63；……</span></div>
+      <div class="row"><span class="lab">範例</span><span>把你的文字填進 &lt;INS&gt;：「Alannah、Beatrix、Queen 共有幾本書？A: &lt;INS&gt;」，標準答案 140。</span></div>
+      <div class="row"><span class="lab">要求</span><span>寫一段和舊的不同、分數盡量高的新文字，放在方括號裡。</span></div>
+    </div>
+    <ul>
+      <li>p.25：OPRO 找出了「Take a deep breath…」這類有趣的策略。GSM8K 零樣本準確率（打分模型為 PaLM 2-L）：</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>來源</th><th>指令</th><th>準確率</th></tr></thead>
+      <tbody>
+        <tr><td>基準（Kojima et al.）</td><td>Let's think step by step.</td><td class="num">71.8</td></tr>
+        <tr><td>基準</td><td>（空字串）</td><td class="num">34.0</td></tr>
+        <tr><td>PaLM 2-L-IT 優化</td><td>Take a deep breath and work on this problem step-by-step.</td><td class="num"><b>80.2</b></td></tr>
+        <tr><td>PaLM 2-L 優化</td><td>Break this down.</td><td class="num">79.9</td></tr>
+        <tr><td>gpt-3.5-turbo 優化</td><td>A little bit of arithmetic and a logical approach will help us quickly arrive at the solution…</td><td class="num">78.5</td></tr>
+        <tr><td>gpt-4 優化</td><td>Let's combine our numerical command and clear thinking…</td><td class="num">74.5</td></tr>
+      </tbody>
+    </table></div>
+    <p>這就是 p.3 投票的答案。驗算 Kojima 句與空字串差距：71.8 − 34.0 = 37.8 個百分點；優化後比 Kojima 句再高 8.4。</p>
+    <div class="terms"><span><em>OPRO</em>以 prompt 做優化（Optimization by PROmpting）</span><span><em>meta-prompt</em>元提示</span></div>
+    <div class="reads"><span class="none">本站未收錄：OPRO（arXiv 2309.03409）</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p26">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=26" target="_blank" rel="noopener"><b>26</b></a>
+    <div class="body">
+    <h3>MIPROv2 三步驟 <span class="en">MIPROv2 [Opsahl-Ong et al., 2024]</span> <span class="key">重點</span></h3>
+    <div class="flow"><span>① 自舉示範<br><small>若程式用 CoT，連推理一起收</small></span><i>→</i><span>② 依反思提出指令<br><small>有根據的指令提案</small></span><i>→</i><span>③ 搜尋指令 × 示範的組合<br><small>貝氏代理模型</small></span></div>
+    <p>MIPROv2 把前面兩條路合起來：少樣本示範用 DSPy 的自舉法（Part 2），指令用 LLM 提案（類似 OPRO），最後同時搜尋兩者的最佳搭配。接下來 p.27–63 用一個<b>鳶尾花分類</b>的 LM 程式逐步示範。</p>
+    <div class="terms"><span><em>MIPRO</em>多提示指令提案優化器（Multi-prompt Instruction PRoposal Optimizer）</span></div>
+    <div class="reads"><a class="rd" data-slug="Opsahl-Ong2024_MIPROv2" href="https://cs.xuyili.com/reading/Opsahl-Ong2024_MIPROv2.html" target="_blank" rel="noopener">MIPROv2（本頁直接引用）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p27">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=27" target="_blank" rel="noopener"><b>27–34</b></a>
+    <div class="body">
+    <h3>步驟 ①：自舉少樣本示範 <span class="en">Bootstrap Fewshot Generation</span></h3>
+    <p>同一張圖的逐步動畫：把訓練範例跑好幾次，收集程式的成功軌跡當少樣本示範。</p>
+    <div class="flow"><span>LM 程式<br><small><code>classify_iris(ptl_len, ptl_wid, sep_len, sep_wid)</code></small></span><i>→</i><span>餵入訓練輸入</span><i>→</i><span>產生推理＋預測物種</span><i>→</i><span>指標打分<br><small>差：丟掉（p.32）／好：保留（p.33）</small></span></div>
+    <div class="example">
+      <div class="row"><span class="lab">輸入</span><span>petal_length 1.4、petal_width 0.2、sepal_length 4.6、sepal_width 3.2</span></div>
+      <div class="row"><span class="lab">推理</span><span>花瓣長 1.4 cm，比其他品種短；花瓣寬 0.2 cm 也窄；萼片長 4.6、寬 3.2 相對長且寬。根據這些特徵，推斷是 setosa。</span></div>
+      <div class="row"><span class="lab">答案</span><span class="ok">setosa（通過指標，保留為示範）</span></div>
+    </div>
+    <div class="terms"><span><em>trace</em>軌跡</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p35">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=35" target="_blank" rel="noopener"><b>35–40</b></a>
+    <div class="body">
+    <h3>步驟 ②（上）：程式與資料的背景 <span class="en">Grounded Instruction Proposal: Program-Aware · Data-Aware Grounding</span></h3>
+    <p>提出指令前，先蒐集任務的各種細節交給「提案用的 LM」，讓它寫出有根據的指令。前兩種背景：</p>
+    <ul>
+      <li><b>1. 程式背景</b>（p.36–38）：讓 LM 讀程式碼，寫出摘要。例：「這個程式要根據花瓣和萼片的尺寸，把鳶尾花分成 setosa、versicolour、virginica 三種，並用語言模型逐步推理尺寸來預測。」</li>
+      <li><b>2. 資料背景</b>（p.39–40）：讓 LM 看訓練資料表，寫出資料摘要。例：「資料有三類，各類在花瓣長寬上分佈明顯不同；萼片長寬的趨勢較不明顯。species 欄位和答案重複，沒有額外資訊。」</li>
+    </ul>
+    <p>注意 p.40 的資料摘要結尾還留著「這樣對嗎？我可以改進嗎？」，這是 LM 原始輸出的樣子，投影片沒有修掉。</p>
+    <div class="terms"><span><em>grounded instruction proposal</em>有根據的指令提案</span><span><em>program-aware</em>程式感知</span><span><em>data-aware</em>資料感知</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p41">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=41" target="_blank" rel="noopener"><b>41–43</b></a>
+    <div class="body">
+    <h3>步驟 ②（中）：成功的自舉軌跡 <span class="en">Successful Bootstrapped Program Traces</span></h3>
+    <ul>
+      <li>p.41 列出兩次呼叫：<code>classify_iris(5.1, 3.5, 1.4, 0.2)</code> → 「versicolor」，以及 <code>classify_iris(5.1, 1.8, 5.9, 3.0)</code> → 「verginica」。第一筆其實是 setosa 的資料（對照 p.39 表的第一列），所以答錯；p.42 只留下第二筆。</li>
+      <li>p.43 展開留下的那筆軌跡：推理說「花瓣長 5.1 比 setosa（通常約 4.8）長、寬 1.8 比 setosa（通常約 1.5）寬……萼片 5.9 和 3.0 比較像 virginica」，答案寫成「virginia」。</li>
+    </ul>
+    <p>這頁的推理其實有錯：setosa 的花瓣長通常約 1.5 cm、寬約 0.2 cm，4.8 和 1.5 比較接近 versicolor；答案也拼錯了。它能留下來，是因為指標只檢查最後答案。這正好說明自舉法的弱點：<b>過濾只看結果，不保證推理正確</b>。</p>
+      </div>
+  </article>
+
+  <article class="slide" id="p44">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=44" target="_blank" rel="noopener"><b>44–47</b></a>
+    <div class="body">
+    <h3>步驟 ②（下）：提示技巧與產生的指令 <span class="en">Prompting Tips · Instructions</span></h3>
+    <ul>
+      <li><b>4. 提示技巧</b>（p.44）：每次隨機給提案 LM 一條技巧，例如「大膽發揮創意」「在指令中加入一個高風險情境，讓模型必須解出任務」「給模型一個和任務相關的角色（You are a…）」「保持指令清楚簡潔」。</li>
+      <li>p.45：程式摘要、資料摘要、成功軌跡、技巧四樣一起送進提案 LM，產出候選指令。</li>
+      <li>p.46–47 產生的候選指令，例如：</li>
+    </ul>
+    <div class="example">
+      <div class="row"><span class="lab">候選 1</span><span>用提供的花瓣長寬、萼片長寬（cm）準確預測鳶尾花品種，<b>拯救一個極度瀕危的物種免於滅絕</b>。</span></div>
+      <div class="row"><span class="lab">候選 2</span><span>給定花瓣與萼片尺寸，預測品種（setosa、versicolour 或 virginica），並依測量值提供逐步推理。</span></div>
+      <div class="row"><span class="lab">候選 3</span><span>在一種稀有鳶尾花瀕臨滅絕的危急情況下，根據花瓣與萼片尺寸預測品種以拯救它。</span></div>
+    </div>
+    <p>候選 1、3 就是「高風險情境」技巧的產物。哪一條比較好，交給步驟 ③ 的搜尋決定。</p>
+      </div>
+  </article>
+
+  <article class="slide" id="p48">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=48" target="_blank" rel="noopener"><b>48–62</b></a>
+    <div class="body">
+    <h3>步驟 ③：搜尋指令與示範的組合 <span class="en">Optimizing the Combination of Instructions and Demonstrations</span></h3>
+    <p>手上已有 N 條候選指令和 N 組示範。用<b>貝氏代理模型</b>反覆抽樣組合，更新「哪條指令、哪組示範比較好」的信念（beliefs）。逐步動畫：</p>
+    <div class="flow"><span>依信念抽參數<br><small>例：指令 1＋示範組 2（p.49–51）</small></span><i>→</i><span>填進程式<br><small>p.52–53</small></span><i>→</i><span>抽一個訓練小批次<br><small>p.54</small></span><i>→</i><span>跑程式、算指標<br><small>p.55</small></span><i>→</i><span>依結果更新信念<br><small>p.56–57</small></span></div>
+    <ul>
+      <li>p.58–62：重複 num_batches 次，每隔幾輪做一次完整評測（不只小批次）。p.62 顯示信念更新後，候選的排序換了位置。</li>
+      <li>用小批次評估是為了省成本：每個組合都在完整資料集上跑太貴。</li>
+    </ul>
+    <div class="terms"><span><em>Bayesian surrogate model</em>貝氏代理模型</span><span><em>minibatch</em>小批次</span><span><em>full evaluation</em>完整評測</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p63">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=63" target="_blank" rel="noopener"><b>63</b></a>
+    <div class="body">
+    <h3>優化後的模組長什麼樣 <span class="en">Example Optimized Module</span></h3>
+    <div class="example">
+      <div class="row"><span class="lab">原指令</span><span class="bad">Given the petal and sepal dimensions in cm, predict the iris species.</span></div>
+      <div class="row"><span class="lab">新指令</span><span class="ok">Given the critical situation in which a rare species of iris is on the brink of extinction, predict the iris species… in order to save it from extinction.</span></div>
+      <div class="row"><span class="lab">示範</span><span>petal_length 1.5、petal_width 0.1、sepal_length 5.2、sepal_width 4.1 → 推理 → setosa</span></div>
+    </div>
+    <p>最後勝出的是「高風險情境」那條指令，加上一組自舉出來的示範。這類指令人通常不會想寫，卻是搜尋出來分數最好的。</p>
+      </div>
+  </article>
+
+  <article class="slide" id="p64">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=64" target="_blank" rel="noopener"><b>64</b></a>
+    <div class="body">
+    <h3>文字梯度：TextGrad <span class="en">Feedback Gradients (TextGrad) [Yuksekgonul et al., 2024]</span></h3>
+    <ul>
+      <li>讓 LLM 反思輸出哪裡可以改進，再把這份回饋<b>沿著系統往回傳</b>到各個 prompt。</li>
+      <li>圖中系統：Prompt、Query、Tool Prompt 三個輸入，經過 LLM、搜尋引擎、工具呼叫器產生中間輸出，再匯到一個 LLM 得到最終輸出，最後由評估用 LLM 依評估指令算出 Loss。</li>
+      <li>類比反向傳播：∂Loss/∂Response ＝「這個回答可以這樣改進……」；∂Loss/∂Prompt ＝「這個 prompt 可以這樣改進……」。梯度不是數字，是一段文字。</li>
+    </ul>
+    <div class="terms"><span><em>textual gradient</em>文字梯度</span><span><em>backpropagation</em>反向傳播</span></div>
+    <div class="reads"><span class="none">本站未收錄：TextGrad（arXiv 2406.07496）</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p65">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=65" target="_blank" rel="noopener"><b>65</b></a>
+    <div class="body">
+    <h3>GEPA：基因–帕累托式的 prompt 演化 <span class="en">Genetic Pareto Prompt Evolution (GEPA) [Agrawal et al., 2026]</span> <span class="key">重點</span> <span class="img-only">圖片頁</span></h3>
+    <p>整頁是 GEPA 的演算法流程圖，依圖整理：</p>
+    <div class="flow"><span>候選池 P<br><small>P0 為初始 prompt，長成一棵樹</small></span><i>→</i><span>分數矩陣<br><small>每個候選 × 每個任務</small></span><i>→</i><span>帕累托過濾<br><small>只留至少在一題上最好的候選</small></span><i>→</i><span>產生新候選 P<sub>new</sub></span><i>→</i><span>小批次評估<br><small>有進步才完整評估並加入候選池</small></span></div>
+    <ul>
+      <li>產生新候選有兩種方式：<b>反思式 prompt 突變</b>（挑一個候選，在小批次上跑 rollout，用回饋函數 μ<sub>f</sub> 取得文字回饋，再反思並提出新 prompt），以及<b>系統感知合併</b>（挑兩個候選，每個模組從兩者中挑演化過的那個版本）。</li>
+      <li>帕累托過濾的用意：不只保留平均最好的候選，也保留在某些題目上特別強的，讓搜尋維持多樣性，不會太早收斂到單一路線。</li>
+      <li>整個迴圈在預算用完前持續進行。</li>
+    </ul>
+    <div class="terms"><span><em>Pareto frontier</em>帕累托前緣</span><span><em>reflective prompt mutation</em>反思式 prompt 突變</span><span><em>system-aware merge</em>系統感知合併</span><span><em>candidate pool</em>候選池</span></div>
+    <div class="reads"><a class="rd" data-slug="Agrawal2026_GEPA" href="https://cs.xuyili.com/reading/Agrawal2026_GEPA.html" target="_blank" rel="noopener">GEPA（本頁直接引用，必讀）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p66">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=66" target="_blank" rel="noopener"><b>66–67</b></a>
+    <div class="body">
+    <h3>GEPA 實例：PAPILLON <span class="en">GEPA Example: PAPILLON [Siyan et al., 2025]</span></h3>
+    <ul>
+      <li>p.66：PAPILLON 是保護隱私的委派流程：① 本地的 Prompt Creator 把使用者問題改寫成不含隱私的請求 → ② 送給外部強大的 API LLM → ③ Information Aggregator 結合原問題和 LLM 回覆，產生最終答案。</li>
+      <li>起始 prompt（來自 GEPA 論文，不是 PAPILLON 原論文）：模組 1「給定一個私人的使用者問題，為強大的外部 LLM 建立保護隱私的請求，讓它能協助又不會得知使用者的私人資訊」；模組 3「回應使用者問題。我們找到一個可能相關的外部 LLM 請求與回覆供參考」。</li>
+      <li>p.67：模組 1 的 prompt 演化樹，括號內是分數。最佳路徑 0 → 2 → 4 → 5 → 11：</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>節點</th><th>分數</th><th>這一代加了什麼</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td class="num">82.26</td><td>基礎指令</td></tr>
+        <tr><td>2</td><td class="num">90.99</td><td>擴充隱私策略與任務理解：詳細說明怎麼辨識與泛化個資，強調分析問題意圖</td></tr>
+        <tr><td>4</td><td class="num">94.44</td><td>結構化輸出與領域最佳實務：拆成「推理」和「請求」兩段，明確禁止名字與代碼</td></tr>
+        <tr><td>5</td><td class="num">94.67</td><td>詳細透明的轉換理由：處理地點、人名、一般資訊的移除，每一步都附解釋</td></tr>
+        <tr><td>11</td><td class="num"><b>97.6</b></td><td>嚴格完整的流程：逐步抽象化個資與專有資訊，禁止只遮一半，零洩漏</td></tr>
+      </tbody>
+    </table></div>
+    <p>其他分支（例如 3 → 6 → 7、8）分數較低，但仍留在樹裡，這就是帕累托式保留多樣性的效果。</p>
+    <div class="terms"><span><em>privacy-preserving delegation</em>保護隱私的委派</span><span><em>PII</em>個人可識別資訊</span></div>
+    <div class="reads"><a class="rd" data-slug="Agrawal2026_GEPA" href="https://cs.xuyili.com/reading/Agrawal2026_GEPA.html" target="_blank" rel="noopener">GEPA（演化樹出自此篇）</a><span class="none">本站未收錄：PAPILLON（arXiv 2410.17127）</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p68">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=68" target="_blank" rel="noopener"><b>68</b></a>
+    <div class="body">
+    <h3>GEPA 結果 <span class="en">GEPA Results</span></h3>
+    <p>反思式 prompt 演化在各任務上都勝過基準。GPT-4.1 Mini、六個基準的總分：</p>
+    <div class="tbl"><table>
+      <thead><tr><th>方法</th><th>HotpotQA</th><th>PUPA</th><th>AIME-2025</th><th>總分</th><th>提升</th></tr></thead>
+      <tbody>
+        <tr><td>基準（未優化）</td><td class="num">38.00</td><td class="num">78.57</td><td class="num">49.33</td><td class="num">53.03</td><td>—</td></tr>
+        <tr><td>Trace (OptoPrime)</td><td class="num">60.33</td><td class="num">74.18</td><td class="num">45.33</td><td class="num">56.30</td><td class="num">+3.27</td></tr>
+        <tr><td>MIPROv2</td><td class="num">58.00</td><td class="num">83.37</td><td class="num">51.33</td><td class="num">58.67</td><td class="num">+5.64</td></tr>
+        <tr><td>TextGrad</td><td class="num">62.33</td><td class="num">85.68</td><td class="num">46.67</td><td class="num">59.14</td><td class="num">+6.11</td></tr>
+        <tr><td>GEPA</td><td class="num"><b>69.00</b></td><td class="num">94.47</td><td class="num"><b>59.33</b></td><td class="num">65.22</td><td class="num">+12.19</td></tr>
+        <tr><td>GEPA＋Merge</td><td class="num">65.67</td><td class="num"><b>96.46</b></td><td class="num"><b>59.33</b></td><td class="num"><b>66.36</b></td><td class="num"><b>+13.33</b></td></tr>
+      </tbody>
+    </table></div>
+    <p>表中只列六個基準裡的三個（另有 IFBench、Hover、LiveBench-Math）。PUPA 就是上一頁 PAPILLON 的隱私任務。驗算：66.36 − 53.03 ＝ 13.33。另外，用 Qwen3-8B 做優化、再拿到 GPT-4.1 Mini 上評估，總分仍有 62.03（+9.00），代表優化出的 prompt 可以跨模型轉移。</p>
+    <div class="reads"><a class="rd" data-slug="Agrawal2026_GEPA" href="https://cs.xuyili.com/reading/Agrawal2026_GEPA.html" target="_blank" rel="noopener">GEPA</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p69">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=69" target="_blank" rel="noopener"><b>69</b></a>
+    <div class="body">
+    <h3>上下文優化小結 <span class="en">Context Optimization Summary</span> <span class="key">重點</span></h3>
+    <ul>
+      <li><b>少樣本優化</b>：自舉推理或輸出，再搜尋有用的少樣本範例，是 prompt 優化的強力模式。</li>
+      <li><b>反思式優化</b>：實際跑任務、反思要改什麼，再寫進 prompt，是另一個強力模式。依帕累托前緣上的進步來演化 prompt 也有幫助。</li>
+    </ul>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 4 ============ -->
+<section class="part" id="part4">
+  <div class="part-head">
+    <span class="no">PART 4 · p.70–104 · 25 分鐘</span>
+    <h2>權重優化</h2>
+    <p>直接改模型參數的三條路：監督式微調、強化學習、on-policy 蒸餾。</p>
+  </div>
+
+  <article class="slide" id="p71">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=71" target="_blank" rel="noopener"><b>71–73</b></a>
+    <div class="body">
+    <h3>回顧：交叉熵與指令微調 <span class="en">Supervised Finetuning · Cross Entropy Loss · Instruction Finetuning</span></h3>
+    <ul>
+      <li>p.71 是小標題頁「監督式微調」。</li>
+      <li>p.72 交叉熵損失：L ＝ −Σ<sub>i=1..V</sub> y<sub>i</sub> log(p<sub>i</sub>)。對詞彙表中每個 token，y<sub>i</sub> 在它是資料中那個 token 時為 1、否則為 0；p<sub>i</sub> 是模型給它的機率。因為只有一個 y<sub>i</sub> 是 1，實際上就是「−log（正確 token 的機率）」。</li>
+      <li>p.73 指令微調：引用 Flan 論文（arXiv 2210.11416）的圖，把大量任務寫成「指令 → 回答」格式來微調。</li>
+    </ul>
+    <p>舉例（非投影片內容）：若模型給正確 token 機率 0.5，損失是 −ln 0.5 ≈ 0.69；機率 0.9 時降到約 0.105。</p>
+    <div class="terms"><span><em>SFT (supervised finetuning)</em>監督式微調</span><span><em>cross entropy loss</em>交叉熵損失</span><span><em>instruction finetuning</em>指令微調</span></div>
+    <div class="reads"><a class="rd" data-slug="Zhou2023_LIMA_NeurIPS2023" href="https://cs.xuyili.com/reading/Zhou2023_LIMA_NeurIPS2023.html" target="_blank" rel="noopener">LIMA（少量高品質資料做 SFT）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p74">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=74" target="_blank" rel="noopener"><b>74–75</b></a>
+    <div class="body">
+    <h3>agent 的 SFT <span class="en">SFT For Agents</span> <span class="key">重點</span></h3>
+    <ul>
+      <li>讓<b>老師</b>模型去做 agent 任務（rollout），再用老師完成的任務去後訓練<b>學生</b>模型。</li>
+      <li>重點放在任務與環境的多樣性；學生學到的是怎麼執行任務。</li>
+      <li>p.75：也可以用某種方式驗證老師的輸出，只拿通過的來訓練（拒絕採樣）。</li>
+    </ul>
+    <div class="example">
+      <div class="row"><span class="lab">使用者</span><span>找出目前目錄下所有檔名以 .example.com 結尾的檔案（不分大小寫），忽略 beta 子目錄，並把 stdout 與 stderr 存進指定檔案。</span></div>
+      <div class="row"><span class="lab">Agent</span><span><code>find . -type f -iname '*.example.com' ! -path './beta/*' &gt; /output/command_capture.txt 2&gt;&amp;1</code>；<code>wc -c</code> 檢查</span></div>
+      <div class="row"><span class="lab">終端機</span><span>48 /output/command_capture.txt</span></div>
+      <div class="row"><span class="lab">Agent</span><span>確認內容：<code>cat</code> 檔案 → ./alpha/one.example.com、./alpha/two.example.com</span></div>
+      <div class="row"><span class="lab">Agent</span><span class="ok">"task_complete": true</span></div>
+    </div>
+    <p>這是 OpenThoughts-Agent SFT 資料集的一筆（task_1087）。整條「想法＋指令＋觀察」軌跡就是學生要模仿的目標。</p>
+    <div class="terms"><span><em>teacher / student model</em>老師／學生模型</span><span><em>post-training</em>後訓練</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p76">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=76" target="_blank" rel="noopener"><b>76–77</b></a>
+    <div class="body">
+    <h3>OpenThoughts-Agent <span class="en">OpenThoughts-Agent [Raoof et al., 2026]</span></h3>
+    <ul>
+      <li>p.76：六階段 SFT 資料流水線：收集來源任務 → 混合任務 → 過濾任務 → 產生 rollout → 過濾 rollout → 選老師模型 → 最終配方。每一階段論文都個別做了消融實驗。後面的「Agent 資料」講次會再詳談。</li>
+      <li>p.77：用強老師的 rollout 微調是有效的。橫軸是資料量（316 到 100K 筆），OT-Agent Qwen3-32B 在 100K 筆時：SWE-Bench Verified（100 題子集）約 56%、Terminal-Bench 2.0 約 26%，全部基準平均約 45%；基礎 Qwen3-32B 分別只有約 4%、4%、16%。</li>
+      <li>資料越多分數越高，到 100K 還沒有飽和。這點在 p.120 會再用到。</li>
+    </ul>
+    <div class="reads"><span class="none">本站未收錄：OpenThoughts-Agent（arXiv 2606.24855）</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p78">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=78" target="_blank" rel="noopener"><b>78–79</b></a>
+    <div class="body">
+    <h3>FireAct <span class="en">FireAct [Chen et al., 2023]</span></h3>
+    <ul>
+      <li>p.78：用 GPT-4 在 HotpotQA、StrategyQA、MMLU 上，搭配 CoT、ReAct、Reflexion 三種推理方式跑出軌跡；只留正確的，統一轉成 ReAct 格式，拿去微調 Llama2。推論時讓微調後的模型<b>自己選</b>怎麼推理（簡單題就直接用 CoT 式的一步作答）。</li>
+      <li>p.79：用 GPT-4 rollout 微調後的 Llama2-13B，比直接提示的 GPT-3.5 還好。</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>模型</th><th>ReAct 提示</th><th>FireAct 微調</th><th>絕對／相對提升</th></tr></thead>
+      <tbody>
+        <tr><td>Llama-2-7B</td><td class="num">14.8</td><td class="num">26.2</td><td class="num">+11.4 / 77%</td></tr>
+        <tr><td>Llama-2-13B</td><td class="num">21.2</td><td class="num">34.4</td><td class="num">+13.1 / 62%</td></tr>
+        <tr><td>CodeLlama-34B</td><td class="num">22.2</td><td class="num">27.8</td><td class="num">+5.6 / 25%</td></tr>
+        <tr><td>GPT-3.5</td><td class="num">31.4</td><td class="num">39.2</td><td class="num">+7.8 / 25%</td></tr>
+      </tbody>
+    </table></div>
+    <p>HotpotQA 完全比對分數。Llama-2-13B 微調後 34.4，高於 GPT-3.5 用 ReAct 提示的 31.4。表上 13B 的差寫 +13.1，直接相減是 13.2，應是原始數字四捨五入造成。</p>
+    <div class="reads"><a class="rd" data-slug="Yao2023_ReAct_ICLR2023" href="https://cs.xuyili.com/reading/Yao2023_ReAct_ICLR2023.html" target="_blank" rel="noopener">ReAct（FireAct 統一使用的格式）</a><span class="none">本站未收錄：FireAct（arXiv 2310.05915）</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p80">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=80" target="_blank" rel="noopener"><b>80–82</b></a>
+    <div class="body">
+    <h3>agent 的強化學習 <span class="en">Reinforcement Learning · RL For Agents</span> <span class="key">重點</span></h3>
+    <ul>
+      <li>讓<b>學生自己</b>去做 agent 任務，成功完成就給獎勵。</li>
+      <li>重點放在環境的變化和任務的複雜度。<b>可驗證性是關鍵</b>：要能自動判斷任務有沒有完成。</li>
+      <li>p.82：外部獎勵負責驗證任務是否成功。同一題跑好幾次組成一個群組（group），幾個群組組成一個批次（batch）。</li>
+    </ul>
+    <div class="example">
+      <div class="row"><span class="lab">任務</span><span>同 p.75 的 task_1087</span></div>
+      <div class="row"><span class="lab">Agent</span><span>find … ／ wc -c ／ cat … ／ "task_complete": true</span></div>
+      <div class="row"><span class="lab">驗證器</span><span class="ok"><code>cmp -s "$EXPECTED" "$OUTPUT"</code>：與標準輸出完全相同 → 最終獎勵 1</span></div>
+    </div>
+    <p>和 p.75 對照：SFT 的訓練訊號是老師軌跡的每個 token；RL 只看最後驗證器給的一個分數，軌跡由學生自己產生。</p>
+    <div class="terms"><span><em>RL (reinforcement learning)</em>強化學習</span><span><em>reward</em>獎勵</span><span><em>verifier</em>驗證器</span><span><em>verifiability</em>可驗證性</span><span><em>group / batch</em>群組／批次</span></div>
+    <div class="reads"><a class="rd" data-slug="Yang2025_SWE-smith_NeurIPSD&amp;B2025" href="https://cs.xuyili.com/reading/Yang2025_SWE-smith_NeurIPSD&amp;B2025.html" target="_blank" rel="noopener">SWE-smith（大量產生可驗證的訓練環境）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p83">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=83" target="_blank" rel="noopener"><b>83–87</b></a>
+    <div class="body">
+    <h3>PPO 的流程與成本 <span class="en">PPO (figure from DeepSeekMath)</span></h3>
+    <p>圖出自 DeepSeekMath（arXiv 2402.03300）的 PPO／GRPO 比較圖，p.84–87 逐步加上標註：</p>
+    <div class="flow"><span>問題 q → 策略模型<br><small>產生輸出 o</small></span><i>→</i><span>參考模型算 KL<br><small>每個 token</small></span><i>→</i><span>獎勵模型<br><small>整個輸出一個分數</small></span><i>→</i><span>價值模型<br><small>每個 token 的價值 v</small></span><i>→</i><span>GAE 算優勢 A<br><small>這個 token 比其他可能的 token 好多少</small></span></div>
+    <ul>
+      <li>p.85：<b>記憶體要放四個模型</b>：策略、參考、獎勵、價值。</li>
+      <li>p.86：<b>每一步要訓練兩個模型</b>：策略模型和價值模型（圖中黃色）。</li>
+      <li>p.87：<b>好幾個昂貴的逐 token 步驟</b>：逐 token 的 KL、價值與優勢估計。</li>
+    </ul>
+    <div class="terms"><span><em>PPO</em>近端策略優化</span><span><em>policy model</em>策略模型</span><span><em>reference model</em>參考模型</span><span><em>reward model</em>獎勵模型</span><span><em>value model</em>價值模型</span><span><em>GAE</em>廣義優勢估計</span><span><em>advantage</em>優勢</span></div>
+    <div class="reads"><span class="none">本站未收錄：DeepSeekMath（arXiv 2402.03300）</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p88">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=88" target="_blank" rel="noopener"><b>88–92</b></a>
+    <div class="body">
+    <h3>GRPO：用群組取代價值模型 <span class="en">GRPO · Advantage Calculation</span> <span class="key">重點</span></h3>
+    <div class="flow"><span>問題 q → 策略模型<br><small>產生一組輸出 o<sub>1</sub>…o<sub>G</sub></small></span><i>→</i><span>每個輸出一個獎勵<br><small>r<sub>1</sub>…r<sub>G</sub></small></span><i>→</i><span>群組計算<br><small>算出 A<sub>1</sub>…A<sub>G</sub></small></span><i>→</i><span>只有 KL 是逐 token</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th>PPO</th><th>GRPO</th></tr></thead>
+      <tbody>
+        <tr><td>記憶體中的模型</td><td class="num">4（策略、參考、獎勵、價值）</td><td class="num">3（策略、參考、獎勵）</td></tr>
+        <tr><td>每步要訓練的模型</td><td class="num">2</td><td class="num">1</td></tr>
+        <tr><td>逐 token 的計算</td><td>KL、價值、優勢</td><td>只有 KL，其餘都在序列層級</td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li>p.89：「獎勵模型」不一定要是模型，可以是規則或驗證器（例如 p.82 的 <code>cmp</code>）。</li>
+      <li>p.92 優勢計算：對同一題的一組輸出，把每個獎勵換成 <b>z 分數</b>：A<sub>i</sub> ＝ (r<sub>i</sub> − 平均) ／ 標準差。比同組平均好的輸出得正優勢，差的得負優勢。</li>
+    </ul>
+    <p>舉例（非投影片內容）：一組 4 個輸出的獎勵是 1、0、0、1，平均 0.5、標準差 0.5，優勢就是 +1、−1、−1、+1。如果 4 個全對或全錯，標準差為 0，這題提供不了學習訊號，所以 RL 的題目難度要落在模型「有時對、有時錯」的範圍。</p>
+    <div class="terms"><span><em>GRPO</em>群組相對策略優化</span><span><em>z-score</em>z 分數（標準分數）</span><span><em>sequence-level</em>序列層級</span></div>
+    <div class="reads"><span class="none">本站未收錄：DeepSeekMath（arXiv 2402.03300）</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p93">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=93" target="_blank" rel="noopener"><b>93</b></a>
+    <div class="body">
+    <h3>GRPO 目標函數逐項拆解 <span class="en">GRPO Objective</span></h3>
+    <p>J<sub>GRPO</sub>(θ) ＝ E[ q ~ P(Q), {o<sub>i</sub>} ~ π<sub>θold</sub> ] (1/G) Σ<sub>i</sub> (1/|o<sub>i</sub>|) Σ<sub>t</sub> { min[ ratio · Â, clip(ratio, 1−ε, 1+ε) · Â ] − β·D<sub>KL</sub>[π<sub>θ</sub> ‖ π<sub>ref</sub>] }</p>
+    <div class="tbl"><table>
+      <thead><tr><th>部分</th><th>投影片的註解</th></tr></thead>
+      <tbody>
+        <tr><td>期望值 E[…]</td><td>從資料集抽一題，並對這題抽樣一組輸出</td></tr>
+        <tr><td>(1/G) Σ<sub>i</sub></td><td>對群組取平均</td></tr>
+        <tr><td>(1/|o<sub>i</sub>|) Σ<sub>t</sub></td><td>對回答中的 token 取平均</td></tr>
+        <tr><td>ratio ＝ π<sub>θ</sub> / π<sub>θold</sub></td><td>新策略相對舊策略，這個 token 變得多重要</td></tr>
+        <tr><td>Â<sub>i,t</sub></td><td>優勢（p.92 的 z 分數，同一輸出的每個 token 共用）</td></tr>
+        <tr><td>clip(…, 1−ε, 1+ε)</td><td>不要在任何一個 token 上更新過頭</td></tr>
+        <tr><td>β·D<sub>KL</sub></td><td>不要偏離參考模型太遠</td></tr>
+      </tbody>
+    </table></div>
+    <div class="terms"><span><em>clipping</em>截斷</span><span><em>KL divergence</em>KL 散度</span><span><em>importance ratio</em>重要性比率</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p94">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=94" target="_blank" rel="noopener"><b>94–95</b></a>
+    <div class="body">
+    <h3>真實案例：DeepSeek-R1 <span class="en">Real World Example · GRPO vs PPO for DeepSeekR1</span> <span class="img-only">圖片頁</span></h3>
+    <ul>
+      <li>p.94 DeepSeek-R1 的訓練流程（arXiv 2501.12948）：V3 Base 直接用 RL 得到 R1-Zero → 從 R1-Zero 抽樣、過濾並由人修整推理資料 → 用這些長 CoT 資料做冷啟動 SFT（Dev-1）→ RL（規則獎勵＋語言一致性，Dev-2）→ 混合推理與非推理資料再做 SFT（Dev-3）→ RL（規則獎勵＋偏好獎勵）得到 R1。SFT 和 RL 交替使用。</li>
+      <li>p.95：MATH 任務上 GRPO 與 PPO 的比較。2400 步時 GRPO 約 0.555，PPO（λ=1.0）約 0.535，PPO（λ=0.95）約 0.50；GRPO 全程領先或持平。</li>
+    </ul>
+    <div class="terms"><span><em>cold start</em>冷啟動</span><span><em>rule-based reward</em>規則式獎勵</span></div>
+    <div class="reads"><span class="none">本站未收錄：DeepSeek-R1（arXiv 2501.12948）</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p96">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=96" target="_blank" rel="noopener"><b>96–99</b></a>
+    <div class="body">
+    <h3>On-policy 蒸餾：在自己下的棋上被指導 <span class="en">On-Policy Distillation · SFT vs RL vs On Policy Distillation</span> <span class="key">重點</span></h3>
+    <ul>
+      <li>p.97：比喻「在你自己下過的棋局上接受指導，比看別人下棋更有用」。配圖是一個棋局分析畫面，引擎標出某一步是妙著。</li>
+      <li>p.98–99：三種方法用兩個維度比較（出自 Thinking Machines 部落格）：</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>方法</th><th>取樣來源</th><th>獎勵訊號</th></tr></thead>
+      <tbody>
+        <tr><td>監督式微調</td><td>off-policy（別人的軌跡）</td><td><b>密集</b>（每個 token 都有目標）</td></tr>
+        <tr><td>強化學習</td><td><b>on-policy</b>（學生自己的軌跡）</td><td>稀疏（整段一個分數）</td></tr>
+        <tr><td>On-policy 蒸餾</td><td><b>on-policy</b></td><td><b>密集</b></td></tr>
+      </tbody>
+    </table></div>
+    <p>On-policy 蒸餾想同時拿到兩邊的優點：學生在自己會走到的狀態上學（像 RL），但每個 token 都有老師給的訊號（像 SFT）。</p>
+    <div class="terms"><span><em>on-policy / off-policy</em>同策略／異策略</span><span><em>dense / sparse reward</em>密集／稀疏獎勵</span><span><em>distillation</em>蒸餾</span></div>
+    <div class="reads"><span class="none">本站未收錄：Thinking Machines〈On-Policy Distillation〉部落格</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p100">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=100" target="_blank" rel="noopener"><b>100</b></a>
+    <div class="body">
+    <h3>On-policy 蒸餾的損失 <span class="en">On Policy Distillation Loss</span></h3>
+    <p>KL(π<sub>θ</sub> ‖ π<sub>teacher</sub>) ＝ E<sub>x~π<sub>θ</sub></sub> [ log π<sub>θ</sub>(x<sub>t+1</sub>|x<sub>1..t</sub>) − log π<sub>teacher</sub>(x<sub>t+1</sub>|x<sub>1..t</sub>) ]</p>
+    <ul>
+      <li>期望值是對<b>學生自己抽樣出的回答</b>取的。</li>
+      <li>對每個 token，計算學生的 log 機率減去老師的 log 機率。老師覺得這個 token 很不可能時，差值大，懲罰就大。</li>
+    </ul>
+    <p>補充：這是「反向 KL」，學生只需要老師對學生已寫出的前綴打分，老師不必自己生成，所以比 RL 便宜很多。</p>
+    <div class="terms"><span><em>reverse KL</em>反向 KL</span><span><em>log probability</em>對數機率</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p101">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=101" target="_blank" rel="noopener"><b>101–103</b></a>
+    <div class="body">
+    <h3>例子與結果 <span class="en">On Policy Distillation Example · Real Model Example · Results</span></h3>
+    <ul>
+      <li>p.101：一道陷阱題「Beth 在第 1 分鐘放 4 塊冰、第 2 分鐘 5 塊、第 3 分鐘再放一些……放進正在煎蛋的平底鍋，第 3 分鐘結束時鍋裡有幾塊完整的冰？選最實際的答案」。學生算 4＋5＋11＝20，選 C，還特別「假設冰塊沒有融化」。依題意「最實際」的答案應是冰塊都融了（B. 0）。圖中每個 token 的底色深淺代表老師給的懲罰大小，「Note」「removed」「melted or」這些關鍵轉折處顏色最深。</li>
+      <li>p.102：Qwen3 的後訓練流程。旗艦模型（235B-A22B、32B）走四階段：長 CoT 冷啟動 → 推理 RL → 思考模式融合 → 通用 RL；輕量模型（30B-A3B、14B、8B、4B、1.7B、0.6B）則從旗艦模型做「強到弱蒸餾」。</li>
+      <li>p.103：on-policy 蒸餾更有效率，產出的模型也比 RL 好（Qwen3 技術報告 Table 21）：</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>方法</th><th>AIME'24</th><th>GPQA-Diamond</th><th>GPU 小時</th></tr></thead>
+      <tbody>
+        <tr><td>Off-policy 蒸餾（起點）</td><td class="num">55.0%</td><td class="num">55.6%</td><td>未公布</td></tr>
+        <tr><td>＋強化學習</td><td class="num">67.6%</td><td class="num">61.3%</td><td class="num">17,920</td></tr>
+        <tr><td>＋On-policy 蒸餾</td><td class="num"><b>74.4%</b></td><td class="num"><b>63.3%</b></td><td class="num"><b>1,800</b></td></tr>
+      </tbody>
+    </table></div>
+    <p>驗算：17,920 ÷ 1,800 ≈ 10，GPU 時數約少一個數量級，分數還更高。</p>
+    <div class="terms"><span><em>strong-to-weak distillation</em>強到弱蒸餾</span></div>
+    <div class="reads"><span class="none">本站未收錄：Qwen3 Technical Report；Thinking Machines 部落格</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p104">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=104" target="_blank" rel="noopener"><b>104</b></a>
+    <div class="body">
+    <h3>權重優化小結 <span class="en">Weight Optimization Summary</span> <span class="key">重點</span> <span class="img-only">圖片頁</span></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>方法</th><th>軌跡來源</th><th>學習訊號</th><th>訓練目標</th></tr></thead>
+      <tbody>
+        <tr><td>監督式微調</td><td>蒐集來的示範</td><td>參考的 token 與動作</td><td>最大化示範行為的機率</td></tr>
+        <tr><td>強化學習</td><td>學生自己產生的軌跡</td><td>任務獎勵</td><td>最大化期望獎勵</td></tr>
+        <tr><td>On-policy 蒸餾</td><td>學生自己產生的軌跡</td><td>老師在學生前綴上的 token 機率</td><td>在學生軌跡上最小化與老師的差距</td></tr>
+      </tbody>
+    </table></div>
+    <p>記這張表就夠了：三種方法的差別只在「軌跡誰產生」和「訊號從哪來」。</p>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 5 ============ -->
+<section class="part" id="part5">
+  <div class="part-head">
+    <span class="no">PART 5 · p.105–116 · 10 分鐘</span>
+    <h2>用 agent 做優化</h2>
+    <p>讓 agent 改自己的程式碼、改 harness、甚至改訓練腳本：自我改進與自動研究。</p>
+  </div>
+
+  <article class="slide" id="p107">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=106" target="_blank" rel="noopener"><b>106–109</b></a>
+    <div class="body">
+    <h3>達爾文–哥德爾機器 <span class="en">Self Improvement · Darwin Gödel Machine [Zhang et al., 2026]</span></h3>
+    <ul>
+      <li>p.107 迴圈：從存檔（archive）中<b>選一個父代</b> coding agent → 它讀自己的 repo 和「自我改進」指令，寫出改進自己的程式碼差異 → 得到新的子代 agent → 在基準上評估（解 GitHub issue）→ 加回存檔。</li>
+      <li>選父代的機率與表現成正比、與已有的子代數成反比：好的多選，但別一直選同一個。</li>
+      <li>p.108：存檔樹和進度圖。SWE-bench 分數從 0.20 升到 0.50，路上的改進包括「非空 patch 的驗證與重試」「依行號更細地看檔案」「用字串取代更細地改檔案」「接近上下文上限時自動摘要」「產生多個 patch 並排序」「參考歷史的 patch 產生與排序」。存檔平均分數則從約 0.20 慢慢升到約 0.27。</li>
+      <li>p.109 消融實驗：自我改進（父代改自己，而不是由另一個 meta-agent 改）<b>和</b>探索（會回到舊的父代，而不是一直建在最新版上）兩者都很關鍵。</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>版本</th><th>SWE-bench 最佳 agent</th><th>Polyglot 最佳 agent</th></tr></thead>
+      <tbody>
+        <tr><td>DGM</td><td class="num">0.50</td><td class="num">約 0.38</td></tr>
+        <tr><td>去掉自我改進</td><td class="num">0.39</td><td class="num">約 0.28</td></tr>
+        <tr><td>去掉開放式探索</td><td class="num">0.23</td><td class="num">約 0.18</td></tr>
+      </tbody>
+    </table></div>
+    <p>起點都是 0.20（SWE-bench）和約 0.14（Polyglot）。注意最佳路徑上第 4 次迭代的分數其實先掉到約 0.17，之後才大幅上升，這說明保留「暫時變差」的分支有價值。</p>
+    <div class="terms"><span><em>self-improvement</em>自我改進</span><span><em>archive</em>存檔</span><span><em>open-ended exploration</em>開放式探索</span></div>
+    <div class="reads"><a class="rd" data-slug="Jimenez2024_SWE-bench_ICLR2024" href="https://cs.xuyili.com/reading/Jimenez2024_SWE-bench_ICLR2024.html" target="_blank" rel="noopener">SWE-bench（評估用的基準）</a><span class="none">本站未收錄：DGM（arXiv 2505.22954）</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p110">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=110" target="_blank" rel="noopener"><b>110–111</b></a>
+    <div class="body">
+    <h3>Meta-Harness <span class="en">Meta-Harness</span></h3>
+    <ul>
+      <li>p.110：讓一個 meta agent 看到<b>所有</b>過去的經驗，再決定下一步改什麼：</li>
+    </ul>
+    <div class="flow"><span>① 讀檔案系統中的所有經驗<br><small>提出新的 harness 程式碼</small></span><i>→</i><span>② harness＋凍結的 LLM<br><small>在任務上評估</small></span><i>→</i><span>③ 把所有紀錄存回檔案系統<br><small>程式碼、推理軌跡、評測分數</small></span></div>
+    <ul>
+      <li>p.111：時間一久，meta agent 能利用累積的上下文，為特定領域的問題做出越來越好的 harness。</li>
+      <li>左圖：40 次 harness 評估內，Meta-Harness 最佳表現約 57%，TTT-Discover 約 45.5%，OpenEvolve 約 43%；少樣本約 36%、零樣本約 33%。</li>
+      <li>右圖 TerminalBench-2 通過率：Meta-Harness <b>37.6</b>，高於人寫的 Goose 35.5、Terminus-KIRA 33.7、Mini-SWE-Agent 29.8、Terminus-2 28.3、Claude Code 27.5。</li>
+    </ul>
+    <p>和 DGM 的差別：DGM 由 agent 改自己；Meta-Harness 由另一個 agent 改目標 agent 的 harness，而且讀得到完整歷史，而不只是分數。</p>
+    <div class="terms"><span><em>harness</em>harness（包住模型的執行框架）</span><span><em>meta agent</em>元 agent</span></div>
+    <div class="reads"><a class="rd" data-slug="Young2025_Effective_Harnesses_Long_Running_Agents" href="https://cs.xuyili.com/reading/Young2025_Effective_Harnesses_Long_Running_Agents.html" target="_blank" rel="noopener">Effective Harnesses for Long-Running Agents（harness 設計）</a><span class="none">本站未收錄：Meta-Harness（arXiv 2603.28052）</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p113">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=112" target="_blank" rel="noopener"><b>112–115</b></a>
+    <div class="body">
+    <h3>自動研究：什麼都能優化 <span class="en">Auto Research (Optimize Anything) · Auto-Research Prompt</span></h3>
+    <ul>
+      <li>p.113：讓 agent 能存取 repo，自己發想、寫一個修改、跑實驗看有沒有變好。指標進步就在此基礎上繼續，否則重置；把發現記下來。（流程圖出自 Cerebras 部落格〈How to stop your autoresearch loop from cheating〉。）</li>
+      <li>p.114 是 Karpathy autoresearch repo 的 prompt「實驗迴圈」，永遠重複：</li>
+    </ul>
+    <div class="example">
+      <div class="row"><span class="lab">1–3</span><span>看目前的 git 分支與 commit；直接改 <code>train.py</code> 試一個點子；git commit。</span></div>
+      <div class="row"><span class="lab">4–5</span><span>跑 <code>uv run train.py &gt; run.log 2&gt;&amp;1</code>（輸出全部導到檔案，別灌進上下文）；用 grep 讀出 val_bpb 和記憶體峰值。</span></div>
+      <div class="row"><span class="lab">6</span><span class="bad">grep 沒結果代表崩潰了：看 log 尾端 50 行試著修，試幾次還不行就放棄。</span></div>
+      <div class="row"><span class="lab">7</span><span>把結果記進 results.tsv（不要 commit 這個檔）。</span></div>
+      <div class="row"><span class="lab">8–9</span><span><span class="ok">val_bpb 變低就保留 commit、推進分支</span>；持平或變差就 git reset 回原點。</span></div>
+    </div>
+    <ul>
+      <li>p.115：83 次實驗中保留了 15 次改進，驗證集 BPB（越低越好）從約 0.998 降到約 0.977。保留的改動包括批次大小減半、調整 warmup 與 warmdown、改模型深度、調學習率、改 RoPE 基頻等；最後一個保留的改動是「換隨機種子 42→137」。</li>
+    </ul>
+    <p>最後那個「換種子」也算進步，正好呼應 Cerebras 那篇標題：只看單一指標的自動迴圈，可能把雜訊當成進步，甚至鑽指標漏洞。</p>
+    <div class="terms"><span><em>auto-research</em>自動研究</span><span><em>BPB (bits per byte)</em>每位元組位元數</span><span><em>reward hacking</em>獎勵駭客（鑽指標漏洞）</span></div>
+    <div class="reads"><a class="rd" data-slug="Si2026_Execution-Grounded_Automated_AI_Research" href="https://cs.xuyili.com/reading/Si2026_Execution-Grounded_Automated_AI_Research.html" target="_blank" rel="noopener">Execution-Grounded Automated AI Research（以執行結果驗證的自動研究）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p116">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=116" target="_blank" rel="noopener"><b>116</b></a>
+    <div class="body">
+    <h3>用 agent 做優化：小結 <span class="en">Optimization with Agents Summary</span> <span class="key">重點</span></h3>
+    <ul>
+      <li>agent 是相當有能力的優化器。</li>
+      <li>把它放進一個能記錄結果、發想點子、實際執行的環境，凡是跑在軟體上的東西它都能優化得不錯。</li>
+      <li><b>指標與評測因此成為最需要掌控的部分。</b></li>
+    </ul>
+    <p>這一點把全講串起來：不管是 GEPA、RL 還是 autoresearch，優化器都會照著指標走，指標寫錯，它就會很有效率地往錯的方向優化。</p>
+    <div class="reads"><a class="rd" data-slug="Zhu2025_Rigorous_Agentic_Benchmarks" href="https://cs.xuyili.com/reading/Zhu2025_Rigorous_Agentic_Benchmarks.html" target="_blank" rel="noopener">Establishing Best Practices for Rigorous Agentic Benchmarks（評測本身的漏洞）</a></div>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 6 ============ -->
+<section class="part" id="part6">
+  <div class="part-head">
+    <span class="no">PART 6 · p.117–122 · 10 分鐘</span>
+    <h2>該用哪種策略</h2>
+    <p>上下文優化省樣本、權重優化吃得下大量資料，兩者也可以交替用。</p>
+  </div>
+
+  <article class="slide" id="p118">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=118" target="_blank" rel="noopener"><b>118</b></a>
+    <div class="body">
+    <h3>BetterTogether：prompt 和權重交替優化 <span class="en">BetterTogether [Soylu et al., 2024]</span></h3>
+    <ul>
+      <li>有時最好的做法是：先優化 prompt，再優化權重，最後再優化一次 prompt（Π → Θ → Π）。演算法很短：Π′ ← 優化 prompt；Θ′ ← 用 Π′ 微調權重；Π″ ← 在 Θ′ 上再優化 prompt。</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>策略（mistral-7b）</th><th>HotPotQA</th><th>GSM8K</th><th>Iris</th></tr></thead>
+      <tbody>
+        <tr><td>零樣本</td><td class="num">17.2</td><td class="num">40.3</td><td class="num">26.0</td></tr>
+        <tr><td>只優化 prompt（Π）</td><td class="num">33.8</td><td class="num">46.4</td><td class="num">57.3</td></tr>
+        <tr><td>只優化權重（Θ）</td><td class="num">22.9</td><td class="num">40.7</td><td class="num">29.3</td></tr>
+        <tr><td>Θ → Π</td><td class="num">33.0</td><td class="num"><b>48.3</b></td><td class="num"><b>66.7</b></td></tr>
+        <tr><td>Π → Θ → Π</td><td class="num"><b>37.6</b></td><td class="num">46.8</td><td class="num">52.7</td></tr>
+      </tbody>
+    </table></div>
+    <p>表中也有 llama-2-7b-chat 與 llama-3-8b-instruct 兩組。在這些小模型上，只調權重常常不如只調 prompt；組合策略多半最好，但最佳順序依任務和模型而異（llama-3-8b 的 Iris 最好的反而是 Π → Π，82.0）。</p>
+    <div class="reads"><a class="rd" data-slug="Soylu2024_FineTuning_and_Prompt_Optimization_EMNLP2024" href="https://cs.xuyili.com/reading/Soylu2024_FineTuning_and_Prompt_Optimization_EMNLP2024.html" target="_blank" rel="noopener">BetterTogether（本頁直接引用）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p119">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=119" target="_blank" rel="noopener"><b>119–120</b></a>
+    <div class="body">
+    <h3>樣本效率 vs 資料規模 <span class="en">GEPA [Agrawal et al., 2026] · OpenThoughts-Agent [Raoof et al., 2026]</span> <span class="key">重點</span></h3>
+    <ul>
+      <li>p.119：<b>prompt 優化比 RL 省樣本得多。</b>Qwen3 8B 在 HotpotQA 上，GEPA 用約 7,000 次 rollout，測試集約 62；GRPO 用到約 24,000 次 rollout，測試集只有約 43。IFBench 上也是 GEPA 和 MIPROv2 用很少 rollout 就勝過 GRPO。</li>
+      <li>p.120：<b>權重優化更吃資料，但能隨著成千上萬筆資料持續成長。</b>這頁重用 p.77 的圖：OT-Agent 的分數從 316 筆到 100K 筆一路往上。</li>
+    </ul>
+    <p>兩頁合起來的結論：資料少、rollout 貴時選上下文優化；有大量資料和算力時，權重優化的上限更高。</p>
+    <div class="reads"><a class="rd" data-slug="Agrawal2026_GEPA" href="https://cs.xuyili.com/reading/Agrawal2026_GEPA.html" target="_blank" rel="noopener">GEPA（p.119 圖出處）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p121">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=121" target="_blank" rel="noopener"><b>121–122</b></a>
+    <div class="body">
+    <h3>什麼時候用上下文優化、什麼時候用權重優化 <span class="en">Reasons to use context / weight optimization</span> <span class="key">重點</span></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>選上下文優化，當……（p.121）</th><th>選權重優化，當……（p.122）</th></tr></thead>
+      <tbody>
+        <tr><td><b>只能用 API 的模型</b>：有些強模型不開放微調</td><td><b>上下文優化失敗</b>：小模型有時幾乎不會照指令做</td></tr>
+        <tr><td><b>需要頻繁、快速地重跑優化</b>：上下文優化比較快，基礎設施也簡單</td><td><b>有能力強的老師、想要便宜的模型</b>：直接蒸餾進學生模型通常有效</td></tr>
+        <tr><td><b>與環境互動很貴</b>：上下文優化比較省樣本</td><td><b>上下文太長</b>：prompt 優化會讓 prompt 越來越複雜，改用權重優化可避免上下文膨脹</td></tr>
+      </tbody>
+    </table></div>
+    <div class="reads"><a class="rd" data-slug="Rajasekaran2025_Effective_Context_Engineering_Anthropic" href="https://cs.xuyili.com/reading/Rajasekaran2025_Effective_Context_Engineering_Anthropic.html" target="_blank" rel="noopener">Effective Context Engineering（上下文膨脹的代價）</a></div>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 7 ============ -->
+<section class="part" id="part7">
+  <div class="part-head">
+    <span class="no">PART 7 · p.123–125</span>
+    <h2>總結</h2>
+    <p>回到五個段落，以及下一堂的預告。</p>
+  </div>
+
+  <article class="slide" id="p123">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture09.pdf#page=123" target="_blank" rel="noopener"><b>123–125</b></a>
+    <div class="body">
+    <h3>總結與下一講 <span class="en">Summary</span></h3>
+    <ul>
+      <li>p.123 的分隔頁沿用了 Lecture 8 的段落標籤（SAS vs MAS、編排、溝通、協調、失敗模式），應是投影片複製時沒改到；p.124 才是本講的總結。</li>
+      <li>p.124 重列五段：優化的條件 → 上下文優化 → 權重優化 → 用 agent 做優化 → 該用哪種策略。</li>
+      <li>p.125：下週一是客座演講。</li>
+    </ul>
+    <p><b>自我檢查</b>，不看資料能回答的話就可以進入下一講：</p>
+    <ul>
+      <li>MIPROv2 的三個步驟各做什麼？為什麼 p.43 那筆推理有錯的軌跡還是被留下來當示範？（p.26、p.41–43）</li>
+      <li>GRPO 相比 PPO 少了哪個模型？優勢是怎麼算的？一組輸出全部答對時會發生什麼事？（p.88–92）</li>
+      <li>SFT、RL、on-policy 蒸餾在「軌跡誰產生」和「訊號密集或稀疏」上各是什麼？什麼情況下你會選上下文優化而不是權重優化？（p.98、p.104、p.121–122）</li>
+    </ul>
+      </div>
+  </article>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section class="gloss" id="glossary">
+  <h2>術語表</h2>
+  <p style="color:var(--muted);margin:0 0 8px">本講出現的主要術語，依出現順序排列。</p>
+  <div class="tbl"><table>
+    <thead><tr><th>英文</th><th>中文</th><th>一句話解釋</th></tr></thead>
+    <tbody>
+      <tr><td>rollout</td><td>rollout（執行軌跡）</td><td>系統實際跑一次任務留下的完整紀錄</td></tr>
+      <tr><td>metric</td><td>指標</td><td>判斷輸出好壞的評分方式，優化器照著它走</td></tr>
+      <tr><td>last-mile adaptation</td><td>最後一哩調適</td><td>把通用模型針對你的具體場景再調整</td></tr>
+      <tr><td>context optimization</td><td>上下文優化</td><td>不動權重，只改 prompt 的指令與範例</td></tr>
+      <tr><td>weight optimization</td><td>權重優化</td><td>直接更新模型參數，例如 SFT、RL</td></tr>
+      <tr><td>few-shot prompting</td><td>少樣本提示</td><td>在 prompt 裡放幾個輸入輸出範例</td></tr>
+      <tr><td>probing set</td><td>探測集</td><td>模型自己生成、用來評估範例順序的無標註資料</td></tr>
+      <tr><td>global / local entropy</td><td>全域熵／局部熵</td><td>整體預測分佈／單筆預測機率的分散程度</td></tr>
+      <tr><td>chain of thought (CoT)</td><td>思維鏈</td><td>先寫出推理步驟再給答案</td></tr>
+      <tr><td>rejection sampling</td><td>拒絕採樣</td><td>多次生成，只保留通過檢查的結果</td></tr>
+      <tr><td>bootstrapping</td><td>自舉</td><td>用系統自己產生並通過指標的輸出當示範或訓練資料</td></tr>
+      <tr><td>OPRO</td><td>以 prompt 做優化</td><td>讓 LLM 看過去指令與分數，寫出新指令</td></tr>
+      <tr><td>meta-prompt</td><td>元提示</td><td>交給優化器 LLM、用來產生新 prompt 的 prompt</td></tr>
+      <tr><td>MIPROv2</td><td>MIPROv2</td><td>自舉示範＋有根據的指令提案＋貝氏搜尋組合</td></tr>
+      <tr><td>grounded instruction proposal</td><td>有根據的指令提案</td><td>參考程式、資料、成功軌跡與技巧來寫候選指令</td></tr>
+      <tr><td>Bayesian surrogate model</td><td>貝氏代理模型</td><td>用少量試驗估計哪些參數組合較好的模型</td></tr>
+      <tr><td>textual gradient</td><td>文字梯度</td><td>TextGrad 中以文字描述的「該怎麼改」，沿系統往回傳</td></tr>
+      <tr><td>GEPA</td><td>基因–帕累托 prompt 演化</td><td>反思式突變＋合併，並以帕累托前緣保留候選</td></tr>
+      <tr><td>Pareto frontier</td><td>帕累托前緣</td><td>沒有被其他候選在所有任務上全面超越的候選集合</td></tr>
+      <tr><td>SFT</td><td>監督式微調</td><td>以示範資料的每個 token 為目標做訓練</td></tr>
+      <tr><td>cross entropy loss</td><td>交叉熵損失</td><td>−log（正確 token 的機率）</td></tr>
+      <tr><td>teacher / student model</td><td>老師／學生模型</td><td>強模型產生資料或訊號，弱模型從中學習</td></tr>
+      <tr><td>reinforcement learning (RL)</td><td>強化學習</td><td>學生自己嘗試，依獎勵調整</td></tr>
+      <tr><td>verifier</td><td>驗證器</td><td>自動判斷任務是否完成、給出獎勵的程式</td></tr>
+      <tr><td>PPO</td><td>近端策略優化</td><td>需要價值模型、逐 token 估計優勢的 RL 演算法</td></tr>
+      <tr><td>value model</td><td>價值模型</td><td>預測每個 token 之後能拿到多少獎勵</td></tr>
+      <tr><td>GAE</td><td>廣義優勢估計</td><td>結合獎勵與價值估計每個 token 的優勢</td></tr>
+      <tr><td>GRPO</td><td>群組相對策略優化</td><td>同題抽一組輸出，以組內 z 分數當優勢，省掉價值模型</td></tr>
+      <tr><td>advantage</td><td>優勢</td><td>某個輸出或 token 比平均好多少</td></tr>
+      <tr><td>KL divergence</td><td>KL 散度</td><td>兩個機率分佈的差距，用來限制模型別偏離太遠</td></tr>
+      <tr><td>clipping</td><td>截斷</td><td>限制新舊策略比率，避免單步更新過頭</td></tr>
+      <tr><td>cold start</td><td>冷啟動</td><td>RL 前先用少量高品質資料做 SFT</td></tr>
+      <tr><td>on-policy / off-policy</td><td>同策略／異策略</td><td>訓練資料由學生自己產生／由別人產生</td></tr>
+      <tr><td>dense / sparse reward</td><td>密集／稀疏獎勵</td><td>每個 token 都有訊號／整段只有一個分數</td></tr>
+      <tr><td>on-policy distillation</td><td>On-policy 蒸餾</td><td>在學生自己的軌跡上，逐 token 向老師的機率靠攏</td></tr>
+      <tr><td>reverse KL</td><td>反向 KL</td><td>以學生分佈取期望的 KL，懲罰學生寫出老師不認同的 token</td></tr>
+      <tr><td>self-improvement</td><td>自我改進</td><td>agent 修改自己的程式碼來變強</td></tr>
+      <tr><td>open-ended exploration</td><td>開放式探索</td><td>保留並回到舊版本繼續分支，而不只建在最新版上</td></tr>
+      <tr><td>harness</td><td>harness（執行框架）</td><td>包住模型的程式：工具、流程、上下文管理</td></tr>
+      <tr><td>auto-research</td><td>自動研究</td><td>agent 自己改程式、跑實驗、依指標保留或回復</td></tr>
+      <tr><td>context bloat</td><td>上下文膨脹</td><td>prompt 優化讓 prompt 越來越長、越來越複雜</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer>
+  依據 Stanford CS 329Z 官方投影片 lecture09.pdf 整理，僅供個人學習。頁碼依 PDF 頁數；圖表數字依投影片圖片判讀，標「約」者為從圖上估讀；標「非投影片內容」的舉例、補充說明與對照表等不是投影片原文。
+</footer>
+</div>
+
+
+
+
+<script>
+(function(){
+  var BASES={online:"https://cs.xuyili.com/reading/",local:"http://127.0.0.1:8329/reading/"};
+  var btns=document.querySelectorAll(".seg button");
+  function apply(mode){
+    document.querySelectorAll("a.rd").forEach(function(a){
+      a.href=BASES[mode]+encodeURIComponent(a.dataset.slug).replace(/%26/g,"&")+".html";
+    });
+    btns.forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.mode===mode));});
+  }
+  var saved="online";
+  try{saved=localStorage.getItem("l9-linkmode")||"online";}catch(e){}
+  if(!BASES[saved])saved="online";
+  apply(saved);
+  btns.forEach(function(b){b.addEventListener("click",function(){
+    apply(b.dataset.mode);
+    try{localStorage.setItem("l9-linkmode",b.dataset.mode);}catch(e){}
+  });});
+})();
+</script>
+
+
+</body></html>

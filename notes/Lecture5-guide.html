@@ -1,0 +1,933 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>CS329Z Lecture 5 導讀</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;800&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: 窄欄閱讀稿 + 左側頁碼欄（像講義旁註），段落導覽固定在頂部 */
+:root{
+  --paper:#f5f6f8; --sheet:#ffffff; --ink:#1a2130; --muted:#5b6475; --rule:#dde1e8;
+  --cardinal:#8c1515; --cardinal-soft:#f6e9e9; --link:#1d5c8f; --chip:#eef1f5; --key:#b5650d; --key-soft:#fbf0e2;
+  --f-display:"Noto Serif TC","Songti TC",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#12151b; --sheet:#1a1e26; --ink:#e6e9ef; --muted:#9aa3b3; --rule:#2c323d;
+  --cardinal:#e07a7a; --cardinal-soft:#2e1d20; --link:#7db5e3; --chip:#232934; --key:#e8a55a; --key-soft:#2d2318; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#12151b; --sheet:#1a1e26; --ink:#e6e9ef; --muted:#9aa3b3; --rule:#2c323d;
+  --cardinal:#e07a7a; --cardinal-soft:#2e1d20; --link:#7db5e3; --chip:#232934; --key:#e8a55a; --key-soft:#2d2318; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.75;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.wrap{max-width:860px;margin:0 auto}
+a{color:var(--link)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--cardinal);outline-offset:2px;border-radius:4px}
+h1,h2{font-family:var(--f-display);text-wrap:balance;line-height:1.3}
+
+header.top{padding-block:40px 20px}
+.eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;color:var(--cardinal);text-transform:uppercase}
+h1{font-size:clamp(28px,5vw,40px);margin:.2em 0 .3em;font-weight:800}
+.lede{color:var(--muted);max-width:62ch;margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-size:14px;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:500}
+
+.howto{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:18px 20px;margin-top:22px;display:grid;gap:10px}
+.howto h2{font-size:17px;margin:0}
+.howto ul{margin:0;padding-left:1.2em;color:var(--ink)}
+.howto li{margin:2px 0}
+.linkmode{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:999px;overflow:hidden}
+.seg button{font:inherit;font-size:13.5px;border:0;background:transparent;color:var(--muted);padding:4px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--cardinal);color:var(--sheet)}
+
+.best{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.best a{display:block;text-decoration:none;background:var(--cardinal-soft);border-radius:8px;padding:12px 14px;color:var(--ink);min-width:0}
+.best a small{display:block;font-family:var(--f-mono);font-size:12px;color:var(--cardinal)}
+.best a span{font-weight:700}
+
+nav.parts{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--rule);
+  margin-top:28px;padding-block:10px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav.parts a{flex:none;font-size:13.5px;text-decoration:none;color:var(--muted);border:1px solid var(--rule);border-radius:999px;padding:3px 12px;background:var(--sheet)}
+nav.parts a:hover{color:var(--cardinal);border-color:var(--cardinal)}
+
+section.part{margin-top:40px}
+.part-head{display:grid;gap:4px;margin-bottom:14px}
+.part-head .no{font-family:var(--f-mono);font-size:12.5px;color:var(--cardinal);letter-spacing:.06em}
+.part-head h2{font-size:clamp(22px,3.6vw,28px);margin:0}
+.part-head p{margin:0;color:var(--muted);max-width:64ch}
+
+.slide{display:grid;grid-template-columns:76px minmax(0,1fr);gap:16px;padding-block:18px;border-top:1px solid var(--rule)}
+.pg{font-family:var(--f-mono);font-size:13px;text-decoration:none;color:var(--muted);line-height:1.4;padding-top:3px}
+.pg b{display:block;font-size:17px;font-weight:600;color:var(--ink)}
+.pg:hover b{color:var(--cardinal)}
+.pg i{font-style:normal;font-size:11.5px}
+.body{min-width:0}
+.body h3{margin:0;font-size:18px;font-weight:700;line-height:1.45;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.body h3 .en{font-family:var(--f-mono);font-size:13px;font-weight:400;color:var(--muted)}
+.key{font-size:11.5px;font-weight:700;color:var(--key);background:var(--key-soft);border-radius:4px;padding:1px 7px;letter-spacing:.04em}
+.img-only{font-size:11.5px;color:var(--muted);border:1px dashed var(--rule);border-radius:4px;padding:0 6px}
+.body ul{margin:8px 0 0;padding-left:1.15em}
+.body li{margin:3px 0}
+.body p{margin:8px 0 0}
+.terms{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.terms span{font-size:13px;background:var(--chip);border-radius:5px;padding:1px 8px;color:var(--ink)}
+.terms span em{font-style:normal;font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-right:5px}
+.reads{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:14px}
+.reads::before{content:"對應閱讀";font-size:12px;color:var(--cardinal);font-weight:700;letter-spacing:.04em;padding-top:2px}
+.reads a{text-decoration-thickness:1px;text-underline-offset:3px}
+.reads .none{color:var(--muted)}
+
+.example{margin-top:10px;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;font-size:14.5px;overflow-x:auto}
+.example .row{display:grid;grid-template-columns:88px minmax(0,1fr);gap:10px;padding-block:3px}
+.example .lab{font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.ok{color:#2f7a3d}
+.bad{color:var(--cardinal)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ok{color:#7fcf8c}}
+:root[data-theme="dark"] .ok{color:#7fcf8c}
+
+.tbl{overflow-x:auto;margin-top:10px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-size:12.5px;color:var(--muted);font-weight:500}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px;font-size:14px}
+.flow span{background:var(--chip);border-radius:6px;padding:3px 10px}
+.flow i{font-style:normal;color:var(--muted)}
+
+.gloss{margin-top:48px}
+.gloss h2{font-size:26px;margin:0 0 6px}
+.gloss td:first-child{font-family:var(--f-mono);font-size:13.5px;white-space:nowrap}
+footer{margin-top:40px;font-size:13px;color:var(--muted)}
+
+@media (max-width:560px){
+  .slide{grid-template-columns:1fr;gap:6px}
+  .pg{display:flex;gap:8px;align-items:baseline}
+  .pg b{display:inline}
+  .example .row{grid-template-columns:1fr;gap:0}
+}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<style>
+pre.code{margin:10px 0 0;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;font-family:var(--f-mono);font-size:13px;line-height:1.6;overflow-x:auto;white-space:pre}
+pre.code .c{color:var(--muted)}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Stanford CS 329Z · Lecture 5 · 132 頁</div>
+  <h1>Frameworks &amp; Orchestration 中文導讀</h1>
+  <p class="lede">逐頁整理重點、翻譯術語，並標出每頁對應本站哪篇已翻譯的文章。這講介紹 agent 工程常用的框架：寫流程用的 DSPy 與 LangGraph、幾個開源 agent harness 的設計取捨、讓長時間任務不怕當機的 Temporal，以及觀測工具。投影片大半是 live demo 的備用程式碼截圖，本導讀已逐張看過並把程式碼整理出來。</p>
+  <div class="meta">
+    <span>講者 <b>Diyi Yang、Michael Ryan、John Yang</b></span>
+    <span>日期 <b>10/7（第 3 週）</b></span>
+    <span>原檔 <a href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf" target="_blank" rel="noopener">lecture05.pdf ↗</a></span>
+  </div>
+
+  <div class="howto">
+    <h2>怎麼用這頁</h2>
+    <ul>
+      <li>左側的<b>頁碼</b>可直接跳到官方 PDF 的那一頁。合併的卡片會跳到範圍的第一頁。</li>
+      <li>標了 <span class="key">重點</span> 的頁面是整講的核心，時間不夠時先讀這些。</li>
+      <li>標了 <span class="img-only">圖片頁</span> 的頁面以圖表為主，請直接看 PDF 原頁。</li>
+      <li>整講貫穿同一個例子：<b>從 email 抽出活動，加進行事曆 tinycal</b>。同一件事分別用 DSPy、LangGraph、Temporal 各做一次，對照著看最能看出三者的差別。</li>
+    </ul>
+    <div class="linkmode">
+      <span>譯文連結指向：</span>
+      <span class="seg" role="group" aria-label="譯文連結指向">
+        <button type="button" id="mode-online" data-mode="online" aria-pressed="true">線上 cs.xuyili.com</button>
+        <button type="button" id="mode-local" data-mode="local" aria-pressed="false">本地 127.0.0.1:8329</button>
+      </span>
+    </div>
+  </div>
+
+  <div class="best">
+    <a class="rd" data-slug="Khattab2024_DSPy_ICLR2024" href="https://cs.xuyili.com/reading/Khattab2024_DSPy_ICLR2024.html" target="_blank" rel="noopener"><small>必讀 · Part 2 直接對應（你已讀過）</small><span>DSPy</span></a>
+    <a class="rd" data-slug="Agrawal2026_GEPA" href="https://cs.xuyili.com/reading/Agrawal2026_GEPA.html" target="_blank" rel="noopener"><small>搭配 · demo 用的優化器</small><span>GEPA</span></a>
+    <a class="rd" data-slug="Schluntz2024_Building_Effective_Agents_Anthropic" href="https://cs.xuyili.com/reading/Schluntz2024_Building_Effective_Agents_Anthropic.html" target="_blank" rel="noopener"><small>搭配 · workflow 與 agent 怎麼選</small><span>Building Effective Agents</span></a>
+  </div>
+</header>
+
+<nav class="parts" aria-label="段落">
+  <a href="#part0">0 開場</a>
+  <a href="#part1">1 什麼是「工程化」</a>
+  <a href="#part2">2 DSPy</a>
+  <a href="#part3">3 LangGraph</a>
+  <a href="#part4">4 Agent Harness</a>
+  <a href="#part5">5 編排與觀測</a>
+  <a href="#part6">6 最佳實踐</a>
+  <a href="#glossary">術語表</a>
+</nav>
+
+<!-- ============ PART 0 ============ -->
+<section class="part" id="part0">
+  <div class="part-head">
+    <span class="no">PART 0 · p.1–8</span>
+    <h2>開場：框架就是抽象層</h2>
+    <p>用 PyTorch 打比方，說明今天要學的是「抽象」，而不是底層細節。</p>
+  </div>
+
+  <article class="slide" id="p1">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=1" target="_blank" rel="noopener"><b>1–3</b></a>
+    <div class="body">
+      <h3>封面、公告、小調查 <span class="en">Announcements · Quick Poll</span></h3>
+      <ul>
+        <li>公告：專題提案 10/9 截止（以組為單位交一份）；HW1 已發布，10/30 截止，份量很長，要早點開始；Laude 提供 OpenRouter 額度。</li>
+        <li>p.3 小調查：「在座誰用過 PyTorch？」為下一頁的比喻鋪陳。</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="slide" id="p4">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=4" target="_blank" rel="noopener"><b>4–5</b></a>
+    <div class="body">
+      <h3>框架的抽象：手寫反向傳播 vs. PyTorch <span class="en">Abstractions in Frameworks</span><span class="key">重點</span></h3>
+      <p>p.4 並排兩段做同一件事（線性迴歸一步梯度下降）的程式：</p>
+      <pre class="code"><span class="c"># 手寫（NumPy）：梯度自己推導</span>
+d_pred = 2 * (pred - y) / y.size
+d_w, d_b = np.sum(d_pred * x), np.sum(d_pred)
+w, b = w - lr * d_w, b - lr * d_b
+
+<span class="c"># PyTorch：框架幫你做</span>
+loss.backward()
+optimizer.step()</pre>
+      <ul>
+        <li>p.5：<b>框架會把底層系統細節抽象掉</b>。這門課其他講次要你實作、理解這些細節；今天的目標是學這些<b>抽象</b>。</li>
+      </ul>
+      <p>這個比喻會在 DSPy 再出現一次：DSPy 的優化器之於 prompt，就像 PyTorch 的 optimizer 之於權重。</p>
+      <div class="terms"><span><em>abstraction</em>抽象</span><span><em>backpropagation</em>反向傳播</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p6">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=6" target="_blank" rel="noopener"><b>6–8</b></a>
+    <div class="body">
+      <h3>學習目標與大綱 <span class="en">Learning Objectives · Lecture Overview</span></h3>
+      <ul>
+        <li><b>學習目標</b>：認識 agent 系統工程常用的框架；把框架提供的抽象，對回課程前面講過的系統設計；評估各種工具對 agent 編排與可靠度的用處。</li>
+        <li>大綱：什麼是「工程化」agent（10 分）→ 流程與程式的框架（25 分）→ 開源 agent harness（15 分）→ 編排與遙測（15 分）→ 最佳實踐與挑戰（15 分）。</li>
+        <li>p.8：課堂有 notebook 可以跟著跑，約花 1 美元以內的 OpenRouter 額度。</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PART 1 ============ -->
+<section class="part" id="part1">
+  <div class="part-head">
+    <span class="no">PART 1 · p.9–18 · 約 10 分鐘</span>
+    <h2>什麼叫「工程化」agent</h2>
+    <p>AI 系統的三根支柱，以及依「控制權在誰手上」排出的框架地圖。</p>
+  </div>
+
+  <article class="slide" id="p10">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=10" target="_blank" rel="noopener"><b>10–13</b></a>
+    <div class="body">
+      <h3>AI 系統的三根支柱 <span class="en">Three Pillars of AI Systems</span><span class="key">重點</span></h3>
+      <div class="tbl"><table>
+        <thead><tr><th>資料 Data</th><th>系統或模型 System or Model</th><th>評測與指標 Evaluation + Metric</th></tr></thead>
+        <tbody><tr>
+          <td>訓練資料、rollout（執行軌跡）、示範、人類回饋…</td>
+          <td>語言模型、複合 AI 系統／workflow、agent 系統…</td>
+          <td>通過率、完全比對、LLM 評審、成本／延遲…</td>
+        </tr></tbody>
+      </table></div>
+      <ul>
+        <li>p.10–12 是同一張圖逐步加字：三者合起來是「AI 系統」，把三者都做好才叫「AI 系統<b>工程</b>」。</li>
+        <li>p.13：整門課的課表也照這三根支柱分類，加上「新興主題」。</li>
+      </ul>
+      <p>後面 DSPy 的優化器會直接用到三者：給它系統（程式）、資料（訓練集）和指標，它就能自動改進。</p>
+      <div class="terms"><span><em>rollout</em>執行軌跡</span><span><em>compound AI system</em>複合 AI 系統</span><span><em>LLM judge</em>LLM 評審</span></div>
+      <div class="reads"><a class="rd" data-slug="Zaharia2024_Compound_AI_Systems_BAIR_blog" href="https://cs.xuyili.com/reading/Zaharia2024_Compound_AI_Systems_BAIR_blog.html" target="_blank" rel="noopener">Compound AI Systems（BAIR 部落格）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p14">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=14" target="_blank" rel="noopener"><b>14–16</b></a>
+    <div class="body">
+      <h3>框架地圖：依控制流程排出的光譜 <span class="en">Framework Landscape · Spectrum of Control Flow (Agency)</span><span class="key">重點</span></h3>
+      <p>這張圖之後在 p.20、79、91 重複出現，當作每段的「你在這裡」。</p>
+      <div class="tbl"><table>
+        <thead><tr><th></th><th>模型 Model</th><th>Workflow／複合 AI 系統</th><th>Agent</th></tr></thead>
+        <tbody>
+          <tr><td>角色</td><td>大系統裡的一小塊</td><td>邏輯和編排<b>寫在程式裡</b></td><td>控制流程<b>交給 AI 模型決定</b></td></tr>
+          <tr><td>框架（從 logo 辨識）</td><td>OpenAI API、Anthropic API、LiteLLM…</td><td>DSPy、LangGraph…</td><td>OpenHands…</td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li>p.15 在下方再加一排橫跨整個光譜的工具：<b>可靠度</b>（Temporal）與<b>可觀測性</b>（MLflow、Langfuse 等）。</li>
+        <li>p.16 標出今天三段對應的位置：Part 1 是 workflow 框架，Part 2 是 agent harness，Part 3 是可靠度與可觀測性。</li>
+      </ul>
+      <div class="terms"><span><em>control flow</em>控制流程</span><span><em>agency</em>自主程度</span><span><em>orchestration</em>編排</span><span><em>reliability</em>可靠度</span><span><em>observability</em>可觀測性</span></div>
+      <div class="reads"><a class="rd" data-slug="Schluntz2024_Building_Effective_Agents_Anthropic" href="https://cs.xuyili.com/reading/Schluntz2024_Building_Effective_Agents_Anthropic.html" target="_blank" rel="noopener">Building Effective Agents（workflow 與 agent 的分界）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p17">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=17" target="_blank" rel="noopener"><b>17–18</b></a>
+    <div class="body">
+      <h3>這些框架真的有人用嗎？與小結 <span class="en">Are these frameworks actually used? · Recap</span></h3>
+      <ul>
+        <li>p.17 兩張搜尋結果截圖：Indeed 上有約 2,000 個 LangGraph 職缺；舊金山的 DSPy 開發職缺頁面列出 1,135 筆。意思是業界確實在用。</li>
+        <li>p.18 小結：工程化 AI 系統需要資料、系統、評測三者；系統依自主程度從模型 → workflow → agent；光譜每一層都有框架；也有專門提升 agent 可靠度和可觀測性的框架。</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PART 2 ============ -->
+<section class="part" id="part2">
+  <div class="part-head">
+    <span class="no">PART 2a · p.19–51 · 約 15 分鐘</span>
+    <h2>DSPy：簽名、模組、優化器</h2>
+    <p>你讀過的 DSPy 論文，這裡用一個行事曆例子實際跑一遍。p.24–48 是 live demo 的備用截圖。</p>
+  </div>
+
+  <article class="slide" id="p20">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=20" target="_blank" rel="noopener"><b>20–22</b></a>
+    <div class="body">
+      <h3>DSPy 的三個抽象 <span class="en">Signatures · Modules · Optimizers</span><span class="key">重點</span></h3>
+      <div class="tbl"><table>
+        <thead><tr><th>抽象</th><th>回答什麼</th><th>做什麼</th></tr></thead>
+        <tbody>
+          <tr><td><b>簽名 Signature</b></td><td>做<b>什麼</b>（What）</td><td>嚴格定義語言模型的輸入和輸出</td></tr>
+          <tr><td><b>模組 Module</b></td><td><b>怎麼</b>做（How）</td><td>把簽名和程式邏輯組合成可呼叫的函式</td></tr>
+          <tr><td><b>優化器 Optimizer</b></td><td>怎麼變好</td><td>改進程式的 prompt 或權重，讓指標最大化</td></tr>
+        </tbody>
+      </table></div>
+      <p>p.20 是框架地圖加上「你在這裡」標記，指向 workflow 那一格。</p>
+      <div class="terms"><span><em>signature</em>簽名</span><span><em>module</em>模組</span><span><em>optimizer</em>優化器</span></div>
+      <div class="reads"><a class="rd" data-slug="Khattab2024_DSPy_ICLR2024" href="https://cs.xuyili.com/reading/Khattab2024_DSPy_ICLR2024.html" target="_blank" rel="noopener">DSPy（本頁直接對應）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p23">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=23" target="_blank" rel="noopener"><b>23–28</b></a>
+    <div class="body">
+      <h3>簽名：從一行字串到 Signature 類別 <span class="en">Signatures (demo backup)</span><span class="key">重點</span></h3>
+      <p>四個例子，由簡到繁：</p>
+      <pre class="code"><span class="c"># p.25 最簡單：字串簽名</span>
+chat = dspy.Predict("message -&gt; response")
+
+<span class="c"># p.26 結構化輸出</span>
+dspy.Predict("message -&gt; sentiment")
+
+<span class="c"># p.27 加上型別</span>
+dspy.Predict("message: str -&gt; sentiment: Literal['positive','negative','neutral'], confidence: float")
+
+<span class="c"># p.28 複雜時改用類別</span>
+class ExtractEvent(dspy.Signature):
+    """Extract event details from an email."""
+    email: str = dspy.InputField()
+    event_name: str | None = dspy.OutputField()
+    date: dt.date | None = dspy.OutputField()
+    start: dt.time | None = dspy.OutputField(desc="24-hour clock")
+    duration_minutes: int | None = dspy.OutputField(desc="duration of the event…")</pre>
+      <ul>
+        <li>p.26 的輸出是 <code>positive</code>、<code>Negative</code>、<code>negative</code>，大小寫不一致。投影片註記「格式不統一不太好」，這正是 p.27 要加型別的原因。</li>
+        <li>p.27 加上 <code>Literal[...]</code> 後，輸出一律是三個值之一，還多了信心分數（例如 0.98、0.9、0.86）。</li>
+        <li>p.28 用類別定義後，輸入「這週五 10 月 9 日上午 10 點 PST 有會議」，得到 <code>date=2026-10-09</code>、<code>start=10:00</code>；email 沒寫長度，<code>duration_minutes=None</code>。</li>
+      </ul>
+      <p>這和 Lecture 2 的結構化輸出、Lecture 4 的 JSON schema 是同一件事：<b>用型別約束模型的輸出</b>。差別在 DSPy 讓你只寫型別，prompt 由框架產生。</p>
+      <div class="terms"><span><em>string signature</em>字串簽名</span><span><em>InputField / OutputField</em>輸入欄位／輸出欄位</span><span><em>Literal</em>字面值型別（只能是列出的幾個值）</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p29">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=29" target="_blank" rel="noopener"><b>29–34</b></a>
+    <div class="body">
+      <h3>模組：換推論策略，組合多次呼叫 <span class="en">Modules (demo backup)</span><span class="key">重點</span></h3>
+      <ul>
+        <li>p.30 <b>換推論策略</b>：把 <code>dspy.Predict</code> 換成 <code>dspy.ChainOfThought</code>，簽名不用改，輸出多了一個 <code>reasoning</code> 欄位。</li>
+        <li>p.31 再定義第二個小簽名 <code>PickEmoji</code>：輸入活動名稱，輸出一個 emoji。例如「Dentist」→ 🦷。</li>
+        <li>p.32 <b>組合</b>：寫一個 <code>dspy.Module</code>，裡面兩次 LLM 呼叫，中間夾普通 Python 邏輯：</li>
+      </ul>
+      <pre class="code">class UpdateCalendarFromEmail(dspy.Module):
+    def __init__(self):
+        self.extract = dspy.ChainOfThought(ExtractEvent)   <span class="c"># LLM 呼叫 1</span>
+        self.pick_emoji = dspy.ChainOfThought(PickEmoji)   <span class="c"># LLM 呼叫 2</span>
+
+    def forward(self, email):
+        details = self.extract(email=email)
+        if details.event_name is None or details.date is None or details.start is None:
+            return dspy.Prediction(event=None, status="no event found in email")  <span class="c"># 一般 Python 控制流程</span>
+        emoji = self.pick_emoji(event_name=details.event_name).emoji
+        event = tinycal.add_event(...)
+        return dspy.Prediction(event=event, status="added to calendar")</pre>
+      <div class="example">
+        <div class="row"><span class="lab">輸入 1</span><span>「這週五 10 月 9 日上午 10 點有會議」→ <span class="ok">added to calendar</span></span></div>
+        <div class="row"><span class="lab">輸入 2</span><span>「謝謝你寄投影片，看起來很棒！」→ <span class="ok">no event found in email</span>（沒有活動，不加）</span></div>
+        <div class="row"><span class="lab">p.34</span><span>tinycal 的週曆畫面：週五 10/9 多了一筆 10:00–11:00 的 Meeting。</span></div>
+      </div>
+      <p>這是 <b>workflow</b>：要不要加進行事曆，由<b>你寫的 if</b> 決定，不是模型決定。</p>
+      <div class="terms"><span><em>dspy.Predict</em>直接預測</span><span><em>dspy.ChainOfThought</em>思維鏈（先推理再回答）</span><span><em>forward</em>前向函式（模組的執行邏輯）</span><span><em>compose</em>組合</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p35">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=35" target="_blank" rel="noopener"><b>35–44</b></a>
+    <div class="body">
+      <h3>優化器：用 GEPA 讓小模型從 55% 變 100% <span class="en">Optimizers: The Data · The Metric (demo backup)</span><span class="key">重點</span></h3>
+      <p>p.36 重放三根支柱：優化需要資料和指標。接著分六步：</p>
+      <div class="flow"><span>① 資料</span><i>→</i><span>② 指標</span><i>→</i><span>大模型先驗證</span><i>→</i><span>③④ 小模型基準</span><i>→</i><span>⑤ GEPA 優化</span><i>→</i><span>⑥ 再評一次</span></div>
+      <ul>
+        <li><b>① 資料</b>（p.37–38）：50 封擬真 email，每封有標準答案。例如「Jesse 剪髮，2026 年 10 月 28 日下午 2:45，一小時」→ <code>{'date': '2026-10-28', 'start': '14:45', 'duration_minutes': 60}</code>。轉成 <code>dspy.Example</code>，輸入是 email，其餘是標籤；打亂後切 <b>30 筆訓練、20 筆測試</b>。</li>
+        <li><b>② 指標</b>（p.39）：日期、開始時間、長度<b>三者全對</b>才得 1 分，否則 0 分。活動名稱是自由文字，不評分。指標還會回傳<b>文字回饋</b>（例如「date: expected …, got …」），GEPA 會把這段給反思模型看。</li>
+        <li><b>驗證</b>（p.40）：大模型（程式註解寫 gpt-5.4-nano，是 demo 的預設 LM）在 20 筆測試上 20/20 = 100%。</li>
+        <li><b>③④ 小模型</b>（p.41）：同一個簽名換成 Gemma 3 12B，優化前 11/20 = <b>55%</b>。</li>
+        <li><b>⑤ 優化</b>（p.42）：<code>dspy.GEPA(metric=event_metric, max_metric_calls=100, reflection_lm=dspy_llm)</code>，約 3 分鐘。<b>大模型負責反思小模型的錯誤，被調整的是小模型的 prompt。</b></li>
+        <li><b>⑥ 結果</b>（p.43）：小模型優化後 20/20 = <b>100%</b>。（55% → 100%，我驗算過：11/20 = 0.55）</li>
+        <li>p.44：<b>GEPA 唯一改動的是指令文字</b>。印出來是一份很長的說明：輸入可能長怎樣、各欄位要什麼格式（日期用 YYYY-MM-DD、沒寫時區就用 UTC）、常見陷阱等。</li>
+      </ul>
+      <p>回到 p.4 的比喻：這就是 prompt 版的 <code>optimizer.step()</code>。你不手改 prompt，而是給資料和指標，讓框架去改。</p>
+      <div class="terms"><span><em>gold label</em>標準答案</span><span><em>trainset / testset</em>訓練集／測試集</span><span><em>metric</em>指標</span><span><em>feedback</em>文字回饋</span><span><em>reflection LM</em>反思模型</span><span><em>GEPA</em>GEPA 優化器</span></div>
+      <div class="reads">
+        <a class="rd" data-slug="Agrawal2026_GEPA" href="https://cs.xuyili.com/reading/Agrawal2026_GEPA.html" target="_blank" rel="noopener">GEPA（本頁直接使用）</a>
+        <a class="rd" data-slug="Opsahl-Ong2024_MIPROv2" href="https://cs.xuyili.com/reading/Opsahl-Ong2024_MIPROv2.html" target="_blank" rel="noopener">MIPROv2（另一個 DSPy 優化器）</a>
+        <a class="rd" data-slug="Soylu2024_FineTuning_and_Prompt_Optimization_EMNLP2024" href="https://cs.xuyili.com/reading/Soylu2024_FineTuning_and_Prompt_Optimization_EMNLP2024.html" target="_blank" rel="noopener">微調與 prompt 優化（優化權重）</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="slide" id="p45">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=45" target="_blank" rel="noopener"><b>45–50</b></a>
+    <div class="body">
+      <h3>DSPy 裡的 agent：ReAct 與 RLM <span class="en">Agents · ReAct · RLM</span></h3>
+      <ul>
+        <li>p.46 <b>一行做出 agent</b>：<code>dspy.ReAct("request -&gt; summary", tools=tinycal.TOOLS)</code>。只要給簽名和工具清單。</li>
+      </ul>
+      <div class="example">
+        <div class="row"><span class="lab">請求</span><span>「10/7 下課後約 John 喝 30 分鐘咖啡，並在那週的每堂課上加一個書本 emoji。」</span></div>
+        <div class="row"><span class="lab">agent</span><span class="ok">把 10/5、10/7 兩堂 CS329Z 加上 📚；排了 10/7 15:00–15:30 和 John 喝咖啡 ☕（p.47 行事曆截圖可對照）</span></div>
+      </div>
+      <ul>
+        <li>和前面的 workflow 對比：這次<b>要呼叫哪些工具、呼叫幾次，是模型自己決定</b>。</li>
+        <li>p.48 <b>RLM</b> 處理很長的上下文：把 50 封信串成一個信箱，用 <code>dspy.RLM("inbox, question -&gt; event_names: list[str], dates: list[str]", max_iters=8)</code> 問「哪些活動在 Gates 大樓？」，答出「Wei Zhang 的論文口試，2026 年 12 月 7 日」。</li>
+        <li>p.49：ReAct 論文的經典軌跡（Thought → Act → Obs 交替，查 Apple Remote 的問題）。</li>
+        <li>p.50 RLM 架構圖：長 prompt <b>不直接塞進模型</b>，而是當成 Python 環境裡的一個變數；模型寫程式去切、去讀，必要時遞迴呼叫子模型（depth=1）處理片段，最後彙整答案。</li>
+      </ul>
+      <p>補充：RLM 指 Recursive Language Models（Zhang、Kraska、Khattab，2025）。p.50 的圖片出處沿用了 p.49 ReAct 論文的網址，看起來是誤植。它對應 Lecture 4 的 Lost in the Middle：與其讓模型硬讀整段長文，不如讓它用程式去翻。</p>
+      <div class="terms"><span><em>ReAct</em>推理＋行動</span><span><em>RLM (Recursive Language Model)</em>遞迴語言模型</span><span><em>long context</em>長上下文</span></div>
+      <div class="reads"><a class="rd" data-slug="Yao2023_ReAct_ICLR2023" href="https://cs.xuyili.com/reading/Yao2023_ReAct_ICLR2023.html" target="_blank" rel="noopener">ReAct（p.49 直接引用；Lecture 6 必讀）</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p51">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=51" target="_blank" rel="noopener"><b>51</b></a>
+    <div class="body">
+      <h3>DSPy 小結 <span class="en">DSPy Summary</span></h3>
+      <ul>
+        <li><b>簽名</b>定義輸入／輸出契約。</li>
+        <li><b>模組</b>組合起來，並指定契約要怎麼完成：<code>dspy.Predict</code>、<code>dspy.ChainOfThought</code>、<code>dspy.BestOfN</code>…</li>
+        <li>給定資料和指標，<b>優化器</b>可以改進程式的 prompt 或權重。</li>
+        <li>DSPy 內建讓 agent 完成簽名的模組：<code>dspy.ReAct</code>、<code>dspy.RLM</code>。</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PART 3 ============ -->
+<section class="part" id="part3">
+  <div class="part-head">
+    <span class="no">PART 2b · p.52–77 · 約 10 分鐘</span>
+    <h2>LangGraph：狀態、節點、邊</h2>
+    <p>同一個行事曆例子，改用「圖」來寫。p.60–75 是 demo 備用截圖。</p>
+  </div>
+
+  <article class="slide" id="p52">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=52" target="_blank" rel="noopener"><b>52–58</b></a>
+    <div class="body">
+      <h3>LangGraph workflow 的骨架 <span class="en">Outline of a LangGraph Workflow · Agent</span><span class="key">重點</span></h3>
+      <p>p.53–57 是同一張圖逐步加上說明：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>元素</th><th>是什麼</th></tr></thead>
+        <tbody>
+          <tr><td><b>狀態 State</b></td><td>整張圖共用的工作區。可以想成一個物件，圖在執行時會不斷修改它。</td></tr>
+          <tr><td><b>Start / End</b></td><td>每張圖都需要一個起點和終點節點。</td></tr>
+          <tr><td><b>節點 Node</b></td><td>函式，從共用狀態讀資料、寫資料。</td></tr>
+          <tr><td><b>邊 Edge</b></td><td>定義控制流程，也就是節點之間的走法。有些邊是<b>條件式</b>的（依狀態決定往哪走）。</td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li>p.58 <b>LangGraph agent</b> 的骨架：狀態可以就是訊息歷史；圖只有 LLM 和 Tools 兩個節點，在兩者之間循環，LLM 決定結束時才走到 End。</li>
+      </ul>
+      <div class="terms"><span><em>state</em>狀態</span><span><em>node</em>節點</span><span><em>edge</em>邊</span><span><em>conditional edge</em>條件邊</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p59">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=59" target="_blank" rel="noopener"><b>59–65</b></a>
+    <div class="body">
+      <h3>建一張最簡單的圖 <span class="en">Building the Graph · Structured I/O · State · Node · Graph</span></h3>
+      <pre class="code"><span class="c"># p.61 結構化輸出：用 Pydantic 定義（對照 DSPy 的 Signature 類別）</span>
+class ExtractEvent(BaseModel):
+    event_name: str | None = Field(description="short title for the event…")
+    date: dt.date | None
+    start: dt.time | None = Field(description="24-hour clock")
+    duration_minutes: int | None = Field(...)
+extract_llm = langchain_llm.with_structured_output(ExtractEvent)
+
+<span class="c"># p.62 狀態</span>
+class State(TypedDict):
+    email: str
+    details: ExtractEvent | None
+
+<span class="c"># p.63 節點：讀狀態、計算、只回傳改了的部分</span>
+def extract(state: State):
+    return {"details": extract_llm.invoke(state["email"])}
+
+<span class="c"># p.64 組圖</span>
+builder = StateGraph(State)
+builder.add_node("extract", extract)
+builder.add_edge(START, "extract")
+builder.add_edge("extract", END)
+graph = builder.compile()</pre>
+      <ul>
+        <li>p.65 執行 <code>graph.invoke({"email": "…10 月 9 日上午 10 點…"})</code>，回傳的狀態裡多了抽出來的 details。</li>
+        <li>注意節點<b>只回傳它改動的欄位</b>，LangGraph 會把它合併回共用狀態。</li>
+      </ul>
+      <div class="terms"><span><em>Pydantic BaseModel</em>Pydantic 資料模型</span><span><em>TypedDict</em>型別字典</span><span><em>StateGraph</em>狀態圖</span><span><em>compile</em>編譯（把圖定案成可執行物件）</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p66">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=66" target="_blank" rel="noopener"><b>66–72</b></a>
+    <div class="body">
+      <h3>條件邊：沒有活動就直接結束 <span class="en">Conditional Edges and Workflows</span><span class="key">重點</span></h3>
+      <pre class="code"><span class="c"># p.67 擴充狀態</span>
+class CalendarState(State):
+    emoji: str
+    status: str
+
+<span class="c"># p.68 兩個新節點：pick_emoji、add_to_calendar（略）</span>
+
+<span class="c"># p.69 條件邊：普通 Python 決定下一步</span>
+def route(state) -&gt; Literal["pick_emoji", "__end__"]:
+    d = state["details"]
+    return "pick_emoji" if d.event_name and d.date and d.start else END
+
+<span class="c"># p.70 組圖</span>
+builder.add_edge(START, "extract")
+builder.add_conditional_edges("extract", route)
+builder.add_edge("pick_emoji", "add_to_calendar")
+builder.add_edge("add_to_calendar", END)</pre>
+      <div class="example">
+        <div class="row"><span class="lab">輸入 1</span><span>「牙醫預約確認，10 月 7 日週三上午 11 點」→ <span class="ok">emoji 🦷，added to calendar</span></span></div>
+        <div class="row"><span class="lab">輸入 2</span><span>「CS329Z 的 OpenRouter 額度到了！」→ <span class="ok">details 全是 None，走到 END，沒有加</span></span></div>
+        <div class="row"><span class="lab">p.72</span><span>行事曆截圖：週三 10/7 多了 11:00–12:00 牙醫預約。</span></div>
+      </div>
+      <p>對照 p.32 的 DSPy 版：DSPy 把判斷寫成 <code>forward</code> 裡的 <code>if</code>，LangGraph 把它寫成<b>一條條件邊</b>。邏輯一樣，只是表示法不同。</p>
+      <div class="terms"><span><em>add_conditional_edges</em>新增條件邊</span><span><em>route</em>路由函式</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p73">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=73" target="_blank" rel="noopener"><b>73–75</b></a>
+    <div class="body">
+      <h3>LangGraph 的 agent 也是兩行 <span class="en">Agents (demo backup)</span></h3>
+      <pre class="code">from langchain.agents import create_agent
+langchain_cal_agent = create_agent(langchain_llm, tools=tinycal.TOOLS)</pre>
+      <div class="example">
+        <div class="row"><span class="lab">請求</span><span>「把我 10/7 和 John 的咖啡往後延 30 分鐘。」</span></div>
+        <div class="row"><span class="lab">結果</span><span class="ok">p.75 行事曆截圖：咖啡從 15:00–15:30 改成 15:30–16:00 ✓</span></div>
+      </div>
+    </div>
+  </article>
+
+  <article class="slide" id="p76">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=76" target="_blank" rel="noopener"><b>76–77</b></a>
+    <div class="body">
+      <h3>LangGraph 小結與 workflow 回顧 <span class="en">LangGraph Summary · Recap</span><span class="key">重點</span></h3>
+      <ul>
+        <li>LangGraph 在一張<b>圖</b>上操作<b>共用狀態</b>；節點讀寫狀態；邊定義節點間的控制流程；條件邊可以做分支；內建 <code>create_agent</code> 快速做出 agent。</li>
+        <li>p.77 回顧（頁面也放了 CrewAI 的 logo，代表其他同類框架）：
+          <ul>
+            <li>Workflow 把模型呼叫、工具和程式邏輯組成更大的 AI 系統。</li>
+            <li>不同框架提供不同抽象：DSPy 用簽名和模組，LangGraph 用狀態、節點和邊。</li>
+            <li><b>控制流程由我們設計，並決定在哪些地方讓模型做決定。</b></li>
+            <li>要改進就需要資料和評測；DSPy 用優化器把這件事明確化。</li>
+          </ul>
+        </li>
+      </ul>
+      <div class="tbl"><table>
+        <thead><tr><th></th><th>DSPy</th><th>LangGraph</th></tr></thead>
+        <tbody>
+          <tr><td>定義輸入輸出</td><td>Signature</td><td>Pydantic + <code>with_structured_output</code></td></tr>
+          <tr><td>組合流程</td><td>Module 的 <code>forward</code>（寫 Python）</td><td>節點 + 邊（畫圖）</td></tr>
+          <tr><td>分支</td><td><code>if</code></td><td>條件邊</td></tr>
+          <tr><td>做 agent</td><td><code>dspy.ReAct</code></td><td><code>create_agent</code></td></tr>
+          <tr><td>自動改進</td><td>優化器（GEPA 等）</td><td>投影片未提</td></tr>
+        </tbody>
+      </table></div>
+      <p>這張比較表是本導讀依 demo 整理的，不是投影片原文。</p>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PART 4 ============ -->
+<section class="part" id="part4">
+  <div class="part-head">
+    <span class="no">PART 3 · p.78–89 · 約 15 分鐘</span>
+    <h2>開源 Agent Harness：同一個模型，外殼不同，結果就不同</h2>
+    <p>四個開源 harness 的設計取捨，以及 harness 對分數影響有多大。</p>
+  </div>
+
+  <article class="slide" id="p80">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=79" target="_blank" rel="noopener"><b>79–81</b></a>
+    <div class="body">
+      <h3>什麼是 agent harness？差在哪？ <span class="en">What is an Agent Harness? · What differentiates them?</span><span class="key">重點</span></h3>
+      <ul>
+        <li>p.80 沿用 Lecture 1 的架構圖：LLM 核心，加上規劃與推理、記憶、工具、對環境的觀察與行動。<b>Harness 就是包在 LLM 外面、把這些接起來的程式。</b></li>
+        <li>p.81：做 agent 要決定<b>工具、記憶、上下文管理、執行方式</b>。不同 harness 依任務和環境做不同取捨。好的 harness 要在任務成功率、成本、延遲、使用者控制權之間取得平衡，怎麼平衡看用途。</li>
+      </ul>
+      <p>HW1 的題目就是「Build an Agentic Harness」，下面四個例子都是你可以參考的設計。</p>
+      <div class="terms"><span><em>harness</em>執行框架（agent 外殼）</span><span><em>context management</em>上下文管理</span><span><em>tradeoff</em>取捨</span></div>
+      <div class="reads"><a class="rd" data-slug="Young2025_Effective_Harnesses_Long_Running_Agents" href="https://cs.xuyili.com/reading/Young2025_Effective_Harnesses_Long_Running_Agents.html" target="_blank" rel="noopener">Effective Harnesses for Long-Running Agents</a></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p82">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=82" target="_blank" rel="noopener"><b>82–85</b></a>
+    <div class="body">
+      <h3>四個 harness 的設計取捨 <span class="en">Mini SWE-Agent · OpenHands · Pi Agent · OpenClaw</span><span class="key">重點</span></h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Harness</th><th>工具</th><th>歷史／記憶</th><th>執行方式</th><th>特色</th></tr></thead>
+        <tbody>
+          <tr><td><b>Mini SWE-Agent</b></td><td>只有 bash</td><td>完全線性：每一步只是附加到訊息列表</td><td>每個動作用 <code>subprocess.run</code> 獨立執行，不保留 shell 狀態</td><td>極簡</td></tr>
+          <tr><td><b>OpenHands</b></td><td>—</td><td>每一步存成事件（磁碟上一個事件一個 JSON 檔），每步再從事件重建送給模型的訊息</td><td>持續存在的終端機（tmux），<code>cd</code>、環境變數、虛擬環境會延續</td><td>卡住時會自己停：同樣的動作和結果重複 4 次就結束</td></tr>
+          <tr><td><b>Pi Agent</b></td><td>只有四個：read、write、edit、bash；系統 prompt 不到 1,000 token</td><td>歷史存成<b>樹</b>：可以回到之前某則訊息，從那裡分支</td><td>沒有權限系統，你用什麼權限啟動它就有什麼權限</td><td>刻意簡單：沒有計畫模式、沒有子 agent</td></tr>
+          <tr><td><b>OpenClaw</b></td><td>—</td><td>身分來自 Markdown 檔（AGENTS.md、SOUL.md、IDENTITY.md、USER.md、MEMORY.md）注入系統 prompt；每晚 3 點背景工作讀當天筆記，把值得留的移進 MEMORY.md</td><td>一個長駐的 Gateway 行程，負責所有聊天頻道</td><td>每 30 分鐘自己醒來一次（heartbeat），沒事就回 NO_REPLY 保持安靜</td></tr>
+        </tbody>
+      </table></div>
+      <p>「—」表示投影片沒提到這一項。對照表的四個欄位，就是 p.81 說的「工具、記憶、上下文管理、執行方式」四個設計選擇。</p>
+      <div class="terms"><span><em>linear history</em>線性歷史</span><span><em>event</em>事件</span><span><em>persistent terminal</em>持續終端機</span><span><em>heartbeat</em>心跳（定時喚醒）</span><span><em>sub-agent</em>子 agent</span></div>
+      <div class="reads">
+        <a class="rd" data-slug="Yang2024_SWE-agent_NeurIPS2024" href="https://cs.xuyili.com/reading/Yang2024_SWE-agent_NeurIPS2024.html" target="_blank" rel="noopener">SWE-agent（Mini SWE-Agent 的前身）</a>
+        <a class="rd" data-slug="Wang2025_OpenHands_ICLR2025" href="https://cs.xuyili.com/reading/Wang2025_OpenHands_ICLR2025.html" target="_blank" rel="noopener">OpenHands（事件流架構）</a>
+        <a class="rd" data-slug="Packer2023_MemGPT" href="https://cs.xuyili.com/reading/Packer2023_MemGPT.html" target="_blank" rel="noopener">MemGPT（OpenClaw 記憶整理的對照）</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="slide" id="p86">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=86" target="_blank" rel="noopener"><b>86</b></a>
+    <div class="body">
+      <h3>Harness 影響很大 <span class="en">The Harness can make a big difference</span></h3>
+      <p>Terminal-Bench 2 上，同一個模型換三種 harness（Pi、Codex、Claude Code）的成功率（出處 arena.ai 部落格 “coding agents harness tax”）：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>模型</th><th>Pi</th><th>Codex</th><th>Claude Code</th><th>差距</th></tr></thead>
+        <tbody>
+          <tr><td>Claude Fable 5</td><td class="num">71.1%</td><td class="num">72.2%</td><td class="num"><b>75.6%</b></td><td class="num">4.5</td></tr>
+          <tr><td>Claude Opus 4.8</td><td class="num"><b>72.2%</b></td><td class="num"><b>72.2%</b></td><td class="num">68.9%</td><td class="num">3.3</td></tr>
+          <tr><td>Claude Sonnet 4.6</td><td class="num"><b>65.6%</b></td><td class="num">63.3%</td><td class="num">62.2%</td><td class="num">3.4</td></tr>
+          <tr><td>Claude Haiku 4.5</td><td class="num"><b>47.8%</b></td><td class="num">31.1%</td><td class="num">41.1%</td><td class="num">16.7</td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li>模型越小，harness 的影響越大：Haiku 4.5 在不同 harness 間差了 16.7 個百分點（47.8 − 31.1）。</li>
+        <li>圖的左半還有每次 rollout 的成本（約 0.21–1.55 美元），請看原頁。</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="slide" id="p87">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=87" target="_blank" rel="noopener"><b>87–89</b></a>
+    <div class="body">
+      <h3>Meta-Harness：讓 agent 自己寫 harness <span class="en">Meta-Harness (arXiv 2603.28052) · Bringing it together</span></h3>
+      <div class="flow"><span>① agent 讀檔案系統裡所有舊候選的程式碼、執行軌跡、分數，提出新的 harness</span><i>→</i><span>② 在評測任務上評分</span><i>→</i><span>③ 程式碼、推理軌跡、分數全部存進新資料夾</span><i>→</i><span>重複</span></div>
+      <ul>
+        <li>p.88 結果：在 TerminalBench-2 上用 Claude Haiku 4.5，Meta-Harness 找到的 harness 通過率 <b>37.6%</b>，勝過所有人寫的 harness（Goose 35.5、Terminus-KIRA 33.7、Mini-SWE-Agent 29.8、Terminus-2 28.3、Claude Code 27.5）。在文字分類任務上，也只花 4 次評估就追上次佳方法的最終準確率。</li>
+        <li>p.89 總結：<b>做 agent 沒有唯一正解</b>。這門課會讓你實驗這些設計選擇，也許你能做出下一個熱門 harness。</li>
+      </ul>
+      <p>這和 DSPy 優化器是同一個思路：有資料和指標，就能自動搜尋更好的系統。差別是這次搜尋的對象從 prompt 換成整個 harness 的程式碼。</p>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PART 5 ============ -->
+<section class="part" id="part5">
+  <div class="part-head">
+    <span class="no">PART 4 · p.90–122 · 約 15 分鐘</span>
+    <h2>編排與遙測：讓長時間任務不怕當機、出事查得到</h2>
+    <p>用 Temporal 把行事曆流程改成「可持久」的 workflow，再介紹幾個觀測工具。p.100–117 是 demo 備用截圖。</p>
+  </div>
+
+  <article class="slide" id="p92">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=91" target="_blank" rel="noopener"><b>91–93</b></a>
+    <div class="body">
+      <h3>為什麼需要編排與遙測 <span class="en">Why is orchestration/telemetry needed?</span><span class="key">重點</span></h3>
+      <ul>
+        <li>p.92 METR 的圖：LLM 有 50% 機率完成的軟體任務長度（以人類所需時間計）隨模型發布時間快速上升，從 GPT-2 的幾秒，到 2026 年的模型已經是好幾小時（縱軸是對數尺度）。</li>
+        <li>p.93：agent 會<b>跑很久</b>（雖然上一頁說的是人類所需時間），支撐它的基礎設施必須可靠；有日誌和觀測工具才好除錯。這些是軟體工程用痛換來的教訓，同樣適用在 agent 上。</li>
+      </ul>
+      <p>想像一個跑了三小時的 agent 在第 2 小時 50 分當機：沒有編排，就得全部重來，前面所有 LLM 呼叫的錢也白花了。</p>
+      <div class="terms"><span><em>telemetry</em>遙測</span><span><em>time horizon</em>時間跨度</span><span><em>infra</em>基礎設施</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p94">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=94" target="_blank" rel="noopener"><b>94–98</b></a>
+    <div class="body">
+      <h3>Temporal 的執行模型 <span class="en">Temporal Execution Model</span><span class="key">重點</span></h3>
+      <p>p.94 是 Temporal 的 logo 頁；p.95–98 是同一張圖逐步加上元件：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>元件</th><th>在哪</th><th>做什麼</th></tr></thead>
+        <tbody>
+          <tr><td><b>Activity 活動</b></td><td>你的程式</td><td>可能失敗的功能單位，例如一次 LLM 呼叫、一次 API 呼叫</td></tr>
+          <tr><td><b>Workflow 流程</b></td><td>你的程式</td><td>把多個 activity 串起來</td></tr>
+          <tr><td><b>Worker</b></td><td>你的程式</td><td>真正執行 workflow 和 activity 的行程</td></tr>
+          <tr><td><b>Server</b></td><td>Temporal</td><td>保存執行歷史與狀態；用任務佇列（workflow 佇列、activity 佇列）把工作派給 worker</td></tr>
+        </tbody>
+      </table></div>
+      <p>關鍵在於<b>每一步的結果都記在 server 上</b>。worker 掛了再起來，可以從記錄接著跑，不用重做已完成的步驟。</p>
+      <div class="terms"><span><em>activity</em>活動</span><span><em>workflow</em>流程</span><span><em>worker</em>工作行程</span><span><em>task queue</em>任務佇列</span><span><em>execution history</em>執行歷史</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p99">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=99" target="_blank" rel="noopener"><b>99–106</b></a>
+    <div class="body">
+      <h3>做一個可持久的 workflow <span class="en">Making a Durable Workflow: Activities · Workflow · Worker · Run it</span></h3>
+      <pre class="code"><span class="c"># p.101 Activity：直接重用 DSPy 的模組</span>
+@activity.defn
+def extract_event(email: str) -&gt; dict | None: ...   <span class="c"># 呼叫 extract_cot</span>
+@activity.defn
+def select_emoji(title: str) -&gt; str: ...            <span class="c"># 呼叫 emoji_cot</span>
+@activity.defn
+def add_to_calendar(details: dict, emoji: str) -&gt; str: ...
+
+<span class="c"># p.102 Workflow：每個可能失敗的呼叫都包一層 execute_activity</span>
+RETRY = RetryPolicy(initial_interval=timedelta(seconds=1), maximum_attempts=5)
+
+@workflow.defn(sandboxed=False)
+class CalendarWorkflow:
+    @workflow.run
+    async def run(self, email: str) -&gt; str:
+        details = await workflow.execute_activity(extract_event, email,
+                      start_to_close_timeout=timedelta(minutes=1), retry_policy=RETRY)
+        if details is None:
+            return "no event found in email"
+        emoji = await workflow.execute_activity(select_emoji, details["title"], ...)
+        return await workflow.execute_activity(add_to_calendar, args=[details, emoji], ...)</pre>
+      <ul>
+        <li><b>workflow 本身必須是確定性的</b>：不能自己呼叫 LLM、不能自己做 I/O，因為 Temporal 會依照記錄<b>重播</b>它。會變動的事都放進 activity。</li>
+        <li>p.103 Worker：<code>Worker(client, task_queue="calendar", workflows=[...], activities=[...])</code>。</li>
+        <li>p.104 執行兩封信：「週四 10 月 8 日下午 3 點 office hours」→ added to calendar；「謝謝投影片」→ no event found。每一步都記錄在 <code>localhost:8233</code> 的網頁介面。</li>
+        <li>p.105–106：行事曆多了週四 Office hours；Temporal 時間軸顯示 extract_event → select_emoji → add_to_calendar 依序執行。</li>
+      </ul>
+      <p>和 p.32 的 DSPy 模組幾乎一樣，差別只在每次呼叫外面多包了「逾時 + 重試」，並且結果會被記錄。</p>
+      <div class="terms"><span><em>durable execution</em>可持久執行</span><span><em>deterministic</em>確定性</span><span><em>replay</em>重播</span><span><em>timeout</em>逾時</span><span><em>RetryPolicy</em>重試策略</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p107">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=107" target="_blank" rel="noopener"><b>107–111</b></a>
+    <div class="body">
+      <h3>重試不穩定的活動 <span class="en">Retrying Flaky Activities</span></h3>
+      <ul>
+        <li>p.108 故意做一個不穩定的 activity：前兩次一定丟出「503 Service Unavailable」，第三次才成功。</li>
+        <li>p.109：activity 會因為頻率限制、逾時、網路不穩而失敗。<b>server 會依 RetryPolicy 自動幫你重試</b>，程式不用自己寫 try/except 迴圈。</li>
+      </ul>
+      <div class="example">
+        <div class="row"><span class="lab">輸入</span><span>「2026 年 10 月 6 日週二早上 9 點去散步，30 分鐘。」</span></div>
+        <div class="row"><span class="lab">輸出</span><span><span class="bad">select_emoji attempt 1、attempt 2（失敗）</span> → <span class="ok">attempt 3 成功，added to calendar</span></span></div>
+      </div>
+      <ul>
+        <li>p.110–111：行事曆多了週二散步；時間軸上 select_emoji 標示重試了 3 次。</li>
+      </ul>
+      <div class="terms"><span><em>flaky</em>不穩定（時好時壞）</span><span><em>rate limit</em>頻率限制</span><span><em>retry</em>重試</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p112">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=112" target="_blank" rel="noopener"><b>112–117</b></a>
+    <div class="body">
+      <h3>由 server 計時：殺掉 worker 也不會丟 <span class="en">Server Based Orchestration · Server Based Timing</span><span class="key">重點</span></h3>
+      <ul>
+        <li>p.113 <code>ReminderWorkflow</code>：先跑子流程把活動加進行事曆，再 <code>await workflow.sleep(seconds)</code> 等到提醒時間。<b>一個 workflow 可以一行睡上幾個月甚至幾年。</b></li>
+      </ul>
+      <div class="example">
+        <div class="row"><span class="lab">p.114</span><span>啟動「週四 10/8 上午 11 點 lab meeting，60 分鐘」，設 20 秒後提醒。10 秒後把 worker <b>殺掉</b>。查狀態：<span class="ok">RUNNING</span>（沒有任何 worker 活著，workflow 仍在執行中）</span></div>
+        <div class="row"><span class="lab">p.115</span><span>重新啟動一個 worker。計時器到了，workflow 完成，印出「Reminder!」。<span class="ok">LLM 步驟沒有重跑，因為結果已經記錄過</span>；行事曆上只有一筆 Lab meeting，<span class="ok">不是兩筆</span>。</span></div>
+        <div class="row"><span class="lab">p.116–117</span><span>行事曆截圖與時間軸：CalendarWorkflow 跑完後是一段 20 秒的計時器。</span></div>
+      </div>
+      <p>這就是「可持久」的意思：計時和狀態放在 server，不在你的行程裡。對 agent 來說，當機後不必從頭重跑（也不必重付 LLM 的錢），也不會重複執行有副作用的動作。</p>
+      <div class="terms"><span><em>child workflow</em>子流程</span><span><em>durable timer</em>可持久計時器</span><span><em>side effect</em>副作用</span><span><em>idempotent</em>冪等（重複執行結果不變）</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p118">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=118" target="_blank" rel="noopener"><b>118–122</b></a>
+    <div class="body">
+      <h3>其他觀測工具與小結 <span class="en">Additional Observability Frameworks · Recap</span><span class="img-only">圖片頁</span></h3>
+      <ul>
+        <li>p.119 <b>MLflow</b>：追蹤 DSPy 呼叫的介面截圖，可以看到每次 <code>LM.__call__</code> 的輸入 prompt 和輸出。</li>
+        <li>p.120 <b>LangSmith</b>：LangChain 的觀測平台（截圖請看原頁）。</li>
+        <li>p.121 <b>Langfuse</b>：儀表板截圖，含各模型延遲、成本、trace 數、評分等。</li>
+        <li>p.122 小結：<b>編排讓 agent 可靠；可觀測性讓你能除錯和監控</b>。軟體工程的最佳實踐和工具會延續到 agent 工程。設好評測、監控、可持久執行等，是「做出 agent」和「<b>工程化</b> agent」的分界。</li>
+      </ul>
+      <div class="terms"><span><em>trace</em>追蹤記錄</span><span><em>span</em>區段（trace 裡的一個步驟）</span><span><em>dashboard</em>儀表板</span></div>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PART 6 ============ -->
+<section class="part" id="part6">
+  <div class="part-head">
+    <span class="no">PART 5 · p.123–132 · 約 15 分鐘</span>
+    <h2>最佳實踐與挑戰</h2>
+    <p>保持簡單、讓失敗看得見、用評測做決定，以及框架本身的代價。</p>
+  </div>
+
+  <article class="slide" id="p124">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=124" target="_blank" rel="noopener"><b>124</b></a>
+    <div class="body">
+      <h3>保持簡單 <span class="en">Keep it Simple</span><span class="key">重點</span></h3>
+      <ul>
+        <li>你不一定需要做 agent，有時 <b>workflow 才是對的選擇</b>。</li>
+        <li>真的要做 agent 時，仔細想清楚要給它哪些工具。</li>
+        <li>如果資料很多，甚至可以端到端優化一個模型。</li>
+      </ul>
+      <p>對照框架地圖：從左往右（模型 → workflow → agent），控制權越來越交給模型，也越難預測。能用左邊解決就不要往右走。</p>
+      <div class="reads">
+        <a class="rd" data-slug="Schluntz2024_Building_Effective_Agents_Anthropic" href="https://cs.xuyili.com/reading/Schluntz2024_Building_Effective_Agents_Anthropic.html" target="_blank" rel="noopener">Building Effective Agents</a>
+        <a class="rd" data-slug="Neubig2024_Dont_Sleep_On_Single_Agent_Systems" href="https://cs.xuyili.com/reading/Neubig2024_Dont_Sleep_On_Single_Agent_Systems.html" target="_blank" rel="noopener">Don’t Sleep on Single-Agent Systems</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="slide" id="p125">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=125" target="_blank" rel="noopener"><b>125–126</b></a>
+    <div class="body">
+      <h3>讓失敗看得見、救得回來 <span class="en">Make Failures Observable and Recoverable · Example: Shepherd</span></h3>
+      <ul>
+        <li>追蹤模型呼叫、工具呼叫、狀態變化和錯誤。</li>
+        <li>設定逾時、重試上限和執行預算。</li>
+        <li>記錄輸出，診斷失敗。監控系統狀態。</li>
+        <li>可以把錯誤丟回給 agent，讓它再試一次。p.125 的截圖就是例子：Claude Code 想用 <code>sleep 30</code> 等待，被 harness 擋下，錯誤訊息直接告訴 agent 該改用什麼方式。</li>
+        <li>p.126 <b>Shepherd</b>（arXiv 2605.10913）：一個 meta-agent 觀察另一個 agent 的執行軌跡，可以攔截、<b>回滾</b>錯誤的編輯、<b>分叉</b>重試。例如在 CooperBench 上，加了 meta-agent 後通過率從 28.8% 提升到 45.3%（Sonnet 4.6）和 54.7%（Opus 4.7）。</li>
+      </ul>
+      <div class="terms"><span><em>execution budget</em>執行預算</span><span><em>meta-agent</em>元 agent（管理 agent 的 agent）</span><span><em>revert</em>回滾</span><span><em>fork</em>分叉</span></div>
+    </div>
+  </article>
+
+  <article class="slide" id="p127">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=127" target="_blank" rel="noopener"><b>127–128</b></a>
+    <div class="body">
+      <h3>跑評測 <span class="en">Run Evaluations</span><span class="key">重點</span></h3>
+      <ul>
+        <li>做設計決策最好的方式，是<b>以評測為依據</b>。評測也讓優化成為可能（就像 DSPy 優化器需要指標）。</li>
+        <li>建好評測是做 AI 系統最重要的步驟之一。指標要選對（準確率、成本、延遲等），並測具代表性的任務、邊界情況和失敗情境。</li>
+        <li>p.128：<b>除非你在做通用的 coding agent harness，或在測通用的 agent 系統改進，否則不該去刷標準的 coding 基準</b>（頁面放了 DeepSWE 排行榜當例子），應該建<b>你自己領域的評測</b>。</li>
+      </ul>
+      <div class="reads">
+        <a class="rd" data-slug="Grace2026_Demystifying_Evals_Anthropic" href="https://cs.xuyili.com/reading/Grace2026_Demystifying_Evals_Anthropic.html" target="_blank" rel="noopener">Demystifying Evals</a>
+        <a class="rd" data-slug="Shankar2024_Data_Flywheels_blog" href="https://cs.xuyili.com/reading/Shankar2024_Data_Flywheels_blog.html" target="_blank" rel="noopener">Data Flywheels</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="slide" id="p129">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=129" target="_blank" rel="noopener"><b>129</b></a>
+    <div class="body">
+      <h3>挑戰與限制 <span class="en">Challenges / Limitations</span><span class="key">重點</span></h3>
+      <ul>
+        <li><b>抽象讓你離底層細節更遠</b>，所以要確定你知道底下發生什麼事。頁面配了一張迷因（出處 hamel.dev〈Fuck You, Show Me The Prompt〉）：有人說「我們的函式庫能讓 LLM 輸出最好的結果」，蝙蝠俠回「把 prompt 拿出來看」。</li>
+        <li>系統一複雜，就很難找出失敗出在哪。<b>一定要看 trace！</b></li>
+        <li>建在框架上，會多出依賴，也要仰賴外部函式庫持續維護。</li>
+      </ul>
+      <p>p.44 的 GEPA 例子正好示範了第一點：優化完一定要把 <code>signature.instructions</code> 印出來看，才知道框架到底送了什麼給模型。</p>
+    </div>
+  </article>
+
+  <article class="slide" id="p130">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=130" target="_blank" rel="noopener"><b>130–132</b></a>
+    <div class="body">
+      <h3>總結 <span class="en">Recap · Summary</span></h3>
+      <ul>
+        <li>工程化 agent 是一個循環：<b>建構 → 執行 → 評測 → 改進</b>。</li>
+        <li>從簡單開始，增加複雜度要有理由。</li>
+        <li>為失敗和復原做設計。</li>
+        <li>用證據和評測判斷品質、成本和延遲。</li>
+        <li>完全理解你的系統怎麼運作。</li>
+      </ul>
+      <p><b>自我檢查</b>，不看資料能回答的話就可以進入 Lecture 6：</p>
+      <ul>
+        <li>DSPy 的簽名、模組、優化器各負責什麼？GEPA 在 demo 裡到底改了程式的哪個部分？（p.22、p.42–44）</li>
+        <li>同一個「沒有活動就不加」的判斷，DSPy 和 LangGraph 各寫在哪裡？（p.32、p.69–70）</li>
+        <li>Temporal 的 worker 被殺掉後再啟動，為什麼 LLM 步驟不會重跑、活動也不會重複加入？（p.102、p.114–115）</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section class="gloss" id="glossary">
+  <h2>術語表</h2>
+  <p style="color:var(--muted);margin:0 0 8px">本講出現的主要術語，依出現順序排列。</p>
+  <div class="tbl"><table>
+    <thead><tr><th>英文</th><th>中文</th><th>一句話解釋</th></tr></thead>
+    <tbody>
+      <tr><td>abstraction</td><td>抽象</td><td>框架把底層細節藏起來，讓你用更高層的概念寫程式</td></tr>
+      <tr><td>compound AI system</td><td>複合 AI 系統</td><td>由多次模型呼叫、工具和程式邏輯組成的系統</td></tr>
+      <tr><td>control flow / agency</td><td>控制流程／自主程度</td><td>下一步做什麼由誰決定：程式還是模型</td></tr>
+      <tr><td>orchestration</td><td>編排</td><td>安排、執行、重試多個步驟的機制</td></tr>
+      <tr><td>observability</td><td>可觀測性</td><td>能從外部看到系統每一步在做什麼</td></tr>
+      <tr><td>signature</td><td>簽名</td><td>DSPy 中定義模型輸入輸出的契約</td></tr>
+      <tr><td>module</td><td>模組</td><td>DSPy 中把簽名和程式邏輯組合成可呼叫函式的單位</td></tr>
+      <tr><td>optimizer</td><td>優化器</td><td>依資料和指標自動改進 prompt 或權重</td></tr>
+      <tr><td>dspy.ChainOfThought</td><td>思維鏈模組</td><td>讓模型先輸出推理再輸出答案</td></tr>
+      <tr><td>metric</td><td>指標</td><td>給每個輸出打分的函式</td></tr>
+      <tr><td>reflection LM</td><td>反思模型</td><td>GEPA 中讀錯誤回饋、提出新 prompt 的模型</td></tr>
+      <tr><td>GEPA</td><td>GEPA 優化器</td><td>用反思與演化改寫 prompt 的 DSPy 優化器</td></tr>
+      <tr><td>ReAct</td><td>推理＋行動</td><td>思考、行動、觀察交替進行的 agent 模式</td></tr>
+      <tr><td>RLM</td><td>遞迴語言模型</td><td>把長上下文當變數，讓模型寫程式去讀並遞迴呼叫子模型</td></tr>
+      <tr><td>state</td><td>狀態</td><td>LangGraph 中整張圖共用、會被節點修改的資料</td></tr>
+      <tr><td>node</td><td>節點</td><td>讀寫狀態的函式</td></tr>
+      <tr><td>edge / conditional edge</td><td>邊／條件邊</td><td>節點間的走法；條件邊依狀態決定下一步</td></tr>
+      <tr><td>harness</td><td>執行框架</td><td>包在 LLM 外面，提供工具、記憶、上下文管理和執行環境的程式</td></tr>
+      <tr><td>heartbeat</td><td>心跳</td><td>定時喚醒 agent 的機制</td></tr>
+      <tr><td>telemetry</td><td>遙測</td><td>自動收集系統執行資料，用於監控與除錯</td></tr>
+      <tr><td>activity</td><td>活動</td><td>Temporal 中可能失敗、會被重試的功能單位</td></tr>
+      <tr><td>workflow</td><td>流程</td><td>Temporal 中串起 activity 的確定性程式</td></tr>
+      <tr><td>worker</td><td>工作行程</td><td>實際執行 workflow 和 activity 的行程</td></tr>
+      <tr><td>durable execution</td><td>可持久執行</td><td>每步結果都被記錄，當機後能接著跑</td></tr>
+      <tr><td>RetryPolicy</td><td>重試策略</td><td>規定失敗後隔多久、最多重試幾次</td></tr>
+      <tr><td>trace / span</td><td>追蹤記錄／區段</td><td>一次執行的完整記錄，以及其中的單一步驟</td></tr>
+      <tr><td>meta-agent</td><td>元 agent</td><td>觀察並介入另一個 agent 執行的 agent</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer>
+  依據 Stanford CS 329Z 官方投影片 lecture05.pdf 整理，僅供個人學習。頁碼依 PDF 頁數；程式碼依 demo 備用截圖謄寫並略有刪節；標註「補充」與比較表等內容不是投影片原文。
+</footer>
+</div>
+
+<script>
+(function(){
+  var BASES={online:"https://cs.xuyili.com/reading/",local:"http://127.0.0.1:8329/reading/"};
+  var btns=document.querySelectorAll(".seg button");
+  function apply(mode){
+    document.querySelectorAll("a.rd").forEach(function(a){
+      a.href=BASES[mode]+encodeURIComponent(a.dataset.slug).replace(/%26/g,"&")+".html";
+    });
+    btns.forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.mode===mode));});
+  }
+  var saved="online";
+  try{saved=localStorage.getItem("l5-linkmode")||"online";}catch(e){}
+  if(!BASES[saved])saved="online";
+  apply(saved);
+  btns.forEach(function(b){b.addEventListener("click",function(){
+    apply(b.dataset.mode);
+    try{localStorage.setItem("l5-linkmode",b.dataset.mode);}catch(e){}
+  });});
+})();
+</script>
+
+
+</body></html>

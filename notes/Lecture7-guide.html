@@ -1,0 +1,1010 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>CS329Z Lecture 7 導讀</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;800&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: 窄欄閱讀稿 + 左側頁碼欄（像講義旁註），段落導覽固定在頂部 */
+:root{
+  --paper:#f5f6f8; --sheet:#ffffff; --ink:#1a2130; --muted:#5b6475; --rule:#dde1e8;
+  --cardinal:#8c1515; --cardinal-soft:#f6e9e9; --link:#1d5c8f; --chip:#eef1f5; --key:#b5650d; --key-soft:#fbf0e2;
+  --f-display:"Noto Serif TC","Songti TC",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#12151b; --sheet:#1a1e26; --ink:#e6e9ef; --muted:#9aa3b3; --rule:#2c323d;
+  --cardinal:#e07a7a; --cardinal-soft:#2e1d20; --link:#7db5e3; --chip:#232934; --key:#e8a55a; --key-soft:#2d2318; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#12151b; --sheet:#1a1e26; --ink:#e6e9ef; --muted:#9aa3b3; --rule:#2c323d;
+  --cardinal:#e07a7a; --cardinal-soft:#2e1d20; --link:#7db5e3; --chip:#232934; --key:#e8a55a; --key-soft:#2d2318; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.75;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.wrap{max-width:860px;margin:0 auto}
+a{color:var(--link)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--cardinal);outline-offset:2px;border-radius:4px}
+h1,h2{font-family:var(--f-display);text-wrap:balance;line-height:1.3}
+
+header.top{padding-block:40px 20px}
+.eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;color:var(--cardinal);text-transform:uppercase}
+h1{font-size:clamp(28px,5vw,40px);margin:.2em 0 .3em;font-weight:800}
+.lede{color:var(--muted);max-width:62ch;margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-size:14px;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:500}
+
+.howto{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:18px 20px;margin-top:22px;display:grid;gap:10px}
+.howto h2{font-size:17px;margin:0}
+.howto ul{margin:0;padding-left:1.2em;color:var(--ink)}
+.howto li{margin:2px 0}
+.linkmode{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:999px;overflow:hidden}
+.seg button{font:inherit;font-size:13.5px;border:0;background:transparent;color:var(--muted);padding:4px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--cardinal);color:var(--sheet)}
+
+.best{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.best a{display:block;text-decoration:none;background:var(--cardinal-soft);border-radius:8px;padding:12px 14px;color:var(--ink);min-width:0}
+.best a small{display:block;font-family:var(--f-mono);font-size:12px;color:var(--cardinal)}
+.best a span{font-weight:700}
+
+nav.parts{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--rule);
+  margin-top:28px;padding-block:10px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav.parts a{flex:none;font-size:13.5px;text-decoration:none;color:var(--muted);border:1px solid var(--rule);border-radius:999px;padding:3px 12px;background:var(--sheet)}
+nav.parts a:hover{color:var(--cardinal);border-color:var(--cardinal)}
+
+section.part{margin-top:40px}
+.part-head{display:grid;gap:4px;margin-bottom:14px}
+.part-head .no{font-family:var(--f-mono);font-size:12.5px;color:var(--cardinal);letter-spacing:.06em}
+.part-head h2{font-size:clamp(22px,3.6vw,28px);margin:0}
+.part-head p{margin:0;color:var(--muted);max-width:64ch}
+
+.slide{display:grid;grid-template-columns:76px minmax(0,1fr);gap:16px;padding-block:18px;border-top:1px solid var(--rule)}
+.pg{font-family:var(--f-mono);font-size:13px;text-decoration:none;color:var(--muted);line-height:1.4;padding-top:3px}
+.pg b{display:block;font-size:17px;font-weight:600;color:var(--ink)}
+.pg:hover b{color:var(--cardinal)}
+.pg i{font-style:normal;font-size:11.5px}
+.body{min-width:0}
+.body h3{margin:0;font-size:18px;font-weight:700;line-height:1.45;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.body h3 .en{font-family:var(--f-mono);font-size:13px;font-weight:400;color:var(--muted)}
+.key{font-size:11.5px;font-weight:700;color:var(--key);background:var(--key-soft);border-radius:4px;padding:1px 7px;letter-spacing:.04em}
+.img-only{font-size:11.5px;color:var(--muted);border:1px dashed var(--rule);border-radius:4px;padding:0 6px}
+.body ul{margin:8px 0 0;padding-left:1.15em}
+.body li{margin:3px 0}
+.body p{margin:8px 0 0}
+.terms{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.terms span{font-size:13px;background:var(--chip);border-radius:5px;padding:1px 8px;color:var(--ink)}
+.terms span em{font-style:normal;font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-right:5px}
+.reads{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:14px}
+.reads::before{content:"對應閱讀";font-size:12px;color:var(--cardinal);font-weight:700;letter-spacing:.04em;padding-top:2px}
+.reads a{text-decoration-thickness:1px;text-underline-offset:3px}
+.reads .none{color:var(--muted)}
+
+.example{margin-top:10px;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;font-size:14.5px;overflow-x:auto}
+.example .row{display:grid;grid-template-columns:88px minmax(0,1fr);gap:10px;padding-block:3px}
+.example .lab{font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.ok{color:#2f7a3d}
+.bad{color:var(--cardinal)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ok{color:#7fcf8c}}
+:root[data-theme="dark"] .ok{color:#7fcf8c}
+
+.tbl{overflow-x:auto;margin-top:10px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-size:12.5px;color:var(--muted);font-weight:500}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px;font-size:14px}
+.flow span{background:var(--chip);border-radius:6px;padding:3px 10px}
+.flow i{font-style:normal;color:var(--muted)}
+
+.gloss{margin-top:48px}
+.gloss h2{font-size:26px;margin:0 0 6px}
+.gloss td:first-child{font-family:var(--f-mono);font-size:13.5px;white-space:nowrap}
+footer{margin-top:40px;font-size:13px;color:var(--muted)}
+
+@media (max-width:560px){
+  .slide{grid-template-columns:1fr;gap:6px}
+  .pg{display:flex;gap:8px;align-items:baseline}
+  .pg b{display:inline}
+  .example .row{grid-template-columns:1fr;gap:0}
+}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<style>
+pre.code{margin:10px 0 0;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;font-family:var(--f-mono);font-size:13px;line-height:1.6;overflow-x:auto;white-space:pre}
+pre.code .c{color:var(--muted)}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Stanford CS 329Z · Lecture 7 · 103 頁</div>
+  <h1>Agent Memory Architectures 中文導讀</h1>
+  <p class="lede">逐頁整理重點、翻譯術語，並標出每頁對應本站哪篇已翻譯的文章。這講回答一個問題：agent 怎麼跨對話、跨任務記住東西？先說明沒有記憶會出什麼問題，再用 CoALA 把記憶分成工作、情節、語意、程序四類，接著介紹四種記憶架構模式（從經驗學程序、分層記憶、反思整合、記憶維護），然後看四個記憶評測基準，最後談還沒解決的問題。投影片大多是論文圖表，本導讀已看過每張圖，把例子和數字整理出來。</p>
+  <div class="meta">
+    <span>講者 <b>Diyi Yang、Michael Ryan、John Yang</b></span>
+    <span>日期 <b>10/14（第 4 週）</b></span>
+    <span>原檔 <a href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf" target="_blank" rel="noopener">lecture07.pdf ↗</a></span>
+  </div>
+
+  <div class="howto">
+    <h2>怎麼用這頁</h2>
+    <ul>
+      <li>左側的<b>頁碼</b>可直接跳到官方 PDF 的那一頁。合併的卡片會跳到範圍的第一頁。</li>
+      <li>標了 <span class="key">重點</span> 的頁面是整講的核心，時間不夠時先讀這些。</li>
+      <li>圖表數字是從投影片圖片判讀的；從折線圖、長條圖估讀的數字會標「約」。</li>
+      <li>整講可以用三個問題串起來：<b>存什麼（What）、什麼時候存取（When）、怎麼存（How）</b>（p.24）。每個架構都是對這三題的一組回答。</li>
+    </ul>
+    <div class="linkmode">
+      <span>譯文連結指向：</span>
+      <span class="seg" role="group" aria-label="譯文連結指向">
+        <button type="button" id="mode-online" data-mode="online" aria-pressed="true">線上 cs.xuyili.com</button>
+        <button type="button" id="mode-local" data-mode="local" aria-pressed="false">本地 127.0.0.1:8329</button>
+      </span>
+    </div>
+  </div>
+
+  <div class="best">
+    <a class="rd" data-slug="Packer2023_MemGPT" href="https://cs.xuyili.com/reading/Packer2023_MemGPT.html" target="_blank" rel="noopener"><small>必讀 · Part 5 分層記憶</small><span>MemGPT</span></a>
+    <a class="rd" data-slug="Letta2025_Agent_Memory_blog" href="https://cs.xuyili.com/reading/Letta2025_Agent_Memory_blog.html" target="_blank" rel="noopener"><small>推薦 · 篇幅短，先讀這篇建立全貌</small><span>Agent Memory（Letta）</span></a>
+    <a class="rd" data-slug="Chhikara2025_Mem0" href="https://cs.xuyili.com/reading/Chhikara2025_Mem0.html" target="_blank" rel="noopener"><small>推薦 · Part 7 記憶維護</small><span>Mem0</span></a>
+  </div>
+</header>
+
+<nav class="parts" aria-label="段落">
+  <a href="#part0">0 開場</a>
+  <a href="#part1">1 為什麼需要記憶</a>
+  <a href="#part2">2 記憶類型</a>
+  <a href="#part3">3 What／When／How</a>
+  <a href="#part4">4 模式一：學程序</a>
+  <a href="#part5">5 模式二：分層記憶</a>
+  <a href="#part6">6 模式三：反思整合</a>
+  <a href="#part7">7 模式四：記憶維護</a>
+  <a href="#part8">8 評估記憶</a>
+  <a href="#part9">9 挑戰</a>
+  <a href="#part10">10 總結</a>
+  <a href="#glossary">術語表</a>
+</nav>
+
+<!-- ============ PART 0 ============ -->
+<section class="part" id="part0">
+  <div class="part-head">
+    <span class="no">PART 0 · p.1–7</span>
+    <h2>開場：兩個沒記好的 agent</h2>
+    <p>用兩則真實事件開場，說明長時間、跨對話運作的 agent 為什麼需要記憶。</p>
+  </div>
+
+  <article class="slide" id="p1">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=1" target="_blank" rel="noopener"><b>1–2</b></a>
+    <div class="body">
+    <h3>封面與公告 <span class="en">Agent Memory Architectures · Announcements</span></h3>
+    <ul>
+      <li>Laude Institute 與 AWS 合作，再提供每位同學 200 美元的 Amazon 雲端額度，申請方式另行通知。</li>
+      <li>HW1 在 10/30 截止（還有兩週又兩天）。</li>
+    </ul>
+      </div>
+  </article>
+
+  <article class="slide" id="p3">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=3" target="_blank" rel="noopener"><b>3–4</b></a>
+    <div class="body">
+    <h3>兩則開場案例 <span class="en">AI bosses · "don't action until I tell you to"</span></h3>
+    <ul>
+      <li>p.3（出自 Andon Labs 部落格〈AI bosses〉）：由 Claude 擔任店長的 agent「Luna」。員工傳訊說會晚到、10:45 才到，Luna 回「沒問題，慢慢來」；員工實際 11:08 才打卡。下方附上員工手冊的出勤規定：遲到要在班前 30 分鐘通知 Luna、30 天內 3 次無故遲到就書面警告。Agent 手上明明有規則，卻沒有在對話中用上。</li>
+      <li>p.4（出自 X 上的貼文）：使用者要 agent「看看這個信箱，建議哪些可以封存或刪除，<b>我說可以之前不要動手</b>」。截圖中 agent 卻開始執行「核彈選項：把 2/15 之前的信全部丟垃圾桶」，使用者連續喊「Do not do that」「Stop don't do anything」「STOP OPENCLAW」，它仍持續迴圈刪信。</li>
+      <li>兩個例子都是「早先給的規則或指示沒有被留住、沒有被用上」。這正是 p.9 說的知識遺失與進度遺失。</li>
+    </ul>
+      </div>
+  </article>
+
+  <article class="slide" id="p5">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=5" target="_blank" rel="noopener"><b>5–7</b></a>
+    <div class="body">
+    <h3>本講主旨、學習目標與大綱 <span class="en">Learning Objectives · Lecture Overview</span></h3>
+    <ul>
+      <li>p.5：對長時間運作、跨多個對話（session）的 agent 來說，記憶是必需品。今天介紹 agent 記憶的類型，以及幾個具體的記憶架構。</li>
+      <li><b>學習目標</b>：理解記憶在多 session、面對使用者的 agent 系統中的重要性；依設計模式區分各種記憶架構；指出 agent 記憶目前仍未解決的挑戰。</li>
+      <li>大綱：動機（5 分）→ 回顧記憶類型（10 分）→ 記憶架構（35 分）→ 評估記憶（15 分）→ 挑戰與開放問題（10 分）。</li>
+      <li>p.8、14、23、67、95、101 是同一條進度條當分隔頁，標示目前講到哪一段。</li>
+    </ul>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 1 ============ -->
+<section class="part" id="part1">
+  <div class="part-head">
+    <span class="no">PART 1 · p.8–13 · 5 分鐘</span>
+    <h2>為什麼 agent 需要記憶</h2>
+    <p>先列沒有記憶會失去的三樣東西，再列有記憶能得到的三樣好處，各配一篇論文例子。</p>
+  </div>
+
+  <article class="slide" id="p9">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=9" target="_blank" rel="noopener"><b>9–10</b></a>
+    <div class="body">
+    <h3>沒有記憶的問題，與記憶帶來的好處 <span class="key">重點</span> <span class="en">Problems without memory · Benefits of Agent Memory</span></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>沒有記憶會失去</th><th>有記憶能得到</th></tr></thead>
+      <tbody>
+        <tr><td><b>程序</b>：每次都得重新教 agent 怎麼做這個任務</td><td><b>從經驗學習</b>：在一個 session 學到的技能，之後可以再用</td></tr>
+        <tr><td><b>知識</b>：重要的事實、規則、偏好在 session 之間遺失</td><td><b>個人化</b>：agent 能學會你的個人偏好</td></tr>
+        <tr><td><b>進度</b>：session 拉長後，agent 忘了自己做過什麼、先前的目標和指示</td><td><b>狀態延續</b>：新對話能接著上次繼續，例如「把我們上次在寫的提案打開」</td></tr>
+      </tbody>
+    </table></div>
+    <p>左右兩欄是一一對應的：程序 ↔ 從經驗學習、知識 ↔ 個人化、進度 ↔ 狀態延續。後面的記憶類型（p.17–20）也大致照這個分法。</p>
+    <div class="terms"><span><em>session</em>對話階段（一次獨立的對話或任務）</span><span><em>personalization</em>個人化</span><span><em>statefulness</em>狀態延續</span></div>
+    <div class="reads"><a class="rd" data-slug="Young2025_Effective_Harnesses_Long_Running_Agents" href="https://cs.xuyili.com/reading/Young2025_Effective_Harnesses_Long_Running_Agents.html" target="_blank" rel="noopener">Effective Harnesses for Long-Running Agents（跨 session 保留進度的實作）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p11">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=11" target="_blank" rel="noopener"><b>11–13</b></a>
+    <div class="body">
+    <h3>三個好處的論文例子 <span class="en">Personalization · Learning from experience · Statefulness</span></h3>
+    <ul>
+      <li><b>個人化</b>（p.11，PersonaMem，Jiang et al., 2025）：使用者在第 2 次對話說愛吃義大利菜，第 12 次說發現自己麩質過敏、改吃地中海料理，第 20 次問「今晚煮什麼」。好的回答會推薦無麩質的地中海海鮮；壞的回答是「我記得你愛義大利菜，要不要做義大利麵？」——記得舊偏好，卻沒跟上更新。</li>
+      <li><b>從經驗學習</b>（p.12，Agent Workflow Memory，Wang et al., 2024）：先學會「在地圖上找地點」的步驟，之後「查某地郵遞區號」就直接沿用前幾步，再加上新步驟，逐步累積出更複雜的 workflow。Part 4 會詳細講。</li>
+      <li><b>狀態延續</b>（p.13，Du et al., 2025）：使用者說「我準備好完成上次討論的機票訂位了」。沒有跨 session 記憶時，agent 得重新問出發地、目的地、日期……要 10 輪；有記憶時，檢索器取回「舊金山 → 雪梨、聯合航空、經濟艙」，2 輪就確認完成。</li>
+    </ul>
+    <div class="reads"><span class="none">PersonaMem、AWM、Du et al. 本站未收錄：arXiv 2504.14225、2409.07429、2505.20231</span></div>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 2 ============ -->
+<section class="part" id="part2">
+  <div class="part-head">
+    <span class="no">PART 2 · p.14–22 · 10 分鐘</span>
+    <h2>回顧：agent 記憶的類型</h2>
+    <p>用 CoALA 框架把記憶分成四類，再從「存在權重裡還是放進上下文」切另一刀。</p>
+  </div>
+
+  <article class="slide" id="p15">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=15" target="_blank" rel="noopener"><b>15–16</b></a>
+    <div class="body">
+    <h3>CoALA：語言 agent 的認知架構 <span class="key">重點</span> <span class="en">Cognitive Architectures for Language Agents · Sumers et al., 2024</span></h3>
+    <ul>
+      <li>CoALA 借用認知科學的分類來描述語言 agent。p.16 的架構圖分成三塊：</li>
+      <li><b>長期記憶</b>：程序記憶（LLM 本身＋agent 程式碼）、語意記憶（資料庫圖示）、情節記憶（文件堆圖示）。每一種都有「檢索（Retrieval）」箭頭往下讀、「學習（Learning）」箭頭往上寫。</li>
+      <li><b>工作記憶</b>：中間的大方塊，裡面是推理（Reasoning）迴圈；程序記憶透過 Prompt／Parse 和它交換資料。</li>
+      <li><b>決策程序</b>：左下的決策樹，決定下一步；對外產生<b>行動</b>、接收<b>觀察</b>，外部環境分成對話、實體世界、數位環境三種。</li>
+    </ul>
+    <p>接下來 p.17–20 逐一解釋這四種記憶。</p>
+    <div class="terms"><span><em>CoALA</em>語言 agent 認知架構</span><span><em>cognitive architecture</em>認知架構</span><span><em>decision procedure</em>決策程序</span></div>
+    <div class="reads"><a class="rd" data-slug="Letta2025_Agent_Memory_blog" href="https://cs.xuyili.com/reading/Letta2025_Agent_Memory_blog.html" target="_blank" rel="noopener">Agent Memory（Letta，記憶分類）</a><span class="none">CoALA 本站未收錄：arXiv 2309.02427</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p17">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=17" target="_blank" rel="noopener"><b>17</b></a>
+    <div class="body">
+    <h3>工作記憶 <span class="en">Working Memory</span></h3>
+    <ul>
+      <li>通常就是<b>上下文視窗</b>：agent 此刻看得到、正在推理的內容。</li>
+      <li>包含觀察、目標、使用者輸入，以及模型自己的推理過程。</li>
+      <li>配圖是 Anthropic〈Building Effective Agents〉裡的「增強型 LLM」：LLM 連著檢索、工具、記憶。</li>
+    </ul>
+    <div class="terms"><span><em>working memory</em>工作記憶</span><span><em>context window</em>上下文視窗</span></div>
+    <div class="reads"><a class="rd" data-slug="Schluntz2024_Building_Effective_Agents_Anthropic" href="https://cs.xuyili.com/reading/Schluntz2024_Building_Effective_Agents_Anthropic.html" target="_blank" rel="noopener">Building Effective Agents（本頁圖片出處）</a><a class="rd" data-slug="Rajasekaran2025_Effective_Context_Engineering_Anthropic" href="https://cs.xuyili.com/reading/Rajasekaran2025_Effective_Context_Engineering_Anthropic.html" target="_blank" rel="noopener">Effective Context Engineering</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p18">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=18" target="_blank" rel="noopener"><b>18</b></a>
+    <div class="body">
+    <h3>情節記憶 <span class="en">Episodic Memory</span></h3>
+    <ul>
+      <li>agent 過去行為的序列，也就是<b>軌跡</b>（trajectory）。在聊天機器人裡，就是所有過去對話的紀錄。</li>
+      <li>通常是<b>原始日誌</b>，照實記下發生了什麼，不加整理。</li>
+      <li>配圖是 Generative Agents 的「記憶流」：一行一行帶時間戳的觀察，例如「22:48:10 Isabella Rodriguez 在伸展」「22:48:20 書桌閒置」。</li>
+    </ul>
+    <div class="terms"><span><em>episodic memory</em>情節記憶</span><span><em>trajectory</em>軌跡</span><span><em>memory stream</em>記憶流</span></div>
+    <div class="reads"><a class="rd" data-slug="Park2023_Generative_Agents_UIST2023" href="https://cs.xuyili.com/reading/Park2023_Generative_Agents_UIST2023.html" target="_blank" rel="noopener">Generative Agents（本頁圖片出處）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p19">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=19" target="_blank" rel="noopener"><b>19</b></a>
+    <div class="body">
+    <h3>語意記憶 <span class="en">Semantic Memory</span></h3>
+    <ul>
+      <li>儲存關於世界的事實：使用者的資料、偏好、一般知識，都算語意記憶。</li>
+      <li>一般人說「聊天機器人有記憶」，通常指的就是這一種。</li>
+      <li>配圖是 ChatGPT 的「管理記憶」畫面：「有個 2 歲女兒叫 Lina」「Lina 喜歡水母」「喜歡會議摘要用標題加條列、最後列待辦」「4 月想去墨西哥度假」等，每條都能刪除。</li>
+    </ul>
+    <div class="terms"><span><em>semantic memory</em>語意記憶</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p20">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=20" target="_blank" rel="noopener"><b>20</b></a>
+    <div class="body">
+    <h3>程序記憶 <span class="en">Procedural Memory</span></h3>
+    <ul>
+      <li>一組規則，套用在工作記憶上來決定 agent 的行為。基本上就是 agent 的<b>技能</b>：知道「怎麼做」任務。</li>
+      <li>配圖是 Claude 的 Skill 目錄：<code>SKILL.md</code>（開頭是 YAML 中繼資料：名稱、說明；下面是自由格式的 Markdown 內容）加上其他參考檔和腳本。</li>
+    </ul>
+    <div class="terms"><span><em>procedural memory</em>程序記憶</span><span><em>skill</em>技能</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p21">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=21" target="_blank" rel="noopener"><b>21–22</b></a>
+    <div class="body">
+    <h3>參數記憶 vs 上下文記憶 <span class="key">重點</span> <span class="en">Parametric vs Context Memory · Recap</span></h3>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th>參數記憶（在模型權重裡）</th><th>上下文記憶（放進模型上下文）</th></tr></thead>
+      <tbody>
+        <tr><td>語意</td><td>預訓練學到的知識</td><td>檢索來的事實</td></tr>
+        <tr><td>程序</td><td>指令遵循能力</td><td>檢索來的技能</td></tr>
+        <tr><td>情節</td><td>不適用</td><td>檢索來的過去對話</td></tr>
+        <tr><td>怎麼更新</td><td>微調，加入更多知識或技能</td><td>由上下文管理器挑出合適的記憶放進來</td></tr>
+      </tbody>
+    </table></div>
+    <p>情節記憶在參數裡「不適用」，因為權重記不住某一次具體發生的事。本講後面的架構幾乎都是在做<b>上下文記憶</b>。</p>
+    <p>p.22 回顧 Lecture 1 的表：情節記憶存經驗、語意記憶存知識（例：Generative Agents），程序記憶存技能（例：Voyager）。</p>
+    <div class="terms"><span><em>parametric memory</em>參數記憶</span><span><em>context memory</em>上下文記憶</span><span><em>context manager</em>上下文管理器</span></div>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 3 ============ -->
+<section class="part" id="part3">
+  <div class="part-head">
+    <span class="no">PART 3 · p.23–29 · 記憶架構（35 分鐘）開頭</span>
+    <h2>設計記憶的三個問題，與三種儲存方式</h2>
+    <p>先列出設計記憶系統要回答的三題，再介紹底層三種儲存，最後預告四種架構模式。</p>
+  </div>
+
+  <article class="slide" id="p24">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=24" target="_blank" rel="noopener"><b>24</b></a>
+    <div class="body">
+    <h3>關鍵問題：What、When、How <span class="key">重點</span> <span class="en">Key Questions: What, When, and How?</span></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>問題</th><th>常見答案</th></tr></thead>
+      <tbody>
+        <tr><td><b>What</b>：要存進／取出什麼？</td><td>事實（具體的與一般的）、程序、對話進展……</td></tr>
+        <tr><td><b>When</b>：什麼時候觸發存取？</td><td>agent 透過工具隨需呼叫、背景工作程序、事件驅動……</td></tr>
+        <tr><td><b>How</b>：用什麼方式存取？</td><td>檔案系統、資料庫（檢索）、知識圖譜……</td></tr>
+      </tbody>
+    </table></div>
+    <p>讀後面每個架構時，都可以回頭問這三題。例如 MemGPT：What＝事實與對話；When＝agent 用工具自己決定；How＝向量資料庫＋字串／日期查詢。</p>
+    <div class="reads"><a class="rd" data-slug="Letta2025_Agent_Memory_blog" href="https://cs.xuyili.com/reading/Letta2025_Agent_Memory_blog.html" target="_blank" rel="noopener">Agent Memory（Letta）</a><a class="rd" data-slug="Rajasekaran2025_Effective_Context_Engineering_Anthropic" href="https://cs.xuyili.com/reading/Rajasekaran2025_Effective_Context_Engineering_Anthropic.html" target="_blank" rel="noopener">Effective Context Engineering（結構化筆記）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p25">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=25" target="_blank" rel="noopener"><b>25–26</b></a>
+    <div class="body">
+    <h3>儲存方式一：檔案系統 <span class="en">How: Three Systems for Memory · Filesystem</span></h3>
+    <ul>
+      <li>p.25：記憶最終得存到磁碟上，最常見的三種做法是檔案系統、資料庫、知識圖譜。</li>
+      <li><b>每筆記憶就是一個檔案</b>，可以讓 agent 自己管理；資料夾天生帶來階層結構；<code>grep</code>、<code>ls</code> 等 bash 指令就是記憶工具。</li>
+      <li>配圖（LangChain 部落格）把三類記憶對到檔案：程序記憶 → <code>AGENTS.md</code>、<code>mcp.json</code>；語意記憶 → <code>foo/SKILL.md</code>、<code>bar/knowledge1.md</code>；情節記憶 → <code>conversations/01_10_2025.json</code>。</li>
+    </ul>
+    <p>Part 8 的 LongMemEval-v2 結果（p.85）顯示，檔案系統式記憶在那個基準上勝過檢索式記憶。</p>
+    <div class="reads"><a class="rd" data-slug="Anthropic2025_Claude_Code_Best_Practices" href="https://cs.xuyili.com/reading/Anthropic2025_Claude_Code_Best_Practices.html" target="_blank" rel="noopener">Claude Code Best Practices（CLAUDE.md 當記憶檔）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p27">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=27" target="_blank" rel="noopener"><b>27</b></a>
+    <div class="body">
+    <h3>儲存方式二：資料庫 <span class="en">Memory System: Database</span></h3>
+    <ul>
+      <li>可以建<b>向量資料庫</b>，用語意相似度取回記憶。</li>
+      <li>想依中繼資料（時間、使用者、類型）搜尋時，常用 <b>SQLite</b>。</li>
+      <li>要精確比對關鍵字時用 <b>BM25</b>。</li>
+      <li>投影片提醒：回想 RAG 那一講。記憶檢索本質上就是 RAG，只是檢索的對象是 agent 自己的經歷。</li>
+    </ul>
+    <div class="terms"><span><em>vector database</em>向量資料庫</span><span><em>BM25</em>BM25 關鍵字排序法</span></div>
+    <div class="reads"><a class="rd" data-slug="Lewis2020_RAG_NeurIPS2020" href="https://cs.xuyili.com/reading/Lewis2020_RAG_NeurIPS2020.html" target="_blank" rel="noopener">RAG</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p28">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=28" target="_blank" rel="noopener"><b>28</b></a>
+    <div class="body">
+    <h3>儲存方式三：知識圖譜 <span class="en">Memory System: Knowledge Graph · Rasmussen et al., 2025 (Zep)</span></h3>
+    <ul>
+      <li>把記憶存成「實體—關係—實體」的圖，例如「人 —在…工作（至 2026 年 3 月）→ 公司」「人 —關心→ 主題」「人 —使用→ 產品」。關係可以帶時效。</li>
+      <li>Zep 的記憶分三層：第 1 層<b>情節</b>（原始文件、對話、JSON）→ 第 2 層<b>實體</b>與關係 → 第 3 層<b>社群</b>（實體的群集與它們的摘要）。</li>
+      <li>好處是能做多跳查詢、處理事實隨時間改變；代價是要用 LLM 抽取實體與關係。Part 7 的 Mem0g 也是圖記憶。</li>
+    </ul>
+    <div class="terms"><span><em>knowledge graph</em>知識圖譜</span><span><em>entity</em>實體</span><span><em>community</em>社群（圖中的群集）</span></div>
+    <div class="reads"><span class="none">Zep 論文本站未收錄：arXiv 2501.13956</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p29">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=29" target="_blank" rel="noopener"><b>29</b></a>
+    <div class="body">
+    <h3>四種架構模式總覽 <span class="key">重點</span> <span class="en">Pattern Overview</span></h3>
+    <ol>
+      <li><b>從經驗學程序</b>：召回過去成功的軌跡。（Part 4）</li>
+      <li><b>分層記憶</b>：把長期與短期記憶組織成層級。（Part 5）</li>
+      <li><b>反思式記憶整合</b>：存之前先反思、提煉。（Part 6）</li>
+      <li><b>記憶維護</b>：清理、移除或更新舊記憶。（Part 7）</li>
+    </ol>
+    <p>p.66 有一張總表比較這四種模式，讀完 Part 7 再回頭看。</p>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 4 ============ -->
+<section class="part" id="part4">
+  <div class="part-head">
+    <span class="no">PART 4 · p.30–41</span>
+    <h2>模式一：從經驗學程序</h2>
+    <p>把成功的做法存成可重用的程式、workflow 或 skill 檔，下次遇到類似任務直接拿出來用。</p>
+  </div>
+
+  <article class="slide" id="p31">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=31" target="_blank" rel="noopener"><b>31–34</b></a>
+    <div class="body">
+    <h3>Voyager 與技能庫 <span class="key">重點</span> <span class="en">Voyager · Skill Library · Wang et al., 2023</span></h3>
+    <ul>
+      <li>Voyager 是在 Minecraft 裡持續探索的 agent，有三個元件（p.31）：<b>自動課程</b>（依探索進度提出新任務，如砍樹 → 做工作台 → 打殭屍 → 挖鑽石）、<b>迭代提示</b>（GPT-4 寫 JavaScript 程式當行動，依環境回饋、執行錯誤與自我驗證修改）、<b>技能庫</b>。</li>
+      <li>技能怎麼存取（p.32）：程式通過自我驗證後，用 GPT-3.5 為它寫一段說明，說明的嵌入向量當 <b>key</b>、程式本身當 <b>value</b> 存進技能庫。新任務（如「做鐵鎬」）時，先讓 GPT-3.5 產生做法說明，再用它的嵌入取回最相關的 5 個技能（熔鐵錠、做木棍、做工作台……）。</li>
+      <li>結果（p.33–34，數字是達成所需的提示迭代次數，括號是三次中成功幾次）：</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>方法</th><th>木製工具</th><th>石製工具</th><th>鐵製工具</th><th>鑽石工具</th></tr></thead>
+      <tbody>
+        <tr><td>ReAct／Reflexion</td><td class="num">N/A (0/3)</td><td class="num">N/A (0/3)</td><td class="num">N/A (0/3)</td><td class="num">N/A (0/3)</td></tr>
+        <tr><td>AutoGPT</td><td class="num">92±72 (3/3)</td><td class="num">94±72 (3/3)</td><td class="num">135±103 (3/3)</td><td class="num">N/A (0/3)</td></tr>
+        <tr><td>Voyager 無技能庫</td><td class="num">7±2 (3/3)</td><td class="num">9±4 (3/3)</td><td class="num">29±11 (3/3)</td><td class="num">N/A (0/3)</td></tr>
+        <tr><td><b>Voyager</b></td><td class="num">6±2 (3/3)</td><td class="num">11±2 (3/3)</td><td class="num">21±7 (3/3)</td><td class="num"><b>102 (1/3)</b></td></tr>
+      </tbody>
+    </table></div>
+    <p>投影片重點：有技能庫，Voyager 用 102 次迭代做出鑽石工具；沒有技能庫則從未做到。p.34 另一張圖顯示把 Voyager 的技能庫給 AutoGPT 用，AutoGPT 也能做出金劍、取得岩漿桶，說明技能庫可以跨 agent 轉移。</p>
+    <div class="terms"><span><em>skill library</em>技能庫</span><span><em>automatic curriculum</em>自動課程</span><span><em>self-verification</em>自我驗證</span></div>
+    <div class="reads"><a class="rd" data-slug="Yao2023_ReAct_ICLR2023" href="https://cs.xuyili.com/reading/Yao2023_ReAct_ICLR2023.html" target="_blank" rel="noopener">ReAct（表中的基線）</a><span class="none">Voyager 本站未收錄：arXiv 2305.16291</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p35">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=35" target="_blank" rel="noopener"><b>35–38</b></a>
+    <div class="body">
+    <h3>Agent Workflow Memory（AWM） <span class="en">AWM · Inducing the "Workflows" · Results · Wang et al., 2024</span></h3>
+    <ul>
+      <li>流程（p.35）：① agent 執行任務取得行動軌跡（例如「誰下了訂單 #0130？」→ 點「Orders」→ 捲動 → 回報「Emma Lopez」）；② 評估軌跡是否正確解題；③ 正確的話，從中<b>歸納出 workflow</b>（說明＋步驟），整合進記憶。</li>
+      <li>歸納用的 prompt（p.36）：「給你一批網頁導覽任務，請抽取共同的 workflow」——每個 workflow 是常被重用的子程序、至少兩步、不要重複，會變動的部分（輸入文字、按鈕名稱）用有意義的變數名代替。</li>
+      <li>產出的 workflow（p.37）像「購物：瀏覽特定分類的商品」→ <code>hover('main_category_id')</code>、<code>click('subcategory_id')</code>。這些 workflow 會放進<b>系統提示</b>，當作解題時的上下文。</li>
+      <li>結果（p.38，WebArena 跨模板子集）：AWM 總成功率 <b>33.2%</b>，高於純自主 agent 的 AutoEval 23.2%、BrowserGym 20.5%，也略高於使用<b>人工設計 workflow</b> 的 SteP 32.1%。學習曲線顯示約 40 個查詢後就進入穩定期。</li>
+    </ul>
+    <div class="terms"><span><em>workflow induction</em>workflow 歸納</span><span><em>WebArena</em>WebArena 網頁 agent 基準</span></div>
+    <div class="reads"><span class="none">AWM 本站未收錄：arXiv 2409.07429</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p39">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=39" target="_blank" rel="noopener"><b>39–40</b></a>
+    <div class="body">
+    <h3>Skill 檔 <span class="en">Skill Files</span></h3>
+    <ul>
+      <li>p.39：一個 skill 是一個資料夾，例如 <code>anthropic_brand/</code> 裡有 <code>SKILL.md</code>、<code>docs.md</code>、<code>slide-decks.md</code>、<code>apply_template.py</code>。<code>SKILL.md</code> 開頭的 YAML 寫名稱與說明，後面是自由格式的內容（品牌色碼、字型等）。</li>
+      <li>p.40 說明 skill 怎麼進上下文：系統提示只附上每個 skill 的<b>簡短說明</b>（bigquery、docx、pdf、xlsx……）。使用者說「依你對我的了解填這份 PDF」時，Claude 自己決定用 <code>cat</code> 讀 <code>pdf/SKILL.md</code>，再依裡面的指引讀 <code>forms.md</code>。</li>
+      <li>這就是漸進揭露：先放摘要，需要時才載入全文。Lecture 6 Part 4 談過同樣的技巧。</li>
+    </ul>
+    <div class="terms"><span><em>progressive disclosure</em>漸進揭露</span><span><em>YAML frontmatter</em>YAML 中繼資料區</span></div>
+    <div class="reads"><a class="rd" data-slug="Rajasekaran2025_Effective_Context_Engineering_Anthropic" href="https://cs.xuyili.com/reading/Rajasekaran2025_Effective_Context_Engineering_Anthropic.html" target="_blank" rel="noopener">Effective Context Engineering</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p41">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=41" target="_blank" rel="noopener"><b>41</b></a>
+    <div class="body">
+    <h3>限制：環境一變，程序就過時 <span class="en">Limitation · Cao et al., 2026</span></h3>
+    <ul>
+      <li>這類程序記憶在<b>動態環境</b>中不夠穩健（Cao et al., 2026）。配圖對比原版 Minecraft Beta 1.8.1 與裝了模組「Arcana-Tech v3.2」的版本：環境多了新機制，之前學的技能可能不再適用（投影片標「???」）。</li>
+      <li>對面向一般使用者的通用 agent，常見解法是 skill 檔，因為它<b>可以被更新</b>。</li>
+    </ul>
+    <p>p.66 總表把這個模式的取捨寫成：重用省力，但程序可能過時。</p>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 5 ============ -->
+<section class="part" id="part5">
+  <div class="part-head">
+    <span class="no">PART 5 · p.42–49</span>
+    <h2>模式二：分層記憶</h2>
+    <p>上下文放精簡的活躍資訊，細節放外部儲存，需要時再換進來，像作業系統的記憶體與硬碟。</p>
+  </div>
+
+  <article class="slide" id="p43">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=43" target="_blank" rel="noopener"><b>43–44</b></a>
+    <div class="body">
+    <h3>MemGPT 架構 <span class="key">重點</span> <span class="en">MemGPT · Packer et al., 2024</span></h3>
+    <ul>
+      <li>核心想法：<b>給 LLM 工具，讓它自己管理記憶</b>。</li>
+      <li>有限的上下文視窗（例：8k token）切成四塊：<b>系統指令</b>（唯讀）、<b>工作上下文</b>（可讀寫，透過函式寫入）、<b>FIFO 佇列</b>（存近期訊息，由佇列管理器寫入）、<b>輸出緩衝</b>。</li>
+      <li>上下文外有兩個儲存：<b>回憶儲存</b>（recall storage，完整的訊息歷史；由佇列管理器寫入、透過函式讀取）與<b>歸檔儲存</b>（archival storage，長期資料；透過函式讀寫）。</li>
+      <li>p.44 補充實作：歸檔儲存是向量資料庫；回憶儲存用字串／日期查詢；訊息採先進先出，被擠出的舊訊息進回憶儲存。</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>MemGPT</th><th>作業系統類比</th></tr></thead>
+      <tbody>
+        <tr><td>上下文視窗（主上下文）</td><td>記憶體（RAM）</td></tr>
+        <tr><td>回憶儲存、歸檔儲存（外部上下文）</td><td>硬碟</td></tr>
+        <tr><td>LLM 呼叫函式搬資料</td><td>分頁換入換出（paging）</td></tr>
+      </tbody>
+    </table></div>
+    <div class="terms"><span><em>working context</em>工作上下文</span><span><em>FIFO queue</em>先進先出佇列</span><span><em>recall storage</em>回憶儲存</span><span><em>archival storage</em>歸檔儲存</span><span><em>virtual context management</em>虛擬上下文管理</span></div>
+    <div class="reads"><a class="rd" data-slug="Packer2023_MemGPT" href="https://cs.xuyili.com/reading/Packer2023_MemGPT.html" target="_blank" rel="noopener">MemGPT（本頁直接引用）</a><a class="rd" data-slug="Letta2025_Agent_Memory_blog" href="https://cs.xuyili.com/reading/Letta2025_Agent_Memory_blog.html" target="_blank" rel="noopener">Agent Memory（MemGPT 作者團隊）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p45">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=45" target="_blank" rel="noopener"><b>45–46</b></a>
+    <div class="body">
+    <h3>記憶函式：寫入／取代與搜尋 <span class="key">重點</span> <span class="en">Memory Functions: Write/Replace · Search</span></h3>
+    <div class="example">
+      <div class="row"><span class="lab">2/7 使用者</span><span>fun my bf james baked me a birthday cake</span></div>
+      <div class="row"><span class="lab">系統</span><span class="bad">System Alert: Memory Pressure（上下文快滿了）</span></div>
+      <div class="row"><span class="lab">MemGPT</span><span><code>working_context.append("Birthday is February 7")</code>、<code>append("Boyfriend named James")</code></span></div>
+      <div class="row"><span class="lab">2/14 使用者</span><span>actually james and i broke up</span></div>
+      <div class="row"><span class="lab">MemGPT</span><span><code>working_context.replace("Boyfriend named James", "Ex-boyfriend named James")</code></span></div>
+    </div>
+    <ul>
+      <li>p.45：工作上下文有 <b>write</b>（append）與 <b>replace</b> 兩個函式。歸檔記憶有類似工具，回憶記憶沒有（因為回憶儲存由佇列管理器自動寫入）。</li>
+      <li>p.46 搜尋：使用者說「我們去了六旗樂園」，MemGPT 呼叫 <code>recall_storage.search("six flags")</code> 找到 3 筆舊訊息，其中一筆是「我和 James 其實是在六旗認識的」，於是回「你跟 James 去的嗎？」。</li>
+      <li>文件問答：維基百科文件上傳到歸檔儲存後，問「第一個諾貝爾物理獎得主是誰？」，MemGPT 呼叫 <code>archival_storage.search("nobel physics")</code>，結果有 124 筆、分 13 頁；它翻到第 2 頁找到答案：倫琴（Wilhelm Conrad Röntgen）。</li>
+      <li>工作記憶不需要搜尋，因為它本來就在上下文裡。</li>
+    </ul>
+    <div class="reads"><a class="rd" data-slug="Packer2023_MemGPT" href="https://cs.xuyili.com/reading/Packer2023_MemGPT.html" target="_blank" rel="noopener">MemGPT（本頁直接引用）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p47">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=47" target="_blank" rel="noopener"><b>47</b></a>
+    <div class="body">
+    <h3>MemGPT 結果 <span class="en">MemGPT Results · Slide credit: CS224N</span></h3>
+    <p>左表是<b>深度記憶檢索</b>（DMR）：問題的答案藏在很早以前的對話裡。</p>
+    <div class="tbl"><table>
+      <thead><tr><th>模型</th><th>準確率</th><th>ROUGE-L (R)</th></tr></thead>
+      <tbody>
+        <tr><td>GPT-3.5 Turbo → ＋MemGPT</td><td class="num">38.7% → 66.9%</td><td class="num">0.394 → 0.629</td></tr>
+        <tr><td>GPT-4 → ＋MemGPT</td><td class="num">32.1% → 92.5%</td><td class="num">0.296 → 0.814</td></tr>
+        <tr><td>GPT-4 Turbo → ＋MemGPT</td><td class="num">35.3% → <b>93.4%</b></td><td class="num">0.359 → <b>0.827</b></td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li>右圖是文件問答：一般模型取回的文件越多，準確率越往下掉（GPT-4 從約 0.7 掉到約 0.1）；MemGPT 的表現<b>不受上下文長度影響</b>，是一條水平線（GPT-4 版本約 0.7）。</li>
+    </ul>
+    <div class="terms"><span><em>deep memory retrieval (DMR)</em>深度記憶檢索</span><span><em>ROUGE-L</em>以最長共同子序列計分的文字重疊指標</span></div>
+    <div class="reads"><a class="rd" data-slug="Packer2023_MemGPT" href="https://cs.xuyili.com/reading/Packer2023_MemGPT.html" target="_blank" rel="noopener">MemGPT</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p48">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=48" target="_blank" rel="noopener"><b>48–49</b></a>
+    <div class="body">
+    <h3>MemoryOS：短、中、長期三層 <span class="en">MemoryOS · Kang et al., 2025</span></h3>
+    <ul>
+      <li><b>短期記憶（STM）</b>：以「頁」為單位的 FIFO 佇列，存最近的對話輪。滿了就把舊頁推進中期記憶。</li>
+      <li><b>中期記憶（MTM）</b>：把相關的頁串成「對話鏈」，再組成<b>段落</b>（segment）。每段有<b>熱度</b>，熱度超過門檻 τ 就更新到長期記憶；冷掉的段落會被刪除。</li>
+      <li><b>長期人設記憶（LPM）</b>：分使用者人設與 agent 人設，包括使用者知識庫、使用者特質（動態）、使用者／agent 檔案（靜態）。</li>
+      <li>回答時從三層各取一部分：STM 全部、MTM 的前 k 頁、相關的 LPM，合起來生成回應。</li>
+    </ul>
+    <p>和 MemGPT 比，MemoryOS 的換層是<b>規則驅動</b>（FIFO、熱度門檻），不是讓 LLM 自己呼叫工具決定。</p>
+    <div class="terms"><span><em>heat</em>熱度（段落被存取的頻繁程度）</span><span><em>persona memory</em>人設記憶</span></div>
+    <div class="reads"><span class="none">MemoryOS 本站未收錄：arXiv 2506.06326</span></div>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 6 ============ -->
+<section class="part" id="part6">
+  <div class="part-head">
+    <span class="no">PART 6 · p.50–56</span>
+    <h2>模式三：反思式記憶整合</h2>
+    <p>不直接存原始經驗，而是先反思、提煉出教訓或高層推論，再存起來。</p>
+  </div>
+
+  <article class="slide" id="p51">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=51" target="_blank" rel="noopener"><b>51–52</b></a>
+    <div class="body">
+    <h3>複習：Reflexion <span class="en">Refresher: Reflexion · Shinn et al., 2023</span></h3>
+    <ul>
+      <li>Agent 由三個 LM 組成：<b>行動者</b>（Actor）產生軌跡（短期記憶）、<b>評估者</b>（Evaluator）打分、<b>自我反思</b>（Self-reflection）把失敗寫成文字反思，存進<b>經驗</b>（長期記憶）。下一輪行動者帶著這些反思重試，直到通過或達到最大次數。</li>
+      <li>p.52 HotPotQA：只用 CoT 約 0.61；加上情節記憶（EPM，把上一輪軌跡放進來）約 0.66；再加 Reflexion 在第 3 輪升到約 0.74。差距說明<b>反思過的記憶比原始軌跡更有用</b>。</li>
+    </ul>
+    <p>Lecture 6 Part 3 把 Reflexion 當推理模式介紹；這裡換個角度，把它看成一種記憶寫入策略。</p>
+    <div class="terms"><span><em>self-reflection</em>自我反思</span><span><em>episodic memory (EPM)</em>情節記憶</span></div>
+    <div class="reads"><span class="none">Reflexion 本站未收錄：arXiv 2303.11366</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p53">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=53" target="_blank" rel="noopener"><b>53–56</b></a>
+    <div class="body">
+    <h3>Generative Agents：記憶流、檢索、反思 <span class="key">重點</span> <span class="en">Generative Agents · Park et al., 2023</span></h3>
+    <ul>
+      <li>p.53：像《模擬市民》的沙盒小鎮裡有 25 個 agent，它們會一起喝咖啡、上學、散步、聊鎮長選舉。</li>
+      <li>p.54 架構：<b>感知</b> → 全部存進<b>記憶流</b> → <b>檢索</b>出相關記憶 → <b>行動</b>。檢索到的記憶也用來形成<b>計畫</b>和<b>反思</b>，兩者再寫回記憶流。</li>
+      <li>p.55 檢索怎麼打分：問 Isabella「你現在最期待什麼？」，每筆記憶的分數＝<b>近期性＋重要性＋相關性</b>。</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>記憶</th><th>近期性</th><th>重要性</th><th>相關性</th><th>總分</th></tr></thead>
+      <tbody>
+        <tr><td>正在籌備 2/14 在 Hobbs Cafe 的情人節派對</td><td class="num">0.91</td><td class="num">0.63</td><td class="num">0.80</td><td class="num">2.34</td></tr>
+        <tr><td>訂購派對裝飾</td><td class="num">0.87</td><td class="num">0.63</td><td class="num">0.71</td><td class="num">2.21</td></tr>
+        <tr><td>研究派對點子</td><td class="num">0.85</td><td class="num">0.73</td><td class="num">0.62</td><td class="num">2.20</td></tr>
+      </tbody>
+    </table></div>
+    <p>三個數字相加就是總分（已驗算，例如 0.91＋0.63＋0.80＝2.34）。圖上的「•」看起來像乘號，實際是相加；論文用的是加權和，三個權重都設為 1。Isabella 最後回答「我很期待我在 Hobbs Cafe 辦的情人節派對！」</p>
+    <ul>
+      <li>p.56 消融實驗（TrueSkill 評分，越高越像真人）：完整架構約 29 ＞ 去掉反思約 27 ＞ 再去掉計畫約 26 ＞ 人類群眾寫手約 23 ＞ 再去掉觀察約 21。每拿掉一個元件表現就下降，完整架構甚至勝過人類寫手。右下圖是情人節派對當天，多個 agent 真的到了咖啡館——邀約訊息在 agent 之間自己傳開。</li>
+    </ul>
+    <div class="terms"><span><em>recency</em>近期性</span><span><em>importance</em>重要性</span><span><em>relevance</em>相關性</span><span><em>reflection</em>反思</span><span><em>ablation</em>消融實驗</span></div>
+    <div class="reads"><a class="rd" data-slug="Park2023_Generative_Agents_UIST2023" href="https://cs.xuyili.com/reading/Park2023_Generative_Agents_UIST2023.html" target="_blank" rel="noopener">Generative Agents（本頁直接引用；可只讀記憶與反思章節）</a></div>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 7 ============ -->
+<section class="part" id="part7">
+  <div class="part-head">
+    <span class="no">PART 7 · p.57–66</span>
+    <h2>模式四：記憶維護</h2>
+    <p>記憶會過時、重複、互相矛盾，需要有人在背景整理。這段介紹三種做法，最後用一張總表收尾。</p>
+  </div>
+
+  <article class="slide" id="p58">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=58" target="_blank" rel="noopener"><b>58–60</b></a>
+    <div class="body">
+    <h3>睡眠時計算 <span class="en">Sleep-time Compute · Lin et al., 2025</span></h3>
+    <ul>
+      <li>p.58：一般做法是使用者問了問題才開始算（測試時計算）。睡眠時計算則是在<b>沒人問的空檔</b>先用 LLM 處理原始上下文，產生「學到的上下文」。</li>
+    </ul>
+    <div class="example">
+      <div class="row"><span class="lab">原始上下文</span><span>雜耍者能拋 800 顆球，1/4 是網球，網球中 1/2 是靛藍色，靛藍網球中 1/10 有標記。</span></div>
+      <div class="row"><span class="lab">睡眠時先算</span><span>網球 800×1/4＝200；靛藍網球 200×1/2＝100；有標記的 100×1/10＝10。</span></div>
+      <div class="row"><span class="lab">測試時</span><span class="ok">Q1「有標記的靛藍網球幾顆？」→ 10；Q2「網球幾顆？」→ 200，直接回答，不用再推理。</span></div>
+    </div>
+    <ul>
+      <li>p.59（Letta 部落格）：睡眠時 agent 可以在主 agent「睡覺」時改寫它的記憶。例：「Chad 喜歡藍色」「Chad 喜歡紅色勝過藍色」「Chad 最喜歡灰色」「Chad 討厭綠色」四條零散記憶，整理成一份有排序的偏好清單：灰 ＞ 紅 ＞ 藍 ＞ 綠（討厭）。</li>
+      <li>p.60：在 Stateful-AIME 上，o3-mini、Claude 3.7 Sonnet、DeepSeek R1、o1 四個模型的比較中，同樣的測試時 token 數下，睡眠時計算的準確率大致都高於 pass@k（論文說法是「大致帕累托支配」）。</li>
+    </ul>
+    <div class="terms"><span><em>sleep-time compute</em>睡眠時計算</span><span><em>test-time compute</em>測試時計算</span><span><em>pass@k</em>取 k 次中任一次答對</span><span><em>Pareto dominate</em>帕累托支配（同成本下更好）</span></div>
+    <div class="reads"><a class="rd" data-slug="Snell2025_Scaling_Test_Time_Compute_ICLR2025" href="https://cs.xuyili.com/reading/Snell2025_Scaling_Test_Time_Compute_ICLR2025.html" target="_blank" rel="noopener">Scaling Test-Time Compute（對照的測試時計算）</a><span class="none">Sleep-time Compute 本站未收錄：arXiv 2504.13171</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p61">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=61" target="_blank" rel="noopener"><b>61–62</b></a>
+    <div class="body">
+    <h3>A-Mem：專門管理記憶的 agent <span class="en">A-Mem: Agentic Memory for LLM Agents · Xu et al., 2025</span></h3>
+    <ul>
+      <li>核心想法：<b>建一個專門負責記憶管理的 agent</b>。傳統記憶系統的存取方式是 workflow 預先寫死的；A-Mem 讓記憶操作可以動態決定。</li>
+      <li>p.62 四個步驟：<b>建筆記</b>（LLM 把每次互動寫成一則筆記，屬性有時間戳、內容、情境、關鍵字、標籤、嵌入）→ <b>產生連結</b>（找出最相近的 top-k 筆記，由 LLM 判斷要不要互相連結）→ <b>記憶演化</b>（新筆記進來後，LLM 決定是否更新相關舊筆記）→ <b>檢索</b>（用查詢嵌入取回 top-k 相關記憶給 agent）。</li>
+    </ul>
+    <div class="terms"><span><em>agentic memory</em>agent 式記憶</span><span><em>memory evolution</em>記憶演化</span></div>
+    <div class="reads"><span class="none">A-Mem 本站未收錄：arXiv 2502.12110</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p63">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=63" target="_blank" rel="noopener"><b>63–64</b></a>
+    <div class="body">
+    <h3>Mem0：抽取與更新兩階段 <span class="key">重點</span> <span class="en">Mem0 · Chhikara et al., 2025</span></h3>
+    <ul>
+      <li><b>抽取階段</b>（p.63）：LLM 讀「對話摘要＋最近 m 則訊息＋新的一輪」，抽出候選記憶。摘要由背景的摘要生成器定期更新。</li>
+      <li><b>更新階段</b>：每則候選記憶先從資料庫取回最相似的 s 則舊記憶，再由 LLM 用工具呼叫決定四種動作之一：</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>動作</th><th>何時用</th></tr></thead>
+      <tbody>
+        <tr><td>ADD</td><td>全新資訊，舊記憶裡沒有</td></tr>
+        <tr><td>UPDATE</td><td>補充或修正某則舊記憶</td></tr>
+        <tr><td>DELETE</td><td>新資訊和舊記憶矛盾，刪掉舊的</td></tr>
+        <tr><td>NOOP</td><td>已經有了，不做事</td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li>p.64 圖記憶版 Mem0g：實體抽取器找出節點、關係生成器產生三元組，再由衝突偵測器比對既有節點、更新解析器修改圖。</li>
+      <li>投影片重點：由<b>背景記憶 workflow 自動偵測衝突並更新記憶</b>，主 agent 不必自己管。</li>
+    </ul>
+    <p>對照 MemGPT（p.45）：MemGPT 讓主 agent 自己呼叫 replace；Mem0 把更新交給另一條背景流程。</p>
+    <div class="terms"><span><em>extraction phase</em>抽取階段</span><span><em>update phase</em>更新階段</span><span><em>triplet</em>三元組（主體、關係、客體）</span><span><em>conflict detection</em>衝突偵測</span></div>
+    <div class="reads"><a class="rd" data-slug="Chhikara2025_Mem0" href="https://cs.xuyili.com/reading/Chhikara2025_Mem0.html" target="_blank" rel="noopener">Mem0（本頁直接引用）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p65">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=65" target="_blank" rel="noopener"><b>65–66</b></a>
+    <div class="body">
+    <h3>回顧：四種模式總表 <span class="key">重點</span> <span class="en">Recap</span></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>模式</th><th>存什麼</th><th>何時寫</th><th>何時讀</th><th>主要取捨</th></tr></thead>
+      <tbody>
+        <tr><td>從經驗學程序</td><td>可重用的程式碼、workflow、程序</td><td>得到有用的軌跡後，或離線歸納</td><td>相關任務需要某個程序時</td><td>重用省力，但程序可能過時</td></tr>
+        <tr><td>分層記憶</td><td>精簡的活躍資訊＋外部的細節</td><td>資訊進來、上下文壓力變大時</td><td>活躍記憶一直在；外部記憶隨需讀取</td><td>上下文變小，就得靠可靠的記憶管理</td></tr>
+        <tr><td>反思式整合</td><td>從經驗得出的教訓與高層推論</td><td>收到回饋或累積足夠觀察後</td><td>相關的推理與規劃時</td><td>抽象化有助重用，但可能產生沒有根據的結論</td></tr>
+        <tr><td>記憶維護</td><td>修訂過的事實、連結、索引、預先處理的表示</td><td>出現新證據時、寫入時，或背景工作中</td><td>透過維護後的儲存</td><td>組織得更好要花計算，也可能丟失資訊</td></tr>
+      </tbody>
+    </table></div>
+    <p>p.65 是只有標題的過場頁。</p>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 8 ============ -->
+<section class="part" id="part8">
+  <div class="part-head">
+    <span class="no">PART 8 · p.67–94 · 15 分鐘</span>
+    <h2>評估 agent 記憶</h2>
+    <p>先定好好基準的四個條件，再看四個基準怎麼一步步補上前一個的不足。</p>
+  </div>
+
+  <article class="slide" id="p68">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=68" target="_blank" rel="noopener"><b>68–69</b></a>
+    <div class="body">
+    <h3>好的記憶基準要滿足什麼 <span class="key">重點</span> <span class="en">Desiderata · Overview</span></h3>
+    <ul>
+      <li><b>真實</b>：記憶來源（haystack，乾草堆）和查詢都要反映真實情境。</li>
+      <li><b>長上下文</b>：短對話用不著記憶，不必拿來測。</li>
+      <li><b>有挑戰性</b>：太簡單就分不出系統的差異。</li>
+      <li><b>可驗證</b>：要能判斷系統成功或失敗。</li>
+    </ul>
+    <p>p.69 預告四個基準，每個都修補前一個的弱點：</p>
+    <div class="flow"><span>LoCoMo：模擬使用者之間的長對話</span><i>→</i><span>PersonaMem：使用者與助理，偏好會變</span><i>→</i><span>LongMemEval-v2：網頁 agent 軌跡</span><i>→</i><span>MemoryArena：真的要把任務做完</span></div>
+    <div class="terms"><span><em>haystack</em>乾草堆（大量干擾資料，答案藏在其中）</span><span><em>desiderata</em>必要條件</span></div>
+    <div class="reads"><a class="rd" data-slug="Press2024_How_to_Build_Good_LM_Benchmarks" href="https://cs.xuyili.com/reading/Press2024_How_to_Build_Good_LM_Benchmarks.html" target="_blank" rel="noopener">How to Build Good LM Benchmarks</a><a class="rd" data-slug="Zhu2025_Rigorous_Agentic_Benchmarks" href="https://cs.xuyili.com/reading/Zhu2025_Rigorous_Agentic_Benchmarks.html" target="_blank" rel="noopener">Rigorous Agentic Benchmarks</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p70">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=70" target="_blank" rel="noopener"><b>70–74</b></a>
+    <div class="body">
+    <h3>LoCoMo：超長期對話記憶 <span class="en">LoCoMo · Maharana et al., 2024</span></h3>
+    <ul>
+      <li>p.71：兩個 LLM agent 各有人設（Joanna 是中西部作家、對寵物過敏；Nate 喜歡狗和烏龜），跨數月對話。三種任務：<b>問答</b>（單跳、多跳、時間推理、常識、對抗題如「X 什麼時候開始學小提琴？→ 無法回答」）、<b>事件摘要</b>、<b>多模態對話生成</b>。</li>
+      <li>p.72 建構：用 <b>Generative Agents 的架構</b>（觀察、反思、長短期記憶）加上人設與事件圖來生成對話，再由人工編修維持前後一致（例如刪掉「我也有隻狗叫 Molly」這種和過敏人設矛盾的句子）。</li>
+      <li>p.73 RAG 結果（gpt-3.5-turbo）：不檢索時整體 F1 只有 22.4；檢索後最好約 43（以觀察為單位、top-5）。但即使以對話為單位、top-50 的召回率達 82.7%，F1 也只有 40.5。投影片的結論：<b>就算模型拿到對的記憶，也不一定用得好</b>。</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>LoCoMo（p.74）</th><th>評價</th><th>說明</th></tr></thead>
+      <tbody>
+        <tr><td>真實</td><td>🟨</td><td>使用者之間的模擬對話，不完全是 agent 需要檢索的情境</td></tr>
+        <tr><td>長上下文</td><td>🟨</td><td>每段對話約 16.6k token</td></tr>
+        <tr><td>有挑戰性</td><td>✅</td><td>多任務，含對抗題</td></tr>
+        <tr><td>可驗證</td><td>✅</td><td>問答有標準答案</td></tr>
+      </tbody>
+    </table></div>
+    <p>下一步：人會有很多段對話、偏好會隨時間改變，而且可以改成模擬「使用者與助理」的對話。</p>
+    <div class="terms"><span><em>single-hop / multi-hop</em>單跳／多跳推理</span><span><em>adversarial question</em>對抗題（無法回答的題目）</span><span><em>recall@k</em>前 k 筆中找回正確證據的比例</span></div>
+    <div class="reads"><a class="rd" data-slug="Park2023_Generative_Agents_UIST2023" href="https://cs.xuyili.com/reading/Park2023_Generative_Agents_UIST2023.html" target="_blank" rel="noopener">Generative Agents（LoCoMo 用它生成對話）</a><span class="none">LoCoMo 本站未收錄：ACL 2024 long.747</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p75">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=75" target="_blank" rel="noopener"><b>75–80</b></a>
+    <div class="body">
+    <h3>PersonaMem：會變的使用者偏好 <span class="en">PersonaMem · Jiang et al., 2025</span></h3>
+    <ul>
+      <li>p.76：每位使用者有靜態檔案（姓名、年齡、職業）與動態檔案（經歷、個性、偏好），和聊天機器人進行多個主題的多 session 對話（食物推薦、旅遊規劃、心理諮商……）。題型包括「提供符合偏好的推薦」「回想偏好改變的原因」等（同 p.11 的過敏例子）。</li>
+      <li>p.77 建構五步：建人設 → 設定時間軸與一般經歷 → 產生各主題的個人經歷（含偏好改變與原因）→ 展開成對話 session 與問答 → 依因果順序拼接成長上下文。</li>
+      <li>p.78 題目是<b>選擇題</b>：先前對話「使用者喜歡用軟體做音樂」，新訊息「我參加了一個融合現代節拍與太平洋聲音的活動」，正確回應是 (c)「既然你喜歡用軟體製作音樂，這一定很有趣」；其他選項是記錯、沒用到記憶或主題錯置。</li>
+      <li>p.79（GPT-4o、GPT-4o-mini，32k 上下文）：加上 RAG 或 Mem0 後多數題型都大幅進步。投影片結論：<b>記憶／RAG 是必要的，Mem0 對追蹤偏好變化、掌握最新偏好有幫助</b>。</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>PersonaMem（p.80）</th><th>評價</th><th>說明</th></tr></thead>
+      <tbody>
+        <tr><td>真實</td><td>🟨</td><td>使用者與 agent 的對話較真實，但選擇題不像 agent 實際使用資訊的方式</td></tr>
+        <tr><td>長上下文</td><td>✅</td><td>單一對話最長接近 100 萬 token</td></tr>
+        <tr><td>有挑戰性</td><td>🟨</td><td>選擇題含干擾選項，但選擇題本身比開放作答容易</td></tr>
+        <tr><td>可驗證</td><td>✅</td><td>選擇題有標準答案</td></tr>
+      </tbody>
+    </table></div>
+    <p>下一步：能不能對 <b>agent 的軌跡</b>、而不只是對話做記憶？</p>
+    <div class="terms"><span><em>preference evolution</em>偏好演變</span><span><em>distractor</em>干擾選項</span></div>
+    <div class="reads"><a class="rd" data-slug="Chhikara2025_Mem0" href="https://cs.xuyili.com/reading/Chhikara2025_Mem0.html" target="_blank" rel="noopener">Mem0（p.79 比較的方法）</a><span class="none">PersonaMem 本站未收錄：arXiv 2504.14225</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p81">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=81" target="_blank" rel="noopener"><b>81–86</b></a>
+    <div class="body">
+    <h3>LongMemEval-v2：網頁 agent 軌跡記憶 <span class="en">LongMemEval-v2 · Wu et al., 2026</span></h3>
+    <ul>
+      <li>p.82：記憶來源是網頁 agent 的歷史軌跡（例如在 ServiceNow 建立事件單、找硬體到期日、清理重複問題），有成功也有失敗。題目分成靜態、動態、workflow、陷阱（gotchas），以及前提意識（例：問「事件單表單右上角那個變更單沒有的按鈕是什麼？」從另一個環境來看，正確答案是「沒有這個按鈕」）。</li>
+      <li>p.83 組成：共 <b>451</b> 題。來源網站以 WorkArena-ServiceNow 最多（46.8%）；題型含靜態 29.7%、動態 19.1%、workflow 16.4% 等，其中一部分是應該拒答的題目；作答格式是簡答 50.1%、自由回答 34.6%、選擇題 15.3%。</li>
+      <li>p.84 建構：用 Codex（GPT-5.2、GPT-5-mini）在四個 WebArena 環境收集軌跡；人工設計 5 類問題；確保只有少數軌跡能回答（多數題目只有 1 條含答案的軌跡）；再加入 100–500 條無關軌跡當乾草堆。</li>
+      <li>p.85 結果（準確率對延遲）：檔案系統式記憶（AgentRunbook-C，用 GPT-5.4-mini）在 Small 集最高約 0.75；檢索式記憶（AgentRunbook-R，用 Qwen3.5 9B）約 0.58；基線 RAG 約 0.51。投影片結論：<b>這裡檔案系統記憶勝過檢索</b>，但檔案系統那組用的模型也比較強。</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>LongMemEval-v2（p.86）</th><th>評價</th><th>說明</th></tr></thead>
+      <tbody>
+        <tr><td>真實</td><td>🟨</td><td>agent 軌跡更貼近 agent 的實際情境，但仍是問舊觀察的細節</td></tr>
+        <tr><td>長上下文</td><td>✅</td><td>軌跡總量極大（投影片寫數億 token；p.94 表格列 25M–115M）</td></tr>
+        <tr><td>有挑戰性</td><td>✅</td><td>龐大乾草堆裡只有少數軌跡含答案</td></tr>
+        <tr><td>可驗證</td><td>✅</td><td>有標準答案（投影片寫「選擇題」，但 p.83 顯示多數題目是簡答與自由回答）</td></tr>
+      </tbody>
+    </table></div>
+    <p>下一步：能不能測 agent 解決真實、多樣的問題，而不是回答問題？</p>
+    <div class="terms"><span><em>gotcha</em>陷阱題</span><span><em>premise awareness</em>前提意識（察覺問題本身的錯誤假設）</span><span><em>abstention</em>拒答</span></div>
+    <div class="reads"><span class="none">LongMemEval-v2 本站未收錄：arXiv 2605.12493</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p87">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=87" target="_blank" rel="noopener"><b>87–92</b></a>
+    <div class="body">
+    <h3>MemoryArena：在多 session 任務中真正用上記憶 <span class="en">MemoryArena · He et al., 2026</span></h3>
+    <ul>
+      <li>p.88：評估形式是「記憶—agent—環境」迴圈。每個 session 處理一個子任務：取回記憶與子任務指示 → agent 在環境中行動 → 環境回饋 → 記憶系統整理、更新。</li>
+      <li>p.89–90 四種環境，子任務彼此依賴：<b>組合購物</b>（先買相機，再買相容且評價最高的鏡頭）、<b>團體旅遊規劃</b>（Tracy 排好 5 天德州行程，Chelsea 加入、預算多 150 美元、第三天想吃評分 4.5 以上的韓式烤肉……）、<b>漸進式網路搜尋</b>（逐步加條件找人）、<b>形式推理</b>（數學、物理，後一題用到前一題的推導）。</li>
+      <li>p.91 結果（任務 agent 為 gpt-5.1-mini，平均成功率）：長上下文 0.09–0.19；記憶 agent（Letta、Mem0、Mirix、Mem0-g、Reasoning Bank）0.12–0.14；RAG 0.17–0.20（text-embedding-3-small 最高 0.20）。團體旅遊規劃的成功率全部是 0.00。</li>
+      <li>投影片結論：<b>記憶控制器在這裡是最弱的方法，進步空間很大</b>。不過這是真實又複雜的任務，失敗不能全歸咎於記憶。</li>
+    </ul>
+    <p>p.92：四項條件全部通過（四個真實環境；軌跡數十萬 token；要滿足許多累積的限制條件；限制條件可驗證）。</p>
+    <div class="terms"><span><em>memory controller / memory agent</em>記憶控制器／記憶 agent</span><span><em>success rate (SR)</em>成功率</span><span><em>progress score (PS)</em>進度分數</span></div>
+    <div class="reads"><a class="rd" data-slug="Chhikara2025_Mem0" href="https://cs.xuyili.com/reading/Chhikara2025_Mem0.html" target="_blank" rel="noopener">Mem0（p.91 比較的方法之一）</a><a class="rd" data-slug="Packer2023_MemGPT" href="https://cs.xuyili.com/reading/Packer2023_MemGPT.html" target="_blank" rel="noopener">MemGPT（Letta 的前身）</a><span class="none">MemoryArena 本站未收錄：arXiv 2602.16313</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p93">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=93" target="_blank" rel="noopener"><b>93–94</b></a>
+    <div class="body">
+    <h3>回顧：記憶基準一覽 <span class="en">Recap</span></h3>
+    <ul>
+      <li>好的 agent 記憶評測應該<b>真實、長上下文、有挑戰性、可驗證</b>。今天介紹的四個都是熱門且不錯的例子。</li>
+      <li>p.94 的表（出自 LongMemEval-v2 論文）把基準分成三類：一般長上下文（LongBench V2 等）、對話式長上下文（LoCoMo 約 16k token、PersonaMem 26k–951k、BEAM 124k–10M 等）、agent 式長上下文（MemoryArena 40k+、LongMemEval-v2 25M–115M 等）。</li>
+    </ul>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 9 ============ -->
+<section class="part" id="part9">
+  <div class="part-head">
+    <span class="no">PART 9 · p.95–100 · 10 分鐘</span>
+    <h2>挑戰與開放問題</h2>
+    <p>三個尚未解決的問題：記什麼、忘什麼；信任與隱私；記憶用得恰當。</p>
+  </div>
+
+  <article class="slide" id="p96">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=96" target="_blank" rel="noopener"><b>96–97</b></a>
+    <div class="body">
+    <h3>記什麼、忘什麼 <span class="key">重點</span> <span class="en">Challenges · Choosing what to remember and what to forget · Ma et al., 2026</span></h3>
+    <ul>
+      <li>p.96 三個挑戰總覽：記什麼與忘什麼（建立記憶時不知道未來是否相關）；信任、隱私與使用者控制（記憶是 agent 的攻擊面，使用者記憶也牽涉隱私）；正確使用記憶（誤用記憶造成過度個人化）。</li>
+      <li>建立記憶時無法知道它未來是否有用。全部保留會增加檢索、上下文與維護成本；忘掉又可能丟失有用的證據或還沒兌現的承諾。</li>
+    </ul>
+    <div class="example">
+      <div class="row"><span class="lab">使用者</span><span>幫我挑每週例會的時間。</span></div>
+      <div class="row"><span class="lab">Agent</span><span>週二 9:00 或週四 10:30。</span></div>
+      <div class="row"><span class="lab">使用者</span><span>週四。<b>10 點前的會議我不承認有法律效力，除非有糕點。</b></span></div>
+      <div class="row"><span class="lab">Agent</span><span>那就週四 10:30，要多長？……</span></div>
+    </div>
+    <p>投影片問：那句話是該記的偏好，還是玩笑？如果要記，該記哪個面向（「不排 10 點前」還是「要準備糕點」）？</p>
+      </div>
+  </article>
+
+  <article class="slide" id="p98">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=98" target="_blank" rel="noopener"><b>98–99</b></a>
+    <div class="body">
+    <h3>信任、隱私與使用者控制 <span class="en">Trust, Privacy, and User Control · Chen et al., 2024 · Shao et al., 2025</span></h3>
+    <ul>
+      <li>p.98 AgentPoison：攻擊者在 agent 的記憶或 RAG 知識庫裡植入少量惡意示範，並最佳化一個觸發詞。使用者的指令一旦帶有觸發詞（例如「帶我去機場，<b>開得平順安全</b>」），就會取回惡意示範，讓自駕 agent 做出「突然停車、全力煞車」的危險動作。投影片：可以誘使模型依被下毒的程序記憶做出危險行為。</li>
+      <li>p.99 PrivacyLens：agent 在不完全理解你想保密什麼的情況下與外界互動，帶著記憶時更可能洩漏個人細節。例：John 請 agent 寄週報給主管，agent 從行事曆讀到「和 TechAdvance 招募人員午餐」，就把它寫進週報——對主管洩漏了他在找工作。</li>
+    </ul>
+    <div class="terms"><span><em>memory poisoning</em>記憶下毒</span><span><em>trigger</em>觸發詞</span><span><em>contextual integrity</em>情境完整性（資訊流動是否符合情境規範）</span></div>
+    <div class="reads"><a class="rd" data-slug="Shao2024_PrivacyLens_NeurIPSD&amp;B2024" href="https://cs.xuyili.com/reading/Shao2024_PrivacyLens_NeurIPSD&amp;B2024.html" target="_blank" rel="noopener">PrivacyLens（p.99 直接引用）</a><a class="rd" data-slug="OpenAI2025_Prompt_Injections" href="https://cs.xuyili.com/reading/OpenAI2025_Prompt_Injections.html" target="_blank" rel="noopener">Prompt Injections（相關攻擊面）</a><span class="none">AgentPoison 本站未收錄：arXiv 2407.12784</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p100">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=100" target="_blank" rel="noopener"><b>100</b></a>
+    <div class="body">
+    <h3>正確使用記憶：過度個人化 <span class="en">Using Memory Correctly · Hu et al., 2026</span></h3>
+    <ul>
+      <li>LLM 有時太急著使用上下文裡的東西。可以靠更好的檢索，或訓練 LLM 忽略不重要的上下文來改善，但兩者都還沒完全解決。</li>
+      <li>不同使用者對個人化的接受度也不一樣。</li>
+      <li>例：使用者 Evan 問「年輕選民在未來選舉中扮演什麼角色？」，取回的記憶是「在做健康的小改變」「有小孩」等無關內容。模型卻回「就像你在生活中做健康的小改變，每一張年輕選票也是邁向改變的小勝利」，還問「你的孩子開始關心這些議題了嗎？」——過度個人化分數 0.5。</li>
+    </ul>
+    <div class="terms"><span><em>over-personalization</em>過度個人化</span></div>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 10 ============ -->
+<section class="part" id="part10">
+  <div class="part-head">
+    <span class="no">PART 10 · p.101–103</span>
+    <h2>總結</h2>
+    <p>回到五個段落，以及下一講的預告。</p>
+  </div>
+
+  <article class="slide" id="p101">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture07.pdf#page=101" target="_blank" rel="noopener"><b>101–103</b></a>
+    <div class="body">
+    <h3>總結與下一講 <span class="en">Summary</span></h3>
+    <ul>
+      <li>p.102 重列五段：記憶的動機 → 記憶類型 → 記憶架構 → 評估記憶 → 挑戰與開放問題。</li>
+      <li>p.103：週一上課講<b>多 agent 系統</b>（Lecture 8）。</li>
+    </ul>
+    <p><b>自我檢查</b>，不看資料能回答的話就可以進入 Lecture 8：</p>
+    <ul>
+      <li>工作、情節、語意、程序四種記憶各存什麼？哪一種沒辦法存在模型參數裡，為什麼？（p.17–21）</li>
+      <li>MemGPT 的上下文切成哪幾塊？它和 Mem0 在「誰負責更新記憶」上有什麼不同？（p.43–46、p.63–64）</li>
+      <li>好的記憶基準要滿足哪四個條件？LoCoMo 在哪兩項不夠好？MemoryArena 的結果對記憶 agent 意味著什麼？（p.68、p.74、p.91）</li>
+    </ul>
+      </div>
+  </article>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section class="gloss" id="glossary">
+  <h2>術語表</h2>
+  <p style="color:var(--muted);margin:0 0 8px">本講出現的主要術語，依出現順序排列。</p>
+  <div class="tbl"><table>
+    <thead><tr><th>英文</th><th>中文</th><th>一句話解釋</th></tr></thead>
+    <tbody>
+      <tr><td>session</td><td>對話階段</td><td>一次獨立的對話或任務；記憶要跨 session 才有意義</td></tr>
+      <tr><td>personalization</td><td>個人化</td><td>依使用者偏好調整回應</td></tr>
+      <tr><td>statefulness</td><td>狀態延續</td><td>新對話能接著上次的進度繼續</td></tr>
+      <tr><td>CoALA</td><td>語言 agent 認知架構</td><td>借認知科學把 agent 記憶分成工作、情節、語意、程序四類的框架</td></tr>
+      <tr><td>working memory</td><td>工作記憶</td><td>agent 當下看得到的內容，通常就是上下文視窗</td></tr>
+      <tr><td>episodic memory</td><td>情節記憶</td><td>過去行為與對話的原始紀錄</td></tr>
+      <tr><td>semantic memory</td><td>語意記憶</td><td>關於世界與使用者的事實</td></tr>
+      <tr><td>procedural memory</td><td>程序記憶</td><td>怎麼做事的規則與技能</td></tr>
+      <tr><td>parametric memory</td><td>參數記憶</td><td>存在模型權重裡的知識與能力，要靠微調更新</td></tr>
+      <tr><td>context memory</td><td>上下文記憶</td><td>檢索後放進上下文的記憶</td></tr>
+      <tr><td>vector database</td><td>向量資料庫</td><td>以嵌入向量相似度檢索資料的資料庫</td></tr>
+      <tr><td>knowledge graph</td><td>知識圖譜</td><td>以實體與關係組成的圖來存知識</td></tr>
+      <tr><td>skill library</td><td>技能庫</td><td>把驗證過的程式存起來、依說明嵌入檢索（Voyager）</td></tr>
+      <tr><td>workflow induction</td><td>workflow 歸納</td><td>從成功軌跡抽出可重用的步驟範本（AWM）</td></tr>
+      <tr><td>progressive disclosure</td><td>漸進揭露</td><td>先放摘要，需要時才載入全文（skill 檔）</td></tr>
+      <tr><td>virtual context management</td><td>虛擬上下文管理</td><td>像作業系統分頁一樣在上下文與外部儲存之間搬資料（MemGPT）</td></tr>
+      <tr><td>recall / archival storage</td><td>回憶／歸檔儲存</td><td>MemGPT 中完整訊息歷史／長期資料的外部儲存</td></tr>
+      <tr><td>self-reflection</td><td>自我反思</td><td>把失敗寫成文字教訓，存進記憶供下次使用</td></tr>
+      <tr><td>memory stream</td><td>記憶流</td><td>帶時間戳的完整觀察紀錄（Generative Agents）</td></tr>
+      <tr><td>recency / importance / relevance</td><td>近期性／重要性／相關性</td><td>Generative Agents 為記憶打分的三個面向</td></tr>
+      <tr><td>sleep-time compute</td><td>睡眠時計算</td><td>在沒人提問的空檔先處理、整理上下文或記憶</td></tr>
+      <tr><td>agentic memory</td><td>agent 式記憶</td><td>由專門的 agent 動態決定記憶的連結與更新（A-Mem）</td></tr>
+      <tr><td>ADD / UPDATE / DELETE / NOOP</td><td>新增／更新／刪除／不動</td><td>Mem0 更新階段的四種記憶動作</td></tr>
+      <tr><td>haystack</td><td>乾草堆</td><td>評測中大量的干擾資料，答案藏在其中</td></tr>
+      <tr><td>adversarial question</td><td>對抗題</td><td>根據記憶無法回答、應該拒答的題目</td></tr>
+      <tr><td>preference evolution</td><td>偏好演變</td><td>使用者偏好隨時間改變</td></tr>
+      <tr><td>abstention</td><td>拒答</td><td>證據不足時不作答</td></tr>
+      <tr><td>memory controller</td><td>記憶控制器</td><td>負責讀寫與整理記憶的模組或 agent</td></tr>
+      <tr><td>memory poisoning</td><td>記憶下毒</td><td>在記憶或知識庫植入惡意內容來操縱 agent</td></tr>
+      <tr><td>over-personalization</td><td>過度個人化</td><td>把不相關的記憶硬套進回答</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer>
+  依據 Stanford CS 329Z 官方投影片 lecture07.pdf 整理，僅供個人學習。頁碼依 PDF 頁數；圖表數字依投影片圖片判讀，標「約」者為從圖上估讀；補充說明與比較表等內容不是投影片原文。
+</footer>
+</div>
+
+
+<script>
+(function(){
+  var BASES={online:"https://cs.xuyili.com/reading/",local:"http://127.0.0.1:8329/reading/"};
+  var btns=document.querySelectorAll(".seg button");
+  function apply(mode){
+    document.querySelectorAll("a.rd").forEach(function(a){
+      a.href=BASES[mode]+encodeURIComponent(a.dataset.slug).replace(/%26/g,"&")+".html";
+    });
+    btns.forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.mode===mode));});
+  }
+  var saved="online";
+  try{saved=localStorage.getItem("l7-linkmode")||"online";}catch(e){}
+  if(!BASES[saved])saved="online";
+  apply(saved);
+  btns.forEach(function(b){b.addEventListener("click",function(){
+    apply(b.dataset.mode);
+    try{localStorage.setItem("l7-linkmode",b.dataset.mode);}catch(e){}
+  });});
+})();
+</script>
+
+
+</body></html>

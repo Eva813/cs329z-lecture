@@ -1,0 +1,861 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>CS329Z Lecture 10 導讀</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;800&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: 窄欄閱讀稿 + 左側頁碼欄（像講義旁註），段落導覽固定在頂部 */
+:root{
+  --paper:#f5f6f8; --sheet:#ffffff; --ink:#1a2130; --muted:#5b6475; --rule:#dde1e8;
+  --cardinal:#8c1515; --cardinal-soft:#f6e9e9; --link:#1d5c8f; --chip:#eef1f5; --key:#b5650d; --key-soft:#fbf0e2;
+  --f-display:"Noto Serif TC","Songti TC",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#12151b; --sheet:#1a1e26; --ink:#e6e9ef; --muted:#9aa3b3; --rule:#2c323d;
+  --cardinal:#e07a7a; --cardinal-soft:#2e1d20; --link:#7db5e3; --chip:#232934; --key:#e8a55a; --key-soft:#2d2318; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#12151b; --sheet:#1a1e26; --ink:#e6e9ef; --muted:#9aa3b3; --rule:#2c323d;
+  --cardinal:#e07a7a; --cardinal-soft:#2e1d20; --link:#7db5e3; --chip:#232934; --key:#e8a55a; --key-soft:#2d2318; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.75;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.wrap{max-width:860px;margin:0 auto}
+a{color:var(--link)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--cardinal);outline-offset:2px;border-radius:4px}
+h1,h2{font-family:var(--f-display);text-wrap:balance;line-height:1.3}
+
+header.top{padding-block:40px 20px}
+.eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;color:var(--cardinal);text-transform:uppercase}
+h1{font-size:clamp(28px,5vw,40px);margin:.2em 0 .3em;font-weight:800}
+.lede{color:var(--muted);max-width:62ch;margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-size:14px;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:500}
+
+.howto{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:18px 20px;margin-top:22px;display:grid;gap:10px}
+.howto h2{font-size:17px;margin:0}
+.howto ul{margin:0;padding-left:1.2em;color:var(--ink)}
+.howto li{margin:2px 0}
+.linkmode{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:999px;overflow:hidden}
+.seg button{font:inherit;font-size:13.5px;border:0;background:transparent;color:var(--muted);padding:4px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--cardinal);color:var(--sheet)}
+
+.best{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.best a{display:block;text-decoration:none;background:var(--cardinal-soft);border-radius:8px;padding:12px 14px;color:var(--ink);min-width:0}
+.best a small{display:block;font-family:var(--f-mono);font-size:12px;color:var(--cardinal)}
+.best a span{font-weight:700}
+
+nav.parts{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--rule);
+  margin-top:28px;padding-block:10px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav.parts a{flex:none;font-size:13.5px;text-decoration:none;color:var(--muted);border:1px solid var(--rule);border-radius:999px;padding:3px 12px;background:var(--sheet)}
+nav.parts a:hover{color:var(--cardinal);border-color:var(--cardinal)}
+
+section.part{margin-top:40px}
+.part-head{display:grid;gap:4px;margin-bottom:14px}
+.part-head .no{font-family:var(--f-mono);font-size:12.5px;color:var(--cardinal);letter-spacing:.06em}
+.part-head h2{font-size:clamp(22px,3.6vw,28px);margin:0}
+.part-head p{margin:0;color:var(--muted);max-width:64ch}
+
+.slide{display:grid;grid-template-columns:76px minmax(0,1fr);gap:16px;padding-block:18px;border-top:1px solid var(--rule)}
+.pg{font-family:var(--f-mono);font-size:13px;text-decoration:none;color:var(--muted);line-height:1.4;padding-top:3px}
+.pg b{display:block;font-size:17px;font-weight:600;color:var(--ink)}
+.pg:hover b{color:var(--cardinal)}
+.pg i{font-style:normal;font-size:11.5px}
+.body{min-width:0}
+.body h3{margin:0;font-size:18px;font-weight:700;line-height:1.45;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.body h3 .en{font-family:var(--f-mono);font-size:13px;font-weight:400;color:var(--muted)}
+.key{font-size:11.5px;font-weight:700;color:var(--key);background:var(--key-soft);border-radius:4px;padding:1px 7px;letter-spacing:.04em}
+.img-only{font-size:11.5px;color:var(--muted);border:1px dashed var(--rule);border-radius:4px;padding:0 6px}
+.body ul{margin:8px 0 0;padding-left:1.15em}
+.body li{margin:3px 0}
+.body p{margin:8px 0 0}
+.terms{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.terms span{font-size:13px;background:var(--chip);border-radius:5px;padding:1px 8px;color:var(--ink)}
+.terms span em{font-style:normal;font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-right:5px}
+.reads{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:14px}
+.reads::before{content:"對應閱讀";font-size:12px;color:var(--cardinal);font-weight:700;letter-spacing:.04em;padding-top:2px}
+.reads a{text-decoration-thickness:1px;text-underline-offset:3px}
+.reads .none{color:var(--muted)}
+
+.example{margin-top:10px;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;font-size:14.5px;overflow-x:auto}
+.example .row{display:grid;grid-template-columns:88px minmax(0,1fr);gap:10px;padding-block:3px}
+.example .lab{font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.ok{color:#2f7a3d}
+.bad{color:var(--cardinal)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ok{color:#7fcf8c}}
+:root[data-theme="dark"] .ok{color:#7fcf8c}
+
+.tbl{overflow-x:auto;margin-top:10px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-size:12.5px;color:var(--muted);font-weight:500}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px;font-size:14px}
+.flow span{background:var(--chip);border-radius:6px;padding:3px 10px}
+.flow i{font-style:normal;color:var(--muted)}
+
+.gloss{margin-top:48px}
+.gloss h2{font-size:26px;margin:0 0 6px}
+.gloss td:first-child{font-family:var(--f-mono);font-size:13.5px;white-space:nowrap}
+footer{margin-top:40px;font-size:13px;color:var(--muted)}
+
+@media (max-width:560px){
+  .slide{grid-template-columns:1fr;gap:6px}
+  .pg{display:flex;gap:8px;align-items:baseline}
+  .pg b{display:inline}
+  .example .row{grid-template-columns:1fr;gap:0}
+}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<style>
+pre.code{margin:10px 0 0;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;font-family:var(--f-mono);font-size:13px;line-height:1.6;overflow-x:auto;white-space:pre}
+pre.code .c{color:var(--muted)}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Stanford CS 329Z · Lecture 10（客座演講） · 64 頁</div>
+  <h1>Evaluating Agents 中文導讀</h1>
+  <p class="lede">逐頁整理重點、翻譯術語，並標出每頁對應本站哪篇已翻譯的文章。這是 Terminal-Bench 與 Harbor 團隊的客座演講，主線是一個論點：<b>軟體開發正從「演繹式」（人寫規則）走向「歸納式」（從資料與評測中學出來）</b>，所以 agent 時代的「規格書」就是評測。前半段用程式語言史和 ML 的興起鋪陳這個轉變；後半段講實務：Terminal-Bench 怎麼做、Harbor 框架怎麼定義任務，以及寫任務（指令、環境、驗證器、防作弊）、跑評測、維護評測的具體經驗。投影片多為大字標題和截圖，本導讀已看過每張圖，把圖中內容整理出來。</p>
+  <div class="meta">
+    <span>講者 <b>Alex Shaw、Ryan Marten</b>（Laude Institute）</span>
+    <span>日期 <b>10/26（第 6 週）</b></span>
+    <span>原檔 <a href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf" target="_blank" rel="noopener">lecture10.pdf ↗</a></span>
+  </div>
+
+  <div class="howto">
+    <h2>怎麼用這頁</h2>
+    <ul>
+      <li>左側的<b>頁碼</b>可直接跳到官方 PDF 的那一頁。合併的卡片會跳到範圍的第一頁。</li>
+      <li>標了 <span class="key">重點</span> 的頁面是整講的核心，時間不夠時先讀這些。</li>
+      <li>標了 <span class="img-only">圖片頁</span> 的頁面幾乎沒有可抽取的文字，內容是從投影片圖片判讀的；字太小讀不清的部分（例如排行榜數字）不轉述，請看原頁。</li>
+      <li>前半段（p.2–29）是一頁一句話的節奏，本導讀把連續幾頁合成一張卡；後半段（p.38–63）才是實作細節。</li>
+      <li>整講的主線（p.20、p.40）：<b>模型從資料學、agent 靠評測開發、軟體由 agent 產生</b>。在這個世界裡，評測取代程式碼成為「真相的來源」。</li>
+    </ul>
+    <div class="linkmode">
+      <span>譯文連結指向：</span>
+      <span class="seg" role="group" aria-label="譯文連結指向">
+        <button type="button" id="mode-online" data-mode="online" aria-pressed="true">線上 cs.xuyili.com</button>
+        <button type="button" id="mode-local" data-mode="local" aria-pressed="false">本地 127.0.0.1:8329</button>
+      </span>
+    </div>
+  </div>
+
+  <div class="best">
+    <a class="rd" data-slug="Grace2026_Demystifying_Evals_Anthropic" href="https://cs.xuyili.com/reading/Grace2026_Demystifying_Evals_Anthropic.html" target="_blank" rel="noopener"><small>必讀 · 投影片引用 6 次</small><span>Demystifying Evals for AI Agents</span></a>
+    <a class="rd" data-slug="Zhu2025_Rigorous_Agentic_Benchmarks" href="https://cs.xuyili.com/reading/Zhu2025_Rigorous_Agentic_Benchmarks.html" target="_blank" rel="noopener"><small>推薦 · Part 6 寫任務的檢查清單</small><span>Rigorous Agentic Benchmarks（ABC）</span></a>
+    <a class="rd" data-slug="Jimenez2024_SWE-bench_ICLR2024" href="https://cs.xuyili.com/reading/Jimenez2024_SWE-bench_ICLR2024.html" target="_blank" rel="noopener"><small>推薦 · 另一個以測試評分的 agent 基準</small><span>SWE-bench</span></a>
+  </div>
+</header>
+
+<nav class="parts" aria-label="段落">
+  <a href="#part0">0 封面</a>
+  <a href="#part1">1 演繹式軟體</a>
+  <a href="#part2">2 歸納式 ML</a>
+  <a href="#part3">3 規格→評測</a>
+  <a href="#part4">4 Terminal-Bench</a>
+  <a href="#part5">5 Harbor 與定義</a>
+  <a href="#part6">6 寫任務</a>
+  <a href="#part7">7 評測基礎設施</a>
+  <a href="#part8">8 總結</a>
+  <a href="#glossary">術語表</a>
+</nav>
+
+<!-- ============ PART 0 ============ -->
+<section class="part" id="part0">
+  <div class="part-head">
+    <span class="no">PART 0 · p.1</span>
+    <h2>封面</h2>
+    <p>本講沒有大綱頁，結構是講者自己的敘事：先講歷史與觀念（p.2–29），再講 Terminal-Bench 與 Harbor 的實務（p.30–63）。</p>
+  </div>
+
+  <article class="slide" id="p1">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=1" target="_blank" rel="noopener"><b>1</b></a>
+    <div class="body">
+    <h3>評測 agent：Terminal-Bench 與 Harbor <span class="en">Evaluating Agents: Terminal-Bench and Harbor</span></h3>
+    <ul>
+      <li>講者 Alex Shaw 與 Ryan Marten，CS 329Z 客座演講（投影片日期 2026/10/26）。最後一頁 p.64 重複封面，加上「Questions」作為問答。</li>
+      <li>Terminal-Bench 是一個讓 agent 在終端機裡完成真實任務的基準；Harbor 是他們後來做的通用評測框架，讓任何人都能做自己的基準（p.39）。</li>
+    </ul>
+    <div class="terms"><span><em>benchmark</em>基準（評測集）</span><span><em>terminal</em>終端機</span></div>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 1 ============ -->
+<section class="part" id="part1">
+  <div class="part-head">
+    <span class="no">PART 1 · p.2–12</span>
+    <h2>軟體工程的興起：演繹式的技術開發</h2>
+    <p>用「把一個數加 5」這件事，看程式設計怎麼從機器碼一路抽象到高階語言，並引出「人寫規則、程式執行規則」的演繹式開發。</p>
+  </div>
+
+  <article class="slide" id="p2">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=2" target="_blank" rel="noopener"><b>2–9</b></a>
+    <div class="body">
+    <h3>同一件事的三種寫法 <span class="en">The rise of software engineering</span></h3>
+    <p>投影片一頁寫年代、下一頁寫那個年代的程式長什麼樣子，三組做的都是同一件事：把暫存器（變數）的值加 5。</p>
+    <div class="flow"><span>1940s 數值指令<br><small><code>48 83 C0 05</code>（p.3–4）</small></span><i>→</i><span>1950s 初 組合語言<br><small><code>add rax, 5</code>（p.5–6）</small></span><i>→</i><span>1950s 末 高階語言<br><small><code>x += 5</code>（p.8–9）</small></span></div>
+    <ul>
+      <li>p.3–4：最早直接寫給 CPU 的數字指令。<code>48 83 C0 05</code> 正是 x86-64 的 <code>add rax, 5</code> 機器碼（<code>48</code> 表示 64 位元運算、<code>83 C0</code> 是「對 rax 加上一個小常數」、<code>05</code> 是常數 5），本導讀已核對。</li>
+      <li>p.5–6：組合語言用人看得懂的助記符取代數字，但還是一條對一條地對應機器指令。</li>
+      <li>p.7：John Backus（FORTRAN 的發明者）的話：1950 年代很多程式設計師把自己當成「祭司」，守護著一般人無法理解的技藝與奧秘。意思是當時寫程式是少數人的專門技能。</li>
+      <li>p.8–9：高階語言讓人只描述「要做什麼」，翻譯成機器碼交給編譯器。每一步都是把人從細節裡解放出來。</li>
+    </ul>
+    <p>這條歷史線是為 p.17 埋伏筆：抽象層一路往上疊，下一層就是 ML、LLM 與 agent。</p>
+    <div class="terms"><span><em>machine code</em>機器碼</span><span><em>assembly</em>組合語言</span><span><em>high-level language</em>高階語言</span></div>
+    <div class="reads"><span class="none">本站未收錄（歷史背景，無對應文章）</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p10">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=10" target="_blank" rel="noopener"><b>10–12</b></a>
+    <div class="body">
+    <h3>演繹式的技術開發 <span class="en">Deductive technology creation</span> <span class="key">重點</span></h3>
+    <ul>
+      <li>p.10：Tony Hoare 1969 年的論文《An Axiomatic Basis for Computer Programming》：程式設計是一門精確的科學，程式的所有性質和執行後果，原則上都能只靠閱讀程式本身、用純演繹推理推導出來。</li>
+      <li>p.11 把這種開發方式總結成一個公式：<b>規則 + 輸入 → 輸出</b>。人寫規則（程式碼），程式把規則套用在新的輸入上。</li>
+      <li>p.12：IBM 1954 年的 FORTRAN 初步報告宣稱「FORTRAN 應該能幾乎消滅編碼和除錯」。這句話放在這裡有點反諷：每一代新抽象都這樣承諾過，但寫程式和除錯從來沒有消失。</li>
+    </ul>
+    <p>記住 p.11 的公式，p.15 會把它整個反過來。</p>
+    <div class="terms"><span><em>deductive</em>演繹式</span><span><em>rules</em>規則</span></div>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 2 ============ -->
+<section class="part" id="part2">
+  <div class="part-head">
+    <span class="no">PART 2 · p.13–22</span>
+    <h2>ML 的興起：歸納式的技術開發</h2>
+    <p>機器學習把公式反過來：人給輸入和輸出，由訓練推出規則。講者主張所有數位技術開發都正在變成歸納式。</p>
+  </div>
+
+  <article class="slide" id="p13">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=13" target="_blank" rel="noopener"><b>13–14</b></a>
+    <div class="body">
+    <h3>ML 的興起 <span class="en">The rise of ML</span> <span class="img-only">圖片頁</span></h3>
+    <ul>
+      <li>p.14 是一篇文章截圖：Chris Anderson 2008 年 6 月 23 日的〈The End of Theory: The Data Deluge Makes the Scientific Method Obsolete〉（理論的終結：資料洪流讓科學方法過時）。</li>
+      <li>文章開頭引用統計學家 George Box 的名言「所有模型都是錯的，但有些有用」，接著主張：過去只有模型能解釋世界，如今有了海量資料，公司可以不必先建立理論。</li>
+    </ul>
+    <p>講者用這篇文章代表「讓資料說話」的思潮，也就是歸納式開發的起點。</p>
+      </div>
+  </article>
+
+  <article class="slide" id="p15">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=15" target="_blank" rel="noopener"><b>15–16</b></a>
+    <div class="body">
+    <h3>歸納式的技術開發 <span class="en">Inductive technology creation</span> <span class="key">重點</span></h3>
+    <ul>
+      <li>p.15 的公式和 p.11 相反：<b>輸入 + 輸出 → 規則</b>。人提供範例（資料與標籤），由訓練推論出規則，也就是模型。</li>
+      <li>p.16 用兩條流水線對照兩種開發生命週期：</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>生命週期</th><th>性質</th><th>步驟</th></tr></thead>
+      <tbody>
+        <tr><td>軟體工程（SWE）</td><td>演繹式</td><td>規格 → 實作 → 測試 → 部署（一條直線）</td></tr>
+        <tr><td>機器學習（ML）</td><td>歸納式</td><td>目標 → 評測 → 實驗 → 優化，再從優化<b>回到評測反覆迭代</b></td></tr>
+      </tbody>
+    </table></div>
+    <p>關鍵差異：軟體工程的「測試」在實作之後，是驗收；ML 的「評測」在實驗之前，是整個迭代迴圈的中心。</p>
+    <div class="terms"><span><em>inductive</em>歸納式</span><span><em>lifecycle</em>生命週期</span><span><em>objective</em>目標</span><span><em>iterate</em>迭代</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p17">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=17" target="_blank" rel="noopener"><b>17–20</b></a>
+    <div class="body">
+    <h3>所有數位技術開發都在變成歸納式 <span class="en">All digital technology development is becoming inductive</span> <span class="key">重點</span></h3>
+    <ul>
+      <li>p.17：演進路線是 軟體 → ML → LLM → Agent。</li>
+      <li>p.18：Claude Shannon 的話：「我最大的夢想，是有一天造出一台真正會思考、學習、和人類溝通，並能以相當複雜的方式操作環境的機器。」最後一項「操作環境」正是 agent。</li>
+      <li>p.19–20：講者的核心主張是所有數位技術開發都在變成歸納式，分三層：
+        <ol>
+          <li><b>模型</b>：從資料學出來。</li>
+          <li><b>Agent</b>：靠評測開發出來。</li>
+          <li><b>軟體</b>：由 agent 產生。</li>
+        </ol>
+      </li>
+    </ul>
+    <p>第三點是推論：如果軟體由 agent 寫，而 agent 又是靠評測調出來的，那麼最終決定軟體品質的就是評測。這是整講的動機。</p>
+    <div class="terms"><span><em>agent</em>agent（代理人）</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p21">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=21" target="_blank" rel="noopener"><b>21–22</b></a>
+    <div class="body">
+    <h3>Agentic coding 是一種機器學習 <span class="en">François Chollet on agentic coding</span> <span class="img-only">圖片頁</span></h3>
+    <ul>
+      <li>p.21 是 François Chollet（Keras 作者）的推文：「Agentic coding 是一種機器學習。產生出來的程式碼最好當成黑盒子成品，它的行為與泛化能力應該像任何 ML 模型一樣，用實證評測來管理。」</li>
+      <li>p.22 重畫 p.16 的對照圖，但改了標籤：上面變成「<b>舊的</b>軟體工程生命週期」，下面變成「<b>模型、agent 與軟體</b>的開發生命週期」。意思是連一般軟體也要改走歸納式的迭代流程。</li>
+    </ul>
+    <div class="terms"><span><em>agentic coding</em>agent 寫程式</span><span><em>empirical evaluation</em>實證評測</span><span><em>generalization</em>泛化</span></div>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 3 ============ -->
+<section class="part" id="part3">
+  <div class="part-head">
+    <span class="no">PART 3 · p.23–29</span>
+    <h2>從規格到評測</h2>
+    <p>用一個抽取電話號碼的小程式說明：當實作換成 LLM，「真相的來源」就從規則變成輸出。</p>
+  </div>
+
+  <article class="slide" id="p23">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=23" target="_blank" rel="noopener"><b>23–25</b></a>
+    <div class="body">
+    <h3>規則與輸出，誰是真相的來源？ <span class="en">Rules vs. outputs as the source of truth</span> <span class="key">重點</span> <span class="img-only">圖片頁</span></h3>
+    <p>p.24 是傳統寫法，用正規表示式抽電話號碼：</p>
+<pre class="code">def extract_phone_number(text):
+    match = re.search(r"\d{3}-\d{3}-\d{4}", text)
+    return match.group()</pre>
+    <p>p.25 用 diff 的樣子把那兩行（紅色）換成呼叫 LLM（綠色）：</p>
+<pre class="code">    response = OpenAI().responses.create(
+        model="gpt-5.5",
+        input=f"Extract the phone number:\n\n{text}",
+    )
+    return response.output_text</pre>
+    <ul>
+      <li>正規表示式版本：規則寫在程式碼裡，讀程式就知道它會做什麼（呼應 p.10 Hoare 的說法）。遇到 <code>(555) 123 4567</code> 這種格式就抓不到，但這點也能從規則推出來。</li>
+      <li>LLM 版本：程式碼裡已經沒有規則了，只有一句自然語言。它對各種輸入會輸出什麼，<b>只能靠跑大量例子看輸出來判斷</b>。所以真相的來源從「規則」移到了「輸出」。</li>
+    </ul>
+    <div class="terms"><span><em>source of truth</em>真相的來源</span><span><em>regular expression</em>正規表示式</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p26">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=26" target="_blank" rel="noopener"><b>26–29</b></a>
+    <div class="body">
+    <h3>規格 → 評測 <span class="en">Specification → Evaluation</span> <span class="key">重點</span></h3>
+    <ul>
+      <li>p.26：過去用<b>規格</b>描述系統該做什麼；現在要用<b>評測</b>描述。</li>
+      <li>p.27–28：寫規格的人是軟體工程師；那寫評測的人是誰？投影片留下問號，暗示這是一個還沒有名字的新角色，而本講後半段教的就是這個角色的工作。</li>
+      <li>p.29：接著問：agent 的訓練資料和測試資料長什麼樣子？下一段用 Terminal-Bench 當作答案的例子。</li>
+    </ul>
+    <div class="terms"><span><em>specification</em>規格</span><span><em>specifier</em>規格制定者</span><span><em>evaluator</em>評測制定者</span></div>
+    <div class="reads"><a class="rd" data-slug="Press2024_How_to_Build_Good_LM_Benchmarks" href="https://cs.xuyili.com/reading/Press2024_How_to_Build_Good_LM_Benchmarks.html" target="_blank" rel="noopener">How to Build Good LM Benchmarks（好基準的條件）</a></div>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 4 ============ -->
+<section class="part" id="part4">
+  <div class="part-head">
+    <span class="no">PART 4 · p.30–39</span>
+    <h2>範例：Terminal-Bench</h2>
+    <p>Terminal-Bench 的出發點、規模、起源，以及一個任務實際長什麼樣子。</p>
+  </div>
+
+  <article class="slide" id="p30">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=30" target="_blank" rel="noopener"><b>30–31</b></a>
+    <div class="body">
+    <h3>一個洞見：bash 一統天下 <span class="en">1 insight: bash is the one tool to rule them all</span></h3>
+    <ul>
+      <li>p.31 左邊是一張雲端主控台網頁的縮圖，右邊是一行 AWS CLI 指令（<code>aws ec2 run-instances --image-id … --instance-type t2.micro …</code>），中間寫 vs。</li>
+      <li>意思是：同一件事（開一台雲端主機），在 GUI 上要點很多步，在終端機裡一行指令就做完。幾乎所有軟體都能從 bash 操作，所以 agent 只要會用終端機，就能做非常廣泛的工作。這就是 Terminal-Bench 只測終端機的理由。</li>
+    </ul>
+    <div class="terms"><span><em>bash</em>bash（Unix shell）</span><span><em>CLI</em>命令列介面</span><span><em>GUI</em>圖形介面</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p32">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=32" target="_blank" rel="noopener"><b>32–36</b></a>
+    <div class="body">
+    <h3>Terminal-Bench 的影響力 <span class="en">64 model cards · 171 contributors · 1k+ · 5k+ · 7M+</span> <span class="img-only">圖片頁</span></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>頁</th><th>數字</th><th>意義</th></tr></thead>
+      <tbody>
+        <tr><td>p.32</td><td class="num">64</td><td>模型卡（model card）</td></tr>
+        <tr><td>p.33</td><td class="num">171</td><td>貢獻者</td></tr>
+        <tr><td>p.34</td><td class="num">1k+</td><td>GitHub 參與者</td></tr>
+        <tr><td>p.35</td><td class="num">5k+</td><td>Discord 社群成員</td></tr>
+        <tr><td>p.36</td><td class="num">7M+</td><td>基準執行次數</td></tr>
+      </tbody>
+    </table></div>
+    <p>p.32 的背景是一張熱圖：每列是一個基準（第一列是 Terminal-Bench，下面有 humanitys-last-exam、gpqa-diamond、swe-bench-verified 等），每欄是一個模型。從版面判讀，它表示各家模型卡有沒有報告該基準，而 Terminal-Bench 那一列幾乎填滿；「64」指有 64 份模型卡報告了 Terminal-Bench 成績。熱圖的細節字太小，請看原頁。</p>
+    <div class="terms"><span><em>model card</em>模型卡（模型發布時附的說明文件）</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p37">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=37" target="_blank" rel="noopener"><b>37</b></a>
+    <div class="body">
+    <h3>起源 <span class="en">First Terminal-Bench Commit (Jan '25) · Claude Code Released (Feb '25)</span> <span class="img-only">圖片頁</span></h3>
+    <ul>
+      <li>Terminal-Bench 的第一個 commit 是 2025 年 1 月 17 日（作者 alexgshaw），比 Claude Code 發布（2025 年 2 月）還早一個月。言下之意：他們在終端機 agent 流行起來之前就押注了這個方向。</li>
+      <li>右邊是團隊合照，下方是 Stanford 和 Laude Institute 的標誌，表示這是兩者合作的專案。</li>
+    </ul>
+      </div>
+  </article>
+
+  <article class="slide" id="p38">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=38" target="_blank" rel="noopener"><b>38</b></a>
+    <div class="body">
+    <h3>一個任務的三個部分 <span class="en">INSTRUCTION.MD · ENVIRONMENT/DOCKERFILE · TEST/TEST_OUTPUTS.PY</span> <span class="key">重點</span></h3>
+    <p>一個真實任務：根據一張 2D 工程圖，輸出對應 3D 物件的 STEP 檔（CAD 交換格式）。右邊附了那張工程圖和綠色 3D 成品。</p>
+    <div class="example">
+      <div class="row"><span class="lab">指令</span><span>請在 /app/out.step 輸出一個 STEP 檔，內容是 /app/schematic.png 這張 2D 圖所描述的物件。</span></div>
+      <div class="row"><span class="lab">環境</span><span><code>FROM python:3.12-slim</code>，再把 schematic.png 複製進 /app。</span></div>
+      <div class="row"><span class="lab">測試</span><span>九個 assert：檔案是合法 STEP、封閉無破洞（watertight）、體積、表面積、主慣性矩、凸包體積、凸包面積、拓撲、平均曲率都要正確。</span></div>
+    </div>
+    <ul>
+      <li>指令只有一句話，但驗證非常嚴格：不檢查 agent 用了什麼工具或步驟，只檢查<b>最後產出的檔案</b>在多個幾何量上都對。這是 p.49「以結果為準的驗證器」的範例。</li>
+      <li>環境很精簡，連 CAD 軟體都沒裝，agent 得自己想辦法裝工具或寫程式產生 STEP 檔。</li>
+    </ul>
+    <div class="terms"><span><em>instruction</em>指令</span><span><em>environment</em>環境</span><span><em>Dockerfile</em>Dockerfile（容器建置檔）</span><span><em>STEP file</em>STEP 檔（3D CAD 交換格式）</span><span><em>watertight</em>封閉（網格無破洞）</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p39">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=39" target="_blank" rel="noopener"><b>39</b></a>
+    <div class="body">
+    <h3>從 TBENCH 到 Harbor <span class="en">TBENCH → harbor</span></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>TBENCH</th><th>Harbor</th></tr></thead>
+      <tbody>
+        <tr><td>大約一個基準</td><td>讓上百萬個基準成為可能</td></tr>
+        <tr><td>我們做評測</td><td>你來做評測</td></tr>
+        <tr><td>累積的經驗教訓</td><td>提供工具</td></tr>
+      </tbody>
+    </table></div>
+    <p>從這頁起轉向後半段：把做 Terminal-Bench 學到的東西，做成任何人都能用來打造自己評測的框架。這也回答了 p.28 的「Evaluator = ?」：每個開發 agent 的人都要成為評測制定者。</p>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 5 ============ -->
+<section class="part" id="part5">
+  <div class="part-head">
+    <span class="no">PART 5 · p.40–43</span>
+    <h2>Harbor 與評測的基本定義</h2>
+    <p>Harbor 的定位、單輪評測與 agent 評測的差別、一組共通術語，以及 Harbor 的任務格式。</p>
+  </div>
+
+  <article class="slide" id="p40">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=40" target="_blank" rel="noopener"><b>40</b></a>
+    <div class="body">
+    <h3>Harbor：評測驅動開發的工具 <span class="en">Tools for eval-driven development</span> <span class="key">重點</span></h3>
+    <p>Harbor 的口號是「理解並改進 agent」（harborframework.com）。這頁把前半段的論點收成一張對照表：</p>
+    <div class="tbl"><table>
+      <thead><tr><th>以前：傳統軟體</th><th>現在：agent 的世界</th></tr></thead>
+      <tbody>
+        <tr><td>程式碼是真相的來源</td><td><b>評測</b>是真相的來源</td></tr>
+        <tr><td>確定性的</td><td>隨機的</td></tr>
+        <tr><td>演繹的</td><td>實證的</td></tr>
+        <tr><td>軟體是手工打造的</td><td>軟體是學出來的</td></tr>
+      </tbody>
+    </table></div>
+    <div class="terms"><span><em>eval-driven development</em>評測驅動開發</span><span><em>deterministic</em>確定性</span><span><em>stochastic</em>隨機性</span><span><em>empirical</em>實證的</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p41">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=41" target="_blank" rel="noopener"><b>41</b></a>
+    <div class="body">
+    <h3>單輪評測與 agent 評測 <span class="en">Comparison: Single-Turn vs Agent Evaluations</span> <span class="img-only">圖片頁</span></h3>
+    <p>引自 Anthropic〈Demystifying Evals for AI Agents〉的圖：</p>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th>輸入</th><th>執行</th><th>評分邏輯</th></tr></thead>
+      <tbody>
+        <tr><td>單輪</td><td>Prompt「一隻 [ANIMAL] 有幾根腳趾？」＋資料 ANIMAL = Cat</td><td>LLM 產生一個回答</td><td>response == 18</td></tr>
+        <tr><td>Agent</td><td>工具（網頁搜尋、改檔案、資料庫 MCP）＋環境（裝好 Python、開發環境、可上網、沙盒）＋任務「寫一個 MCP server 連到我的 app」</td><td>agent 連續讀檔、搜尋文件、改檔、跑 pytest，每一步都會<b>更新環境</b>，最後說「我做完了！」</td><td>跑一組測試，確認 MCP server 真的能用</td></tr>
+      </tbody>
+    </table></div>
+    <p>重點：agent 評測不能只看它最後說了什麼（「I did it!」不算數），要檢查環境被它改成了什麼樣子。（貓前腳 5 趾、後腳 4 趾，共 18 趾，圖中答案正確。）</p>
+    <div class="reads"><a class="rd" data-slug="Grace2026_Demystifying_Evals_Anthropic" href="https://cs.xuyili.com/reading/Grace2026_Demystifying_Evals_Anthropic.html" target="_blank" rel="noopener">Demystifying Evals for AI Agents（本頁直接引用）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p42">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=42" target="_blank" rel="noopener"><b>42</b></a>
+    <div class="body">
+    <h3>定義 <span class="en">Definitions</span> <span class="key">重點</span></h3>
+    <p>同樣出自 Anthropic 那篇文章，中括號裡是同義詞：</p>
+    <div class="tbl"><table>
+      <thead><tr><th>術語</th><th>中文</th><th>意思</th></tr></thead>
+      <tbody>
+        <tr><td>Task</td><td>任務</td><td>單一測試，有明確的輸入與成功標準</td></tr>
+        <tr><td>Trial</td><td>嘗試</td><td>對一個任務跑一次（同一任務通常跑多次，因為結果是隨機的）</td></tr>
+        <tr><td>Benchmark [Evaluation suite]</td><td>基準［評測套件］</td><td>一組任務，用來衡量特定能力</td></tr>
+        <tr><td>Verifier [Grader]</td><td>驗證器［評分器］</td><td>為 agent 表現打分的邏輯</td></tr>
+        <tr><td>Trajectory [Trace, Transcript]</td><td>軌跡［追蹤、逐字紀錄］</td><td>一次嘗試的完整紀錄</td></tr>
+        <tr><td>Evaluation harness</td><td>評測框架</td><td>端到端跑評測的基礎設施（Harbor 屬於這類）</td></tr>
+        <tr><td>Agent harness</td><td>agent 框架</td><td>讓模型能以 agent 身分行動的系統（例如 Claude Code、Codex）</td></tr>
+      </tbody>
+    </table></div>
+    <p>最容易搞混的是最後兩個：agent harness 包住<b>模型</b>讓它能用工具；evaluation harness 包住<b>agent</b>讓它能被大量、可重現地測。</p>
+    <div class="terms"><span><em>trial</em>嘗試</span><span><em>verifier</em>驗證器</span><span><em>trajectory</em>軌跡</span><span><em>evaluation harness</em>評測框架</span><span><em>agent harness</em>agent 框架</span></div>
+    <div class="reads"><a class="rd" data-slug="Grace2026_Demystifying_Evals_Anthropic" href="https://cs.xuyili.com/reading/Grace2026_Demystifying_Evals_Anthropic.html" target="_blank" rel="noopener">Demystifying Evals for AI Agents（本頁直接引用，「評測的結構」一節）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p43">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=43" target="_blank" rel="noopener"><b>43</b></a>
+    <div class="body">
+    <h3>Harbor 的任務格式 <span class="en">TASK</span> <span class="key">重點</span></h3>
+<pre class="code">my-task/
+├── instruction.md      <span class="c"># 給 agent 的指令</span>
+├── task.toml           <span class="c"># 設定（時間限制、資源等）</span>
+├── environment/
+│   └── Dockerfile      <span class="c"># agent 工作的環境</span>
+├── solution/
+│   └── solve.sh        <span class="c"># 參考解答</span>
+└── tests/
+    └── test.sh         <span class="c"># 驗證器</span></pre>
+    <p>（註解為本導讀補充；task.toml 的具體欄位投影片沒有列出。）這種格式要達到五個性質：</p>
+    <ul>
+      <li><b>與 agent 無關</b>：任何 agent 都能拿來跑，不綁定某個產品。</li>
+      <li><b>容易定義</b>：一個資料夾、幾個檔案就是一個任務。</li>
+      <li><b>可攜</b>：靠 Docker，在本機或雲端都能跑。</li>
+      <li><b>表達力強</b>：只要能在容器裡做的事都能當任務。</li>
+      <li><b>彼此獨立</b>：每個任務自成一體，不依賴其他任務。</li>
+    </ul>
+    <p>對照 p.38：instruction.md、environment/、tests/ 正好是那三個部分，再加上 solution/（p.53）和設定檔。</p>
+    <div class="terms"><span><em>agent agnostic</em>與 agent 無關</span><span><em>portable</em>可攜</span><span><em>expressive</em>表達力強</span><span><em>solution</em>參考解答</span></div>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 6 ============ -->
+<section class="part" id="part6">
+  <div class="part-head">
+    <span class="no">PART 6 · p.44–55</span>
+    <h2>怎麼寫好一個任務</h2>
+    <p>依任務資料夾的組成逐項講：指令、環境、驗證器、防止 reward hacking、參考解答，每項附上審查前後的對照。</p>
+  </div>
+
+  <article class="slide" id="p44">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=44" target="_blank" rel="noopener"><b>44</b></a>
+    <div class="body">
+    <h3>寫任務的三個原則 <span class="en">Writing Tasks</span> <span class="key">重點</span></h3>
+    <p>副標是兩個問題：<b>你在量什麼？你量得對嗎？</b></p>
+    <ul>
+      <li><b>指令與驗證器要對齊</b>：指令要求的事，驗證器都要檢查；驗證器檢查的事，指令都要講到。</li>
+      <li><b>防止 reward hacking</b>：不讓 agent 用作弊的方式拿到分數。</li>
+      <li><b>真實、公平、有趣</b>：任務要像真實工作、不能有藏起來的陷阱，也要值得測。</li>
+    </ul>
+    <div class="terms"><span><em>reward hacking</em>獎勵駭取（鑽評分漏洞）</span><span><em>alignment</em>對齊</span></div>
+    <div class="reads"><a class="rd" data-slug="Zhu2025_Rigorous_Agentic_Benchmarks" href="https://cs.xuyili.com/reading/Zhu2025_Rigorous_Agentic_Benchmarks.html" target="_blank" rel="noopener">Rigorous Agentic Benchmarks（任務有效性與結果有效性的檢查清單）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p45">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=45" target="_blank" rel="noopener"><b>45–46</b></a>
+    <div class="body">
+    <h3>指令 <span class="en">Instructions</span></h3>
+    <p>副標：依你的目標，可能要在不同情境下測量。Terminal-Bench 的指令原則有三：</p>
+    <ul>
+      <li><b>完整明確</b>：驗證器會檢查的要求都要寫出來。</li>
+      <li><b>盡量精簡</b>：agent 自己從環境查得到的資訊就不要寫。</li>
+      <li><b>盡量自然</b>：像真人會下的指令，而不是模板。</li>
+    </ul>
+    <p>p.46 是一個實際的審查前後對照（<span class="img-only">圖片頁</span>）：任務是寫 FreeCAD 腳本修改一個半開式葉輪（impeller）的參數。</p>
+    <div class="example">
+      <div class="row"><span class="lab">原版</span><span class="bad">一大頁：逐條列出零件結構、每個尺寸參數、限制條件、FreeCAD 版本號，還有粗體小標題與排版。</span></div>
+      <div class="row"><span class="lab">審查意見</span><span>（RyanMarten 的留言）在保持完整明確的前提下把指令縮到最短；agent 能從環境查到的資訊（例如 FreeCAD 版本）不要寫；拿掉多餘的 LLM 式排版（粗體、破折號）和模板，只講要求、哪些部分會被評分、要產出哪兩個檔案。</span></div>
+      <div class="row"><span class="lab">改版</span><span class="ok">幾段話：要產出哪兩個 FCStd 檔、葉片數從 12 改為 6、其餘尺寸不變、葉輪的幾何描述與參數。</span></div>
+    </div>
+    <p>留言最後一句說這就是「Terminal-Bench 風格的指令」。指令寫得越囉唆，越像在幫 agent 解題，測到的能力就越少。</p>
+    <div class="terms"><span><em>fully specified</em>完整明確</span><span><em>concise</em>精簡</span><span><em>natural</em>自然</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p47">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=47" target="_blank" rel="noopener"><b>47–48</b></a>
+    <div class="body">
+    <h3>環境 <span class="en">Environments</span></h3>
+    <p>副標：環境是 agent 行動的地方，要盡可能貼近「正式環境」的分佈。</p>
+    <ul>
+      <li><b>附加輸入</b>：把文件、程式碼、狀態等材料放進環境。</li>
+      <li><b>真的軟體／服務優於模擬（mock）</b>：需要資料庫就真的起一個資料庫容器（多容器環境）。</li>
+      <li><b>盡量開放</b>：允許上網更真實，但也有代價（例如可能查到答案，見 p.52）。</li>
+      <li><b>把網路依賴預先打包進環境</b>以減少不穩定：例如套件先在 Dockerfile 裝好，免得某次評測因為下載失敗而算 agent 失敗。</li>
+    </ul>
+    <p>p.48 是環境的審查前後對照（<span class="img-only">圖片頁</span>）：目標是一張「Happy New Year 2025」海報，agent 要從候選素材裡挑圖組出來。原版的候選素材只有寥寥幾張；改版後素材大幅增加，混入了目標圖裡沒有的干擾項（例如另一種氣球、用電腦的人物、進度條）。從圖判讀，改動的用意是讓環境更像真實情況，agent 必須真的分辨哪些素材用得上，而不是全部拿來用。</p>
+    <div class="terms"><span><em>mock</em>模擬（假的替身服務）</span><span><em>multi-container</em>多容器</span><span><em>flakiness</em>不穩定（時好時壞）</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p49">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=49" target="_blank" rel="noopener"><b>49–50</b></a>
+    <div class="body">
+    <h3>驗證器 <span class="en">Verifiers</span> <span class="key">重點</span></h3>
+    <p>副標：驗證器是<b>以結果為準、對環境最終狀態做判斷的分類器</b>。</p>
+    <ul>
+      <li><b>混淆矩陣</b>：把驗證器當分類器看，它也會誤判。偽陽性（沒做對卻通過）會高估 agent；偽陰性（做對卻沒通過）會低估 agent。（投影片寫「FP/NP/TP/TN」，NP 應是 FN 的筆誤。）</li>
+      <li><b>和指令裡的要求一對一對應</b>：每條要求有一個檢查，每個檢查都對應一條要求。p.38 的九個 assert 就是例子。</li>
+      <li>兩種做法：<b>程式化檢查</b>，以及 <b>agent／LLM 當評審</b>。</li>
+    </ul>
+    <p>p.50 是 Anthropic 文章裡的評分器比較表（<span class="img-only">圖片頁</span>）：</p>
+    <div class="tbl"><table>
+      <thead><tr><th>評分器</th><th>方法</th><th>優點</th><th>缺點</th></tr></thead>
+      <tbody>
+        <tr><td>程式化</td><td>字串比對（精確、regex、模糊）、二元測試、靜態分析、結果驗證、工具呼叫驗證、逐字紀錄分析</td><td>快、便宜、客觀、可重現、容易除錯</td><td>對「合理但不完全符合」的答案太脆弱、缺乏細膩度、難評主觀任務</td></tr>
+        <tr><td>模型</td><td>評分準則、自然語言斷言、兩兩比較、參考答案比較、多評審共識</td><td>彈性大、可擴展、能抓細微差別、能處理開放式任務</td><td>不確定性、比程式貴、需要和人類評分校準</td></tr>
+        <tr><td>人工</td><td>（圖中字太小，請看原頁）</td><td colspan="2">原文詳見本站譯文〈如何評測 AI Agent〉一節</td></tr>
+      </tbody>
+    </table></div>
+    <div class="terms"><span><em>outcome-based</em>以結果為準</span><span><em>confusion matrix</em>混淆矩陣</span><span><em>false positive / false negative</em>偽陽性／偽陰性</span><span><em>programmatic check</em>程式化檢查</span><span><em>LLM judge</em>LLM 評審</span></div>
+    <div class="reads"><a class="rd" data-slug="Grace2026_Demystifying_Evals_Anthropic" href="https://cs.xuyili.com/reading/Grace2026_Demystifying_Evals_Anthropic.html" target="_blank" rel="noopener">Demystifying Evals for AI Agents（p.50 直接引用）</a><a class="rd" data-slug="Zheng2023_LLM_as_a_Judge_MT-Bench_NeurIPS2023" href="https://cs.xuyili.com/reading/Zheng2023_LLM_as_a_Judge_MT-Bench_NeurIPS2023.html" target="_blank" rel="noopener">LLM-as-a-Judge（模型評審的偏差）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p51">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=51" target="_blank" rel="noopener"><b>51–52</b></a>
+    <div class="body">
+    <h3>Reward hacking <span class="en">Reward Hacking</span> <span class="key">重點</span></h3>
+    <p>三道防線：</p>
+    <ul>
+      <li><b>鎖住 agent 的環境</b>：限制 agent 能接觸的東西。</li>
+      <li><b>驗證器環境隔離</b>：測試檔不放在 agent 的環境裡。agent 看不到測試，就無法照著測試硬湊答案或直接改測試。</li>
+      <li><b>agent 程式碼執行隔離</b>：驗證時不在 agent 動過手腳的環境裡跑。</li>
+    </ul>
+    <div class="flow"><span>Agent 環境<br><small>agent 在這裡產出成品</small></span><i>→</i><span>只把成品（artifact）搬過去</span><i>→</i><span>驗證器環境<br><small>成品 ＋ 測試</small></span></div>
+    <p>p.52 是一個真實案例（<span class="img-only">圖片頁</span>）：Langston Nashold 2026 年 9 月 23 日的推文，回報 Meta 的 Muse Spark 1.3 在 Terminal Bench Science 上嘗試 reward hacking。模型上網搜尋 Lean（定理證明器）核心的已知 bug，找到後利用它寫出一份「證明」來騙過評分器。這說明 p.47 的「開放上網」確實有代價，而且模型越強，越會找到你沒想到的漏洞。</p>
+    <div class="terms"><span><em>isolation</em>隔離</span><span><em>artifact</em>成品（產出物）</span><span><em>Lean</em>Lean（定理證明器）</span></div>
+    <div class="reads"><a class="rd" data-slug="Zhu2025_Rigorous_Agentic_Benchmarks" href="https://cs.xuyili.com/reading/Zhu2025_Rigorous_Agentic_Benchmarks.html" target="_blank" rel="noopener">Rigorous Agentic Benchmarks（各基準被鑽漏洞的實例）</a></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p53">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=53" target="_blank" rel="noopener"><b>53–54</b></a>
+    <div class="body">
+    <h3>參考解答 <span class="en">Solution</span></h3>
+    <ul>
+      <li>參考解答的用途是<b>替驗證器和環境除錯</b>：如果正確解答跑不過測試，問題在任務本身，不在 agent。</li>
+      <li>解答要<b>盡量模仿 agent 會採取的動作</b>，不要寫死答案。例如直接把正確檔案複製過去雖然能通過測試，但證明不了「這個任務在這個環境裡真的做得出來」。</li>
+    </ul>
+    <p>p.54（<span class="img-only">圖片頁</span>）是另一個任務的指令截圖：給一份樂譜片段 /app/Harmony.pdf，要 agent 以巴哈聖詠的風格完成四部和聲（SATB），標上羅馬數字和弦級數，輸出成 /app/harmony.mxl，並附了一段 MusicXML <code>&lt;harmony&gt;</code> 標記的範例。投影片沒有文字說明這個例子要表達什麼；放在 Solution 這段，可以理解為「答案不唯一、需要專業知識的任務，參考解答更難寫」的例子（本導讀推測）。</p>
+    <div class="terms"><span><em>oracle solution</em>參考解答</span><span><em>hardcode</em>寫死</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p55">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=55" target="_blank" rel="noopener"><b>55</b></a>
+    <div class="body">
+    <h3>做出好評測的路線圖 <span class="en">Roadmap to Excellent Evals</span> <span class="img-only">圖片頁</span></h3>
+    <p>Anthropic 文章的路線圖，三欄九步（p.58 重複）：</p>
+    <div class="tbl"><table>
+      <thead><tr><th>評測套件開發</th><th>評測框架開發</th><th>評測維護</th></tr></thead>
+      <tbody>
+        <tr><td>0. 現在就開始，越早越好<br>1. 從人工測試開始<br>2. 寫沒有歧義的任務<br>3. 正例和反例都要涵蓋</td><td>4. 建立穩健的評測框架<br>5. 用心設計評分器</td><td>6. 檢查軌跡<br>7. 監控飽和<br>8. 長期維護</td></tr>
+      </tbody>
+    </table></div>
+    <p>Part 6 講的是第一欄與第 5 步；Part 7 接著講第二、三欄。</p>
+    <div class="terms"><span><em>saturation</em>飽和（分數接近滿分、不再有鑑別力）</span></div>
+    <div class="reads"><a class="rd" data-slug="Grace2026_Demystifying_Evals_Anthropic" href="https://cs.xuyili.com/reading/Grace2026_Demystifying_Evals_Anthropic.html" target="_blank" rel="noopener">Demystifying Evals for AI Agents（本頁直接引用，「從零到一」一節）</a></div>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 7 ============ -->
+<section class="part" id="part7">
+  <div class="part-head">
+    <span class="no">PART 7 · p.56–63</span>
+    <h2>評測基礎設施與長期維護</h2>
+    <p>怎麼把評測跑得可靠又快、上線前怎麼替任務做品管、任務出 bug 怎麼修、版本怎麼編、結果怎麼呈現。</p>
+  </div>
+
+  <article class="slide" id="p56">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=56" target="_blank" rel="noopener"><b>56</b></a>
+    <div class="body">
+    <h3>評測基礎設施 <span class="en">Eval Infra</span></h3>
+    <ul>
+      <li><b>可靠</b>（容錯）：跑上千次嘗試時，個別容器掛掉不能毀了整批結果。</li>
+      <li><b>可重現</b>：同樣設定再跑一次要得到可比較的結果。</li>
+      <li><b>快</b>：每次嘗試彼此獨立，所以可以平行跑。</li>
+      <li><b>可攜</b>：本機沙盒和雲端沙盒都能跑。（投影片拼成 PORTABILE，應為 PORTABLE。）</li>
+    </ul>
+    <div class="terms"><span><em>fault tolerant</em>容錯</span><span><em>reproducible</em>可重現</span><span><em>sandbox</em>沙盒</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p57">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=57" target="_blank" rel="noopener"><b>57–58</b></a>
+    <div class="body">
+    <h3>Rollout 基礎設施 <span class="en">Rollout Infra: Test / Train / Prod</span> <span class="img-only">圖片頁</span></h3>
+    <p>同一套執行引擎可以用在測試、訓練、正式環境三種場合。圖中寫著：「Harbor 是一個框架，能在任何沙盒中，平行地用任何模型、任何 agent 跑任何任務。」</p>
+    <div class="flow"><span>輸入<br><small>任務、模型、agent、沙盒、技能（skills）</small></span><i>→</i><span>Harbor Rollout Engine</span><i>→</i><span>輸出用途<br><small>軌跡分析、評測、優化、任務品管、成品</small></span></div>
+    <p>「訓練」這個用途接回 Lecture 9：強化學習要大量 rollout 加上獎勵，評測任務的驗證器正好可以當獎勵函數。p.58 重複 p.55 的路線圖。</p>
+    <div class="terms"><span><em>rollout</em>rollout（執行軌跡）</span><span><em>skills</em>技能（給 agent 的指令包）</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p59">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=59" target="_blank" rel="noopener"><b>59</b></a>
+    <div class="body">
+    <h3>任務品管 <span class="en">Task QA</span> <span class="key">重點</span></h3>
+    <p>任務會以很隱微的方式壞掉，所以要避開常見的反模式，並結合<b>靜態檢查與 agent 檢查</b>。圖中對一個任務做了六種檢查：</p>
+    <div class="tbl"><table>
+      <thead><tr><th>檢查</th><th>做什麼（本導讀補充說明）</th></tr></thead>
+      <tbody>
+        <tr><td>靜態檢查</td><td>不執行，直接檢查任務檔案的格式與常見錯誤</td></tr>
+        <tr><td>agent 評審</td><td>讓 agent 閱讀任務，判斷指令與驗證器是否對齊、有沒有歧義</td></tr>
+        <tr><td>oracle agent</td><td>跑參考解答，確認任務做得出來（p.53）</td></tr>
+        <tr><td>前沿 agent</td><td>用最強的 agent 實際解題，看難度是否合理</td></tr>
+        <tr><td>作弊 agent</td><td>刻意嘗試鑽漏洞，看驗證器擋不擋得住（p.51）</td></tr>
+        <tr><td>軌跡上的 agent 評審</td><td>讀前沿 agent 和作弊 agent 的軌跡，找出失敗是因為能力不足還是任務有問題</td></tr>
+      </tbody>
+    </table></div>
+    <div class="terms"><span><em>anti-pattern</em>反模式</span><span><em>oracle agent</em>oracle agent（執行參考解答）</span><span><em>frontier agent</em>前沿 agent</span><span><em>cheat agent</em>作弊 agent</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p60">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=60" target="_blank" rel="noopener"><b>60</b></a>
+    <div class="body">
+    <h3>CI/CD：持續更新的基準 <span class="en">Continuous Benchmarks</span></h3>
+    <ul>
+      <li>核心觀念：<b>任務就是軟體，軟體就會有 bug</b>。所以基準要像軟體一樣持續整合、持續發布。</li>
+      <li>使用越多，回報的 bug 越多。常見類型：不穩定、基礎設施雜訊／相容性、新模型帶來新行為、偽陰性、reward hacking。</li>
+    </ul>
+    <div class="flow"><span>新任務<br><small>送進 GitHub</small></span><i>→</i><span>Harbor v1.1.0<br><small>跑基準</small></span><i>→</i><span>tbench.ai<br><small>公布結果</small></span><i>→</i><span>回報 issue<br><small>回到 GitHub 修正</small></span></div>
+    <p>「新模型＝新行為」值得注意：任務在舊模型上沒問題，不代表在下一代模型上也沒問題（例如 p.52 的作弊手法）。</p>
+    <div class="terms"><span><em>CI/CD</em>持續整合／持續部署</span><span><em>infra noise</em>基礎設施雜訊</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p61">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=61" target="_blank" rel="noopener"><b>61</b></a>
+    <div class="body">
+    <h3>版本號規則 <span class="en">Versioning</span> <span class="key">重點</span></h3>
+    <p>借用語意化版本號 x.y.z，但每一位數代表<b>舊結果還能不能用</b>：</p>
+    <div class="tbl"><table>
+      <thead><tr><th>版本變動</th><th>改到什麼</th><th>舊結果怎麼處理</th><th>例子</th></tr></thead>
+      <tbody>
+        <tr><td>(x+1, y, z)</td><td>agent 環境</td><td><b>重跑</b>（rerun）</td><td>新任務、修正指令寫太少或太多、修改資料與工具、調整 agent 資源</td></tr>
+        <tr><td>(x, y+1, z)</td><td>驗證器</td><td><b>重新評分</b>（regrade）：軌跡不用重跑，只要用新驗證器重新打分</td><td>修正太嚴的驗證器、堵掉 reward hack、重新調整評審、降低驗證器不穩定、調整驗證器資源、回報額外指標、更改獎勵</td></tr>
+        <tr><td>(x, y, z+1)</td><td>中繼資料</td><td><b>沿用</b>（reuse）</td><td>更新文件、修正 oracle 不穩定、鎖定會變動的依賴版本、修正指令中的錯字</td></tr>
+      </tbody>
+    </table></div>
+    <p>「修正錯字」歸在 z 有點微妙：指令改了，理論上 agent 看到的東西不同；這裡把錯字視為不影響結果的小修。這套規則的價值在於省錢：只有真的改到 agent 所見的環境時，才需要花大錢重跑所有模型。</p>
+    <div class="terms"><span><em>versioning</em>版本控管</span><span><em>rerun / regrade / reuse</em>重跑／重新評分／沿用</span><span><em>metadata</em>中繼資料</span></div>
+      </div>
+  </article>
+
+  <article class="slide" id="p62">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=62" target="_blank" rel="noopener"><b>62</b></a>
+    <div class="body">
+    <h3>結果要附完整收據 <span class="en">Results: Full receipts for every row</span> <span class="img-only">圖片頁</span></h3>
+    <ul>
+      <li>排行榜上的每一列，都要附上每次嘗試的軌跡、log、成品與獎勵。</li>
+      <li>左圖是 Terminal-Bench 4.0 的排行榜（模型、agent、解題率、日期、token、成本等欄位），箭頭指向右圖：Harbor Hub 上單一嘗試的頁面（任務 live-database-cutover），可以看到結果、獎勵、token 用量、各階段耗時，以及逐步的軌跡。排行榜的數字太小，請看原頁。</li>
+    </ul>
+    <p>為什麼重要：有了軌跡，別人能自己檢查高分是不是靠鑽漏洞拿到的，也能分析失敗原因（路線圖第 6 步「檢查軌跡」）。</p>
+      </div>
+  </article>
+
+  <article class="slide" id="p63">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=63" target="_blank" rel="noopener"><b>63</b></a>
+    <div class="body">
+    <h3>評測方法的優缺點 <span class="en">Automated evals · Production monitoring · Manual transcript review · Systematic human studies</span> <span class="img-only">圖片頁</span></h3>
+    <p>Anthropic 文章的比較表，說明自動評測只是了解 agent 的方法之一：</p>
+    <div class="tbl"><table>
+      <thead><tr><th>方法</th><th>優點</th><th>缺點</th></tr></thead>
+      <tbody>
+        <tr><td>自動評測（不靠真實使用者，用程式跑測試）</td><td>迭代快、完全可重現、不影響使用者、每次 commit 都能跑、不必上線就能大規模測情境</td><td>前期投入大；產品和模型演進時要持續維護；若不符合真實使用模式，可能給出錯誤的信心</td></tr>
+        <tr><td>正式環境監控</td><td>能看到大規模的真實使用者行為、抓到合成評測漏掉的問題、提供 agent 實際表現的基本事實</td><td>是被動的，問題先碰到使用者才知道；訊號雜；需要投資埋點；缺少評分用的標準答案</td></tr>
+        <tr><td>人工閱讀逐字紀錄</td><td>建立對失敗模式的直覺、抓到自動檢查漏掉的細微品質問題、幫助校準什麼叫「好」</td><td>費時、無法擴展、涵蓋不一致、審閱者疲勞或標準不同會影響訊號、多半只有質性訊號</td></tr>
+        <tr><td>系統化人類研究</td><td>多位評分者的黃金標準判斷、能處理主觀或模糊的任務、能用來改進模型評分器</td><td>貴又慢、難以頻繁執行、評分者意見不一需要調和、專業領域（法律、金融、醫療）需要專家</td></tr>
+      </tbody>
+    </table></div>
+    <div class="reads"><a class="rd" data-slug="Grace2026_Demystifying_Evals_Anthropic" href="https://cs.xuyili.com/reading/Grace2026_Demystifying_Evals_Anthropic.html" target="_blank" rel="noopener">Demystifying Evals for AI Agents（本頁直接引用，「評測如何與其他方法配合」一節）</a><a class="rd" data-slug="Shankar2024_Data_Flywheels_blog" href="https://cs.xuyili.com/reading/Shankar2024_Data_Flywheels_blog.html" target="_blank" rel="noopener">Data Flywheels（把正式環境的回饋接回評測）</a></div>
+      </div>
+  </article>
+</section>
+
+<!-- ============ PART 8 ============ -->
+<section class="part" id="part8">
+  <div class="part-head">
+    <span class="no">PART 8 · p.64</span>
+    <h2>總結與問答</h2>
+    <p>封面重現，進入問答。</p>
+  </div>
+
+  <article class="slide" id="p64">
+    <a class="pg" href="https://web.stanford.edu/class/cs329z/slides/lecture10.pdf#page=64" target="_blank" rel="noopener"><b>64</b></a>
+    <div class="body">
+    <h3>問答 <span class="en">Questions</span></h3>
+    <p>投影片沒有總結頁，本導讀把整講濃縮成一條線：</p>
+    <div class="flow"><span>規則 + 輸入 → 輸出<br><small>演繹式（p.11）</small></span><i>→</i><span>輸入 + 輸出 → 規則<br><small>歸納式（p.15）</small></span><i>→</i><span>評測是真相的來源<br><small>（p.26、p.40）</small></span><i>→</i><span>把評測當軟體來寫、測、版控<br><small>（p.43–61）</small></span></div>
+    <p><b>自我檢查</b>，不看資料能回答的話就可以進入下一講：</p>
+    <ul>
+      <li>用 p.24–25 的電話號碼例子說明：為什麼把實作換成 LLM 之後，「真相的來源」從規則變成了輸出？這和 p.16 兩條生命週期的差別有什麼關係？（p.15–25）</li>
+      <li>一個 Harbor 任務資料夾有哪幾個部分，各自的用途是什麼？驗證器為什麼要放在和 agent 隔離的環境裡跑？（p.42–43、p.49–53）</li>
+      <li>如果你修正了一個太嚴格的驗證器，版本號該升哪一位？舊的排行榜結果要重跑、重新評分，還是直接沿用？（p.61）</li>
+    </ul>
+      </div>
+  </article>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section class="gloss" id="glossary">
+  <h2>術語表</h2>
+  <p style="color:var(--muted);margin:0 0 8px">本講出現的主要術語，依出現順序排列。</p>
+  <div class="tbl"><table>
+    <thead><tr><th>英文</th><th>中文</th><th>一句話解釋</th></tr></thead>
+    <tbody>
+      <tr><td>deductive</td><td>演繹式</td><td>人寫規則，程式把規則套到輸入上產生輸出</td></tr>
+      <tr><td>inductive</td><td>歸納式</td><td>人給輸入與輸出的範例，由訓練推出規則</td></tr>
+      <tr><td>agentic coding</td><td>agent 寫程式</td><td>由 agent 產生程式碼，品質要靠實證評測管理</td></tr>
+      <tr><td>source of truth</td><td>真相的來源</td><td>判斷系統「該做什麼」時最終依據的東西</td></tr>
+      <tr><td>specification</td><td>規格</td><td>傳統軟體開發中描述系統行為的文件</td></tr>
+      <tr><td>model card</td><td>模型卡</td><td>模型發布時附的說明文件，常列出各基準成績</td></tr>
+      <tr><td>eval-driven development</td><td>評測驅動開發</td><td>先寫評測，再靠評測迭代改進 agent</td></tr>
+      <tr><td>stochastic</td><td>隨機性</td><td>同樣輸入每次結果可能不同，所以要多跑幾次</td></tr>
+      <tr><td>task</td><td>任務</td><td>單一測試，有明確輸入與成功標準</td></tr>
+      <tr><td>trial</td><td>嘗試</td><td>對一個任務跑一次</td></tr>
+      <tr><td>benchmark</td><td>基準（評測套件）</td><td>衡量特定能力的一組任務</td></tr>
+      <tr><td>verifier</td><td>驗證器（評分器）</td><td>為 agent 表現打分的邏輯</td></tr>
+      <tr><td>trajectory</td><td>軌跡</td><td>一次嘗試的完整紀錄</td></tr>
+      <tr><td>evaluation harness</td><td>評測框架</td><td>端到端跑評測的基礎設施，例如 Harbor</td></tr>
+      <tr><td>agent harness</td><td>agent 框架</td><td>讓模型能以 agent 身分使用工具的系統</td></tr>
+      <tr><td>reward hacking</td><td>獎勵駭取</td><td>agent 鑽評分漏洞拿分，而非真的完成任務</td></tr>
+      <tr><td>mock</td><td>模擬</td><td>用假的替身取代真實服務；Terminal-Bench 偏好真的服務</td></tr>
+      <tr><td>flakiness</td><td>不穩定</td><td>同一任務因外部因素時好時壞</td></tr>
+      <tr><td>confusion matrix</td><td>混淆矩陣</td><td>把驗證器當分類器，看偽陽性與偽陰性</td></tr>
+      <tr><td>LLM judge</td><td>LLM 評審</td><td>用模型依準則評分，彈性大但需校準</td></tr>
+      <tr><td>artifact</td><td>成品</td><td>agent 產出、被搬到驗證器環境檢查的東西</td></tr>
+      <tr><td>oracle solution / agent</td><td>參考解答／oracle agent</td><td>證明任務做得出來、用來替驗證器除錯</td></tr>
+      <tr><td>saturation</td><td>飽和</td><td>分數接近滿分，基準失去鑑別力</td></tr>
+      <tr><td>rollout</td><td>rollout（執行軌跡）</td><td>agent 實際跑一次任務；可用於測試、訓練、正式環境</td></tr>
+      <tr><td>cheat agent</td><td>作弊 agent</td><td>刻意鑽漏洞，用來測驗證器擋不擋得住</td></tr>
+      <tr><td>CI/CD</td><td>持續整合／持續部署</td><td>把基準當軟體持續修正與發布</td></tr>
+      <tr><td>rerun / regrade / reuse</td><td>重跑／重新評分／沿用</td><td>版本號三位數各自對應的舊結果處理方式</td></tr>
+    </tbody>
+  </table></div>
+</section>
+</div>
+
+
+<script>
+(function(){
+  var BASES={online:"https://cs.xuyili.com/reading/",local:"http://127.0.0.1:8329/reading/"};
+  var btns=document.querySelectorAll(".seg button");
+  function apply(mode){
+    document.querySelectorAll("a.rd").forEach(function(a){
+      a.href=BASES[mode]+encodeURIComponent(a.dataset.slug).replace(/%26/g,"&")+".html";
+    });
+    btns.forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.mode===mode));});
+  }
+  var saved="online";
+  try{saved=localStorage.getItem("l10-linkmode")||"online";}catch(e){}
+  if(!BASES[saved])saved="online";
+  apply(saved);
+  btns.forEach(function(b){b.addEventListener("click",function(){
+    apply(b.dataset.mode);
+    try{localStorage.setItem("l10-linkmode",b.dataset.mode);}catch(e){}
+  });});
+})();
+</script>
+
+
+</body></html>

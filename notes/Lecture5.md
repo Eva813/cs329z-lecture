@@ -483,3 +483,11 @@ class CalendarWorkflow:
 - [ ] 讀 DSPy 論文 §3（程式模型：簽名、模組）、§4（優化器／teleprompter），再挑一個案例研究，對照本講的 demo
 - [ ] 選讀：GEPA、Building Effective Agents、Demystifying Evals
 - [ ] 跑一次 [lecture05-code.zip](../slides/lecture05-code.zip) 的 notebook（約 1 美元以內的 OpenRouter 額度）
+
+---
+
+## 7. 延伸：ReAct 與 MemGPT 怎麼落地
+
+這段原本寫在這裡，已依講次搬到：
+- [Lecture 6 筆記](Lecture6.md)：ReAct 論文重點、tool calling 迴圈實作
+- [Lecture 7 筆記](Lecture7.md)：MemGPT、Mem0、兩者比較，以及把 ReAct 和記憶接起來的完整系統
