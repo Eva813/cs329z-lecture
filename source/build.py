@@ -68,21 +68,26 @@ LECTURES = [
      "video": "https://youtu.be/Vr1NzH8bT44"},
     {"no": 3, "date": "9/30", "title_zh": "构建基石:检索增强生成 RAG",
      "title": "Building Blocks: Retrieval-Augmented Generation (RAG)", "file": "lecture03.pdf",
-     "url": "https://web.stanford.edu/class/cs329z/slides/lecture03.pdf"},
+     "url": "https://web.stanford.edu/class/cs329z/slides/lecture03.pdf",
+     "video": "https://youtu.be/psLc-46GqY0"},
     {"no": 4, "date": "10/5", "title_zh": "工具调用与函数调用",
      "title": "Tool Use & Function Calling", "file": "lecture04.pdf",
-     "url": "https://web.stanford.edu/class/cs329z/slides/lecture04.pdf"},
+     "url": "https://web.stanford.edu/class/cs329z/slides/lecture04.pdf",
+     "video": "https://youtu.be/s0S38lz6O7M"},
     {"no": 5, "date": "10/7", "title_zh": "框架与编排",
      "title": "Frameworks & Orchestration", "file": "lecture05.pdf",
      "url": "https://web.stanford.edu/class/cs329z/slides/lecture05.pdf",
+     "video": "https://youtu.be/q0Q-Hy8TTps",
      "code_zip": "lecture05-code.zip",
      "code_repo": "https://github.com/cs329z/lecture5-frameworks"},
     {"no": 6, "date": "10/12", "title_zh": "智能体设计模式与脚手架",
      "title": "Agent Design Patterns & Scaffolds", "file": "lecture06.pdf",
-     "url": "https://web.stanford.edu/class/cs329z/slides/lecture06.pdf"},
+     "url": "https://web.stanford.edu/class/cs329z/slides/lecture06.pdf",
+     "video": "https://youtu.be/JC_pLC5EX_w"},
     {"no": 7, "date": "10/14", "title_zh": "智能体记忆架构",
      "title": "Agent Memory Architectures", "file": "lecture07.pdf",
-     "url": "https://web.stanford.edu/class/cs329z/slides/lecture07.pdf"},
+     "url": "https://web.stanford.edu/class/cs329z/slides/lecture07.pdf",
+     "video": "https://youtu.be/qh5tP6PBZ6U"},
     {"no": 8, "date": "10/19", "title_zh": "多智能体系统",
      "title": "Multi-Agent Systems", "file": "lecture08.pdf",
      "url": "https://web.stanford.edu/class/cs329z/slides/lecture08.pdf"},
@@ -101,6 +106,9 @@ LECTURES = [
     {"no": 13, "date": "11/4", "title_zh": "评测基础与基准设计",
      "title": "Evaluation Fundamentals & Benchmark Design", "file": "lecture13.pdf",
      "url": "https://web.stanford.edu/class/cs329z/slides/lecture13.pdf"},
+    {"no": 15, "date": "11/9", "title_zh": "LLM-as-Judge 与评测基础设施",
+     "title": "LLM-as-Judge & Evaluation Infrastructure", "file": "lecture15.pdf",
+     "url": "https://web.stanford.edu/class/cs329z/slides/lecture15.pdf"},
 ]
 
 # 官网发布的作业;HW 链接为官方 GitHub harness 仓库;pdf/zip 为本站镜像(hw/ 目录,存在才显示)
@@ -372,13 +380,23 @@ def main():
         figs = sorted(f for f in fig_dir.iterdir()
                       if f.suffix.lower() in (".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg")
                       ) if fig_dir.exists() else []
+        cap_map = {}
+        if figs and (fig_dir / "captions.json").exists():
+            try:
+                cap_map = json.loads((fig_dir / "captions.json").read_text(encoding="utf-8"))
+            except Exception:
+                cap_map = {}
         if figs:
-            fig_items = "".join(
-                f'<figure><img loading="lazy" src="../figures/{e["slug"]}/{f.name}" alt="原文插图 {n}"><figcaption>原文图 {n} / {len(figs)}</figcaption></figure>'
-                for n, f in enumerate(figs, 1))
+            parts = []
+            for n, f in enumerate(figs, 1):
+                cap = cap_map.get(f.name) or f"原文图 {n} / {len(figs)}"
+                if len(cap) > 120:
+                    cap = cap[:117] + "…"
+                parts.append(f'<figure><img loading="lazy" src="../figures/{e["slug"]}/{f.name}" alt="原文插图 {n}"><figcaption>{html.escape(cap)}</figcaption></figure>')
+            fig_items = "".join(parts)
             gallery = (f'<details class="fig-gallery"><summary>🖼 原文图表({len(figs)} 张)—— 提取自原始文献,点击展开</summary>'
                        f'<div class="fig-grid">{fig_items}</div>'
-                       f'<p class="fig-note">以上图片自动提取自原始 PDF/网页并镜像至本站;与正文的对应关系请以原文为准。若某篇无画廊,说明其原文图表为矢量绘制,暂无法自动提取。</p></details>')
+                       f'<p class="fig-note">以上图片提取自原始 PDF/网页或 arXiv 官方 HTML 版(含矢量图与原始图注),已镜像至本站;与正文的对应关系请以原文为准。</p></details>')
         else:
             gallery = ""
         body = f"""{topbar()}
@@ -490,6 +508,7 @@ def main():
         </tr>"""
         for h in HOMEWORKS)
 
+    nvideos = sum(1 for l in lectures if l.get("video"))
     index_body = f"""{topbar("")}
 <div class="hero">
   <div class="hero-inner">
@@ -501,7 +520,7 @@ def main():
 </div>
 <div class="star-banner">
   <div class="star-banner-text">
-    <b>关于本站</b>:这是 Stanford CS 329Z《Engineering AI Agents》(2026 秋)全部 <b>49 篇</b>阅读材料的中文学习库——<b>35 篇论文已完成逐段中英对照全译</b>(2,035 个对照段、44.9 万中文字,宽屏下英文左栏/中文右栏),15 篇博客与规范全文中译,全部 PDF 原件在线可读;官网已放出前 {len(lectures)} 讲讲义,本站同步收录。完全免费、无广告、开源。
+    <b>关于本站</b>:这是 Stanford CS 329Z《Engineering AI Agents》(2026 秋)全部 <b>49 篇</b>阅读材料的中文学习库——<b>35 篇论文已完成逐段中英对照全译</b>(2,035 个对照段、44.9 万中文字,宽屏下英文左栏/中文右栏),15 篇博客与规范全文中译,全部 PDF 原件在线可读;官网已放出 {len(lectures)} 讲讲义与 {nvideos} 讲官方录像,本站同步收录。完全免费、无广告、开源。
   </div>
   <a class="star-btn" href="https://github.com/athlonk8/cs329z" target="_blank" rel="noopener">⭐ 在 GitHub 点个 Star{banner_stars}</a>
 </div>
@@ -517,7 +536,7 @@ def main():
 
   <section class="dates lectures" id="lectures">
     <h2 class="sec-title">课程讲义 · Lecture Slides</h2>
-    <div class="lecture-note">课程 9/23 开课后,官网随进度放出各讲幻灯片,本站同步收录 PDF 原件——已收录 <b>{len(lectures)} 讲</b>,后续讲次待官网发布后跟进(下一讲:11/9 LLM-as-Judge;Lecture 10 为 10/26 Terminal-Bench 嘉宾讲座)。<b>官方录像已开始放出</b>(视频列,YouTube 渠道,国内访问需自备网络)。</div>
+    <div class="lecture-note">课程 9/23 开课后,官网随进度放出各讲幻灯片,本站同步收录 PDF 原件——已收录 <b>{len(lectures)} 讲</b>,后续讲次待官网发布后跟进(11/11 Safety 讲 slides 待发布;官网暂缺 Lecture 14 编号,LLM-as-Judge 为第 15 讲;Lecture 10 为 10/26 Terminal-Bench 嘉宾讲座)。<b>官方录像持续放出中</b>(视频列,YouTube 渠道,国内访问需自备网络)。</div>
     <table class="dates-table lecture-table">
       <tr><th>讲次</th><th>主题</th><th>日期</th><th>讲义</th><th>视频</th></tr>
 {lectures_rows}
@@ -579,7 +598,7 @@ def main():
       <ul>
         <li><b>翻译策略</b>:论文正文(摘要至结论,多数含实质附录)逐段英文原文+中文全译;参考文献列表不译;博客服从原文结构全文中译。</li>
         <li><b>重要度标记</b>:🔴 必读 = 该讲核心;🟡 推荐 = 强烈建议;⚪ 补充 = 拓展阅读(编者判断,仅供参考)。</li>
-        <li><b>时效说明</b>:阅读材料下载于 2026-09-14(开课前);开课后官网放出的课程讲义(slides)与作业(HW1、HW2)均已同步收录(见「课程讲义」「课程作业」)。</li>
+        <li><b>时效说明</b>:阅读材料下载于 2026-09-14(开课前);开课后官网放出的课程讲义(slides)与作业(HW1、HW2)均已同步收录,课程录像逐讲放出中(见「课程讲义」视频列)。</li>
         <li><b>版权</b>:原文版权归原作者及机构所有,AI 辅助译文仅供个人学习研究使用,请勿商用。</li>
       </ul>
     </div>
